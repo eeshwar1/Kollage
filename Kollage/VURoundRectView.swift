@@ -16,7 +16,7 @@ import Cocoa
     override func draw(_ dirtyRect: NSRect) {
         
         let path = NSBezierPath(roundedRect: NSInsetRect(bounds, radius, radius), xRadius: radius, yRadius: radius)
-        NSColor.white.set()
+        NSColor.black.set()
         path.fill()
     }
 }
