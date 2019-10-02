@@ -17,7 +17,7 @@ import Cocoa
         
         let path = NSBezierPath(roundedRect: NSInsetRect(bounds, radius, radius), xRadius: radius, yRadius: radius)
         NSColor.black.set()
-        path.fill()
+        path.stroke()
     }
 }
 

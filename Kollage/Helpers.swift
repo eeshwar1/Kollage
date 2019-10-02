@@ -17,3 +17,17 @@ extension NSView {
         return image ?? NSImage()
     }
 }
+
+extension NSImage {
+    
+    func sizeForMaxDimention(_ maxDimension: CGFloat) -> NSSize {
+    
+    
+        let aspectRatio = self.size.width/self.size.height
+                   
+        let width = aspectRatio > 0 ? maxDimension: maxDimension * aspectRatio
+        let height = aspectRatio < 0 ? maxDimension: maxDimension/aspectRatio
+    
+        return NSSize(width: width, height: height)
+    }
+}
