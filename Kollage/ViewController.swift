@@ -21,11 +21,20 @@ class ViewController: NSViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        buttonDragMode.title = "Drag Contents"
+        buttonDragMode.title = "Drag Frame"
         
-        for item in 1...5 {
+        
+        let itemWidth: CGFloat = 200
+        let itemHeight: CGFloat = 100
+        
+        let bounds = self.view.bounds
+        let origin = bounds.origin
+        let center = NSPoint(x: origin.x + bounds.width / 4, y: origin.y + bounds.height / 4)
+        
+        for _ in 1...10 {
             
-            let newImageView =  VUDraggableImageView(frame: NSRect(x: 20 + 20 * item, y: 20 + 20 * item, width: 200, height: 200))
+            let newCenter = center.addRandomNoise(100)
+            let newImageView =  VUDraggableImageView(frame: NSRect(x: newCenter.x, y: newCenter.y, width: itemWidth, height: itemHeight))
             newImageView.image = NSImage(named: "Pookkalam") ?? NSImage()
             newImageView.draggingType = .contents
          
@@ -49,12 +58,12 @@ class ViewController: NSViewController {
         if dragMode == .contents
         {
             dragMode = .frame
-            buttonDragMode.title = "Drag Frame"
+            buttonDragMode.title = "Drag Contents"
         }
         else
         {
             dragMode = .contents
-            buttonDragMode.title = "Drag Contents"
+            buttonDragMode.title = "Drag Frame"
         }
         
         for view in kollageCanvas.subviews {

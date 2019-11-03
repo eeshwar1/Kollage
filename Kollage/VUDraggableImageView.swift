@@ -23,8 +23,8 @@ class VUDraggableImageView: NSImageView {
         didSet {
             
             if let image = image {
-                
-                let maxDimension: CGFloat = 300
+               
+                let maxDimension: CGFloat =  CGFloat.maximum(self.frame.size.height, self.frame.size.width)
                 self.frame.size = image.sizeForMaxDimention(maxDimension)
                
                 needsDisplay = true
@@ -49,7 +49,7 @@ class VUDraggableImageView: NSImageView {
     func configureImageView()
     {
         self.wantsLayer = true
-        self.layer?.borderWidth = 2
+        self.layer?.borderWidth = 1
         self.layer?.borderColor = NSColor.gray.cgColor
         
         

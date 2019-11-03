@@ -11,12 +11,13 @@ import Cocoa
 
 @IBDesignable class VURoundedRectView: NSView {
     
-    var radius : CGFloat = 10.0
+    @IBInspectable var radius : CGFloat = 10.0
     
     override func draw(_ dirtyRect: NSRect) {
         
-        let path = NSBezierPath(roundedRect: NSInsetRect(bounds, radius, radius), xRadius: radius, yRadius: radius)
+        let path = NSBezierPath(roundedRect: bounds, xRadius: radius, yRadius: radius)
         NSColor.black.set()
+        path.lineWidth = 1.0
         path.stroke()
     }
 }

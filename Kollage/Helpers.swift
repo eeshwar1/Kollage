@@ -31,3 +31,24 @@ extension NSImage {
         return NSSize(width: width, height: height)
     }
 }
+
+extension NSPoint {
+  /**
+   Mutate an NSPoint with a random amount of noise bounded by maximumDelta
+   
+   - parameter maximumDelta: change range +/-
+   
+   - returns: mutated point
+   */
+  func addRandomNoise(_ maximumDelta: UInt32) -> NSPoint {
+    
+    var newCenter = self
+    let range = 2 * maximumDelta
+    let xdelta = arc4random_uniform(range)
+    let ydelta = arc4random_uniform(range)
+    newCenter.x += (CGFloat(xdelta) - CGFloat(maximumDelta))
+    newCenter.y += (CGFloat(ydelta) - CGFloat(maximumDelta))
+    
+    return newCenter
+  }
+}
