@@ -720,23 +720,33 @@
                                                 <rect key="frame" x="0.0" y="40" width="400" height="400"/>
                                                 <subviews>
                                                     <customView translatesAutoresizingMaskIntoConstraints="NO" id="aZo-6R-3SV" customClass="VUKollageCanvas" customModule="Kollage" customModuleProvider="target">
-                                                        <rect key="frame" x="10" y="10" width="380" height="380"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="400" height="400"/>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="radius">
+                                                                <real key="value" value="5"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
                                                     </customView>
                                                     <customView translatesAutoresizingMaskIntoConstraints="NO" id="qVj-gI-5Ux" customClass="VURoundedRectView" customModule="Kollage" customModuleProvider="target">
                                                         <rect key="frame" x="0.0" y="0.0" width="400" height="400"/>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="radius">
+                                                                <real key="value" value="5"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
                                                     </customView>
                                                 </subviews>
                                                 <constraints>
-                                                    <constraint firstItem="aZo-6R-3SV" firstAttribute="top" secondItem="aUR-Pw-ZDa" secondAttribute="top" constant="10" id="3FV-TU-2v6"/>
+                                                    <constraint firstItem="aZo-6R-3SV" firstAttribute="top" secondItem="aUR-Pw-ZDa" secondAttribute="top" id="3FV-TU-2v6"/>
                                                     <constraint firstItem="qVj-gI-5Ux" firstAttribute="top" secondItem="aUR-Pw-ZDa" secondAttribute="top" id="AfK-Ko-FDe"/>
                                                     <constraint firstItem="qVj-gI-5Ux" firstAttribute="leading" secondItem="aUR-Pw-ZDa" secondAttribute="leading" id="CHr-VZ-h4T"/>
                                                     <constraint firstAttribute="height" constant="400" id="D8i-mH-EtC"/>
                                                     <constraint firstAttribute="bottom" secondItem="qVj-gI-5Ux" secondAttribute="bottom" id="Gz1-3f-0uh"/>
                                                     <constraint firstAttribute="trailing" secondItem="qVj-gI-5Ux" secondAttribute="trailing" id="gvm-ou-ocA"/>
-                                                    <constraint firstItem="aZo-6R-3SV" firstAttribute="leading" secondItem="aUR-Pw-ZDa" secondAttribute="leading" constant="10" id="h7P-An-GgK"/>
-                                                    <constraint firstAttribute="bottom" secondItem="aZo-6R-3SV" secondAttribute="bottom" constant="10" id="hMp-bW-FZG"/>
+                                                    <constraint firstItem="aZo-6R-3SV" firstAttribute="leading" secondItem="aUR-Pw-ZDa" secondAttribute="leading" id="h7P-An-GgK"/>
+                                                    <constraint firstAttribute="bottom" secondItem="aZo-6R-3SV" secondAttribute="bottom" id="hMp-bW-FZG"/>
                                                     <constraint firstAttribute="width" constant="400" id="iSF-2c-SEr"/>
-                                                    <constraint firstAttribute="trailing" secondItem="aZo-6R-3SV" secondAttribute="trailing" constant="10" id="ji8-cO-lfU"/>
+                                                    <constraint firstAttribute="trailing" secondItem="aZo-6R-3SV" secondAttribute="trailing" id="ji8-cO-lfU"/>
                                                 </constraints>
                                             </customView>
                                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Vcr-YW-qm6">
