@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		650E1EEF237844ED00A44E4F /* KollageGridController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650E1EEE237844ED00A44E4F /* KollageGridController.swift */; };
 		654F7C642327491E00DF6265 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654F7C632327491E00DF6265 /* AppDelegate.swift */; };
 		654F7C662327491E00DF6265 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654F7C652327491E00DF6265 /* ViewController.swift */; };
 		654F7C682327492000DF6265 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 654F7C672327492000DF6265 /* Assets.xcassets */; };
@@ -19,6 +20,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		650E1EEE237844ED00A44E4F /* KollageGridController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KollageGridController.swift; sourceTree = "<group>"; };
 		654F7C602327491E00DF6265 /* Kollage.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Kollage.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		654F7C632327491E00DF6265 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		654F7C652327491E00DF6265 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -64,6 +66,7 @@
 			isa = PBXGroup;
 			children = (
 				654F7C632327491E00DF6265 /* AppDelegate.swift */,
+				650E1EEE237844ED00A44E4F /* KollageGridController.swift */,
 				654F7C652327491E00DF6265 /* ViewController.swift */,
 				65BE3718232EE1BA00BE58AA /* VURoundRectView.swift */,
 				65C9480A23387EED004D8015 /* VUKollageCanvas.swift */,
@@ -105,7 +108,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1030;
-				LastUpgradeCheck = 1100;
+				LastUpgradeCheck = 1340;
 				ORGANIZATIONNAME = "Venky UL";
 				TargetAttributes = {
 					654F7C5F2327491E00DF6265 = {
@@ -154,6 +157,7 @@
 				65BE3719232EE1BA00BE58AA /* VURoundRectView.swift in Sources */,
 				65C9480923387ACA004D8015 /* Helpers.swift in Sources */,
 				65C9480B23387EED004D8015 /* VUKollageCanvas.swift in Sources */,
+				650E1EEF237844ED00A44E4F /* KollageGridController.swift in Sources */,
 				654F7C642327491E00DF6265 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -198,6 +202,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -223,7 +228,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -259,6 +264,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -278,7 +284,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
