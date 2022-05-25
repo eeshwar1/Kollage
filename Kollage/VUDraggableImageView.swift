@@ -22,10 +22,10 @@ class VUDraggableImageView: NSImageView {
    override var image: NSImage? {
         didSet {
             
-            if let image = image {
+            if let _image = image {
                
                 let maxDimension: CGFloat =  CGFloat.maximum(self.frame.size.height, self.frame.size.width)
-                self.frame.size = image.sizeForMaxDimention(maxDimension)
+                self.frame.size = _image.sizeForMaxDimention(maxDimension)
                
                 needsDisplay = true
             }
@@ -54,6 +54,7 @@ class VUDraggableImageView: NSImageView {
         
         
     }
+    
     override func mouseDown(with event: NSEvent) {
         
         if draggingType == .contents {
@@ -85,7 +86,107 @@ class VUDraggableImageView: NSImageView {
             self.frame = NSRect(x: origin.x + offset.x, y: origin.y + offset.y, width: size.width, height: size.height)
         }
     }
+    
+    var nonURLTypes: Set<NSPasteboard.PasteboardType>  { return [NSPasteboard.PasteboardType.tiff, NSPasteboard.PasteboardType.png, .fileURL]}
+    
+    var acceptableTypes: Set<NSPasteboard.PasteboardType> { if #available(macOS 10.13, *) {
+      return nonURLTypes.union([NSPasteboard.PasteboardType.URL])
+    } else {
+      return nonURLTypes
+    }
+      
+    }
+    
+    func setup() {
+      registerForDraggedTypes(Array(acceptableTypes))
+    }
+    
+    
+    let filteringOptions = [NSPasteboard.ReadingOptionKey.urlReadingContentsConformToTypes:NSImage.imageTypes]
+    
+    func shouldAllowDrag(_ draggingInfo: NSDraggingInfo) -> Bool {
+      
+      var canAccept = false
+      
+      //2.
+      let pasteBoard = draggingInfo.draggingPasteboard
+      
+      //3.
+      if pasteBoard.canReadObject(forClasses: [NSURL.self], options: filteringOptions) {
+        canAccept = true
+      }
+      
+      else if let types = pasteBoard.types, nonURLTypes.intersection(types).count > 0 {
+        
+          canAccept = true
+        
+      }
+      return canAccept
+      
+    }
+    
+    var isReceivingDrag = false {
+      didSet {
+        needsDisplay = true
+      }
+    }
+    
+    override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
+      let allow = shouldAllowDrag(sender)
+      isReceivingDrag = allow
+      return allow ? .copy : NSDragOperation()
+    }
+    
+    override func prepareForDragOperation(_ sender: NSDraggingInfo) -> Bool {
+      let allow = shouldAllowDrag(sender)
+      return allow
+    }
+    
+    
+    override func performDragOperation(_ draggingInfo: NSDraggingInfo) -> Bool {
+      
+      //1.
+      isReceivingDrag = false
+      let pasteBoard = draggingInfo.draggingPasteboard
+      
+      if let urls = pasteBoard.readObjects(forClasses: [NSURL.self], options:filteringOptions) as? [URL], urls.count > 0 {
+        processImageURLs(urls)
+        return true
+      }
+      else if let image = NSImage(pasteboard: pasteBoard) {
+        processImage(image)
+        return true
+      }
+    
+      return false
+      
+    }
+    
+    func processImageURLs(_ urls: [URL]) {
+         
+        print("processImageURLs")
+        
+        for (_,url) in urls.enumerated() {
+         
+            if let image = NSImage(contentsOf:url) {
+                processImage(image)
+            }
+          
+        }
+    
+    }
+    
+    func processImage(_ image: NSImage) {
+        
+        print("processImage")
+        
+        self.image = image
+   
+    }
+    
 }
+
+
 
 
 
@@ -112,7 +213,5 @@ extension VUDraggableImageView: NSPasteboardItemDataProvider {
           pasteboard.setData(tiffData, forType: type)
         }
     }
-    
-    
     
 }
