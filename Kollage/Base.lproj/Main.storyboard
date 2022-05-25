@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="14868" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14868"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="20037"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -707,17 +707,17 @@
             <objects>
                 <viewController id="XfG-lQ-9wD" customClass="ViewController" customModule="Kollage" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="m2S-Jp-Qdl">
-                        <rect key="frame" x="0.0" y="0.0" width="717" height="480"/>
+                        <rect key="frame" x="0.0" y="0.0" width="557" height="787"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <stackView distribution="fill" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="i16-Di-Em8">
-                                <rect key="frame" x="20" y="20" width="677" height="440"/>
+                            <stackView distribution="fill" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="i16-Di-Em8" userLabel="Vertical Stack View">
+                                <rect key="frame" x="20" y="20" width="517" height="747"/>
                                 <subviews>
-                                    <stackView distribution="fill" orientation="horizontal" alignment="top" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SyD-WR-Xcs">
-                                        <rect key="frame" x="20" y="0.0" width="637" height="440"/>
+                                    <stackView distribution="fill" orientation="horizontal" alignment="top" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SyD-WR-Xcs" userLabel="Horizontal Stack View">
+                                        <rect key="frame" x="20" y="335" width="477" height="412"/>
                                         <subviews>
                                             <customView translatesAutoresizingMaskIntoConstraints="NO" id="aUR-Pw-ZDa">
-                                                <rect key="frame" x="0.0" y="40" width="400" height="400"/>
+                                                <rect key="frame" x="0.0" y="12" width="400" height="400"/>
                                                 <subviews>
                                                     <customView translatesAutoresizingMaskIntoConstraints="NO" id="aZo-6R-3SV" customClass="VUKollageCanvas" customModule="Kollage" customModuleProvider="target">
                                                         <rect key="frame" x="0.0" y="0.0" width="400" height="400"/>
@@ -731,7 +731,7 @@
                                                         <rect key="frame" x="0.0" y="0.0" width="400" height="400"/>
                                                         <userDefinedRuntimeAttributes>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="radius">
-                                                                <real key="value" value="5"/>
+                                                                <real key="value" value="0.0"/>
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
                                                     </customView>
@@ -750,7 +750,7 @@
                                                 </constraints>
                                             </customView>
                                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Vcr-YW-qm6">
-                                                <rect key="frame" x="402" y="412" width="241" height="32"/>
+                                                <rect key="frame" x="401" y="385" width="83" height="32"/>
                                                 <buttonCell key="cell" type="push" title="Button" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Q8A-qY-vIV">
                                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                     <font key="font" metaFont="system"/>
@@ -769,15 +769,23 @@
                                             <real value="3.4028234663852886e+38"/>
                                         </customSpacing>
                                     </stackView>
+                                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="off-uO-Ryx">
+                                        <rect key="frame" x="20" y="0.0" width="300" height="327"/>
+                                    </customView>
                                 </subviews>
                                 <constraints>
                                     <constraint firstItem="SyD-WR-Xcs" firstAttribute="leading" secondItem="i16-Di-Em8" secondAttribute="leading" constant="20" id="00V-Ry-lXA"/>
+                                    <constraint firstAttribute="trailing" secondItem="off-uO-Ryx" secondAttribute="trailing" constant="197" id="BZI-78-xGy"/>
                                     <constraint firstAttribute="trailing" secondItem="SyD-WR-Xcs" secondAttribute="trailing" constant="20" id="IhP-RV-EqB"/>
+                                    <constraint firstItem="off-uO-Ryx" firstAttribute="leading" secondItem="SyD-WR-Xcs" secondAttribute="leading" id="atE-uv-2ih"/>
+                                    <constraint firstItem="off-uO-Ryx" firstAttribute="top" secondItem="i16-Di-Em8" secondAttribute="top" constant="420" id="rsn-IQ-ZgU"/>
                                 </constraints>
                                 <visibilityPriorities>
                                     <integer value="1000"/>
+                                    <integer value="1000"/>
                                 </visibilityPriorities>
                                 <customSpacing>
+                                    <real value="3.4028234663852886e+38"/>
                                     <real value="3.4028234663852886e+38"/>
                                 </customSpacing>
                             </stackView>
@@ -791,12 +799,43 @@
                     </view>
                     <connections>
                         <outlet property="buttonDragMode" destination="Vcr-YW-qm6" id="lUN-eU-gXY"/>
+                        <outlet property="gridView" destination="off-uO-Ryx" id="H1P-cS-FsT"/>
                         <outlet property="kollageCanvas" destination="aZo-6R-3SV" id="YFO-Fp-Ukx"/>
                     </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="188.5" y="747"/>
+            <point key="canvasLocation" x="242" y="987"/>
+        </scene>
+        <!--Kollage Grid Controller-->
+        <scene sceneID="hP5-mU-r5F">
+            <objects>
+                <customObject id="6HU-MH-6uA" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+                <viewController storyboardIdentifier="KollageGridController" id="Tuv-PP-glX" customClass="KollageGridController" customModule="Kollage" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" identifier="KollageGridView" id="9nC-MT-EFT">
+                        <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Wvh-ME-fBe">
+                                <rect key="frame" x="168" y="138" width="115" height="25"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" title="Kollage Grid" id="rjt-6M-9iW">
+                                    <font key="font" metaFont="system" size="21"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="Wvh-ME-fBe" firstAttribute="centerY" secondItem="9nC-MT-EFT" secondAttribute="centerY" id="eyC-Aq-Em8"/>
+                            <constraint firstItem="Wvh-ME-fBe" firstAttribute="centerX" secondItem="9nC-MT-EFT" secondAttribute="centerX" id="nO2-BM-DDP"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="labelTitle" destination="Wvh-ME-fBe" id="9zd-Ky-KSW"/>
+                    </connections>
+                </viewController>
+            </objects>
+            <point key="canvasLocation" x="188" y="1621"/>
         </scene>
     </scenes>
 </document>
