@@ -17,6 +17,8 @@
 		65C948072337F2AB004D8015 /* Pookkalam.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 65C948062337F2AB004D8015 /* Pookkalam.jpg */; };
 		65C9480923387ACA004D8015 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C9480823387ACA004D8015 /* Helpers.swift */; };
 		65C9480B23387EED004D8015 /* VUKollageCanvas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C9480A23387EED004D8015 /* VUKollageCanvas.swift */; };
+		65E384D128409EF10042C0A8 /* DraggableResizableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E384D028409EF10042C0A8 /* DraggableResizableView.swift */; };
+		65E384D32840F2570042C0A8 /* VUDraggableTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E384D22840F2570042C0A8 /* VUDraggableTextView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +35,8 @@
 		65C948062337F2AB004D8015 /* Pookkalam.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Pookkalam.jpg; sourceTree = "<group>"; };
 		65C9480823387ACA004D8015 /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		65C9480A23387EED004D8015 /* VUKollageCanvas.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VUKollageCanvas.swift; sourceTree = "<group>"; };
+		65E384D028409EF10042C0A8 /* DraggableResizableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DraggableResizableView.swift; sourceTree = "<group>"; };
+		65E384D22840F2570042C0A8 /* VUDraggableTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VUDraggableTextView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,6 +75,8 @@
 				65BE3718232EE1BA00BE58AA /* VURoundRectView.swift */,
 				65C9480A23387EED004D8015 /* VUKollageCanvas.swift */,
 				65C948042337F250004D8015 /* VUDraggableImageView.swift */,
+				65E384D028409EF10042C0A8 /* DraggableResizableView.swift */,
+				65E384D22840F2570042C0A8 /* VUDraggableTextView.swift */,
 				65C9480823387ACA004D8015 /* Helpers.swift */,
 				654F7C672327492000DF6265 /* Assets.xcassets */,
 				65C948062337F2AB004D8015 /* Pookkalam.jpg */,
@@ -154,8 +160,10 @@
 			files = (
 				654F7C662327491E00DF6265 /* ViewController.swift in Sources */,
 				65C948052337F250004D8015 /* VUDraggableImageView.swift in Sources */,
+				65E384D32840F2570042C0A8 /* VUDraggableTextView.swift in Sources */,
 				65BE3719232EE1BA00BE58AA /* VURoundRectView.swift in Sources */,
 				65C9480923387ACA004D8015 /* Helpers.swift in Sources */,
+				65E384D128409EF10042C0A8 /* DraggableResizableView.swift in Sources */,
 				65C9480B23387EED004D8015 /* VUKollageCanvas.swift in Sources */,
 				650E1EEF237844ED00A44E4F /* KollageGridController.swift in Sources */,
 				654F7C642327491E00DF6265 /* AppDelegate.swift in Sources */,
@@ -307,6 +315,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.venkyul.Kollage;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -327,6 +336,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.venkyul.Kollage;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
