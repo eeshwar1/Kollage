@@ -432,6 +432,18 @@ class VUDraggableImageView: NSImageView {
             self.frame.origin.y = superView.frame.maxY - self.frame.size.height
         }
     }
+    
+    func setAsBackground() {
+        
+        print("Fill background")
+        
+        if let canvas = self.canvas {
+            
+            canvas.setAsBackground(self)
+        }
+        
+        
+    }
 }
 
 

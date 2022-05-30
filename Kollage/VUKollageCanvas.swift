@@ -23,6 +23,8 @@ protocol DestinationViewDelegate {
     
     var selectedView: NSView?
     
+    var background: NSImageView?
+    
     override func awakeFromNib() {
         setup()
     }
@@ -35,6 +37,7 @@ protocol DestinationViewDelegate {
         NSColor.black.set()
         NSColor.white.setFill()
         path.fill()
+        
     }
     
     
@@ -208,7 +211,8 @@ protocol DestinationViewDelegate {
     
     func addText() {
         
-        let textView = VUDraggableTextView(frame: NSRect(x: 0, y: 0, width: 200, height: 50))
+        let center = NSPoint(x: self.frame.origin.x + self.frame.width/2, y: self.frame.origin.y + self.frame.height/2)
+        let textView = VUDraggableTextView(frame: NSRect(x: center.x, y: center.y, width: 200, height: 50))
         self.addSubview(textView)
         textView.canvas = self
         
@@ -220,6 +224,20 @@ protocol DestinationViewDelegate {
         if let textView = self.selectedView as? VUDraggableTextView {
             textView.changeFont(font)
         }
+        
+    }
+    
+    func setAsBackground(_ imageView: NSImageView) {
+        
+        
+        if let image = imageView.image {
+            self.background = NSImageView(image: image)
+            self.background!.frame.size = self.frame.size
+        }
+        
+        
+        self.subviews.insert(self.background!, at: 0)
+        imageView.removeFromSuperview()
         
     }
 }

@@ -31,7 +31,7 @@ class ViewController: NSViewController, NSFontChanging {
         
         setupView()
 
-        setupGridView()
+        // setupGridView()
         
     }
 
@@ -78,19 +78,19 @@ class ViewController: NSViewController, NSFontChanging {
 //               }
 //    }
     
-    func setupGridView()
-    {
-        // print("Setup Grid View")
-        
-        let storyboard = NSStoryboard(name: "Main", bundle: Bundle.main)
-        let gridController = storyboard.instantiateController(withIdentifier: "KollageGridController") as! KollageGridController
-        
-        self.addChild(gridController)
-        gridController.view.frame = self.gridView.frame
-        
-        self.gridView.addSubview(gridController.view)
-   
-    }
+//    func setupGridView()
+//    {
+//        // print("Setup Grid View")
+//
+//        let storyboard = NSStoryboard(name: "Main", bundle: Bundle.main)
+//        let gridController = storyboard.instantiateController(withIdentifier: "KollageGridController") as! KollageGridController
+//
+//        self.addChild(gridController)
+//        gridController.view.frame = self.gridView.frame
+//
+//        self.gridView.addSubview(gridController.view)
+//
+//    }
     
    
     
@@ -107,6 +107,10 @@ class ViewController: NSViewController, NSFontChanging {
        
         print("select font")
         
+       
+        
+        NSFontManager.shared.setSelectedAttributes([NSAttributedString.Key.foregroundColor.rawValue: NSColor.red], isMultiple: false)
+        
         NSFontManager.shared.orderFrontFontPanel(nil)
     }
     
@@ -117,12 +121,29 @@ class ViewController: NSViewController, NSFontChanging {
         }
         let newFont = fontManager.convert(NSFont.systemFont(ofSize: 14))
         
-        print("New font: \(String(describing: newFont.displayName))")
+        //let newColor = fontManager
+        
+        // print("New font: \(String(describing: newFont.displayName))")
         
         if let canvas = self.kollageCanvas as? VUKollageCanvas {
             
             canvas.changeFont(newFont)
         }
+    }
+    
+    @IBAction func setAsBackground(_ sender: NSButton) {
+       
+        print("Set as background")
+        
+        if let canvas = self.kollageCanvas as? VUKollageCanvas {
+            
+            if let imageView = canvas.selectedView as? VUDraggableImageView {
+                
+                imageView.setAsBackground()
+            }
+        }
+        
+        
     }
    
 
