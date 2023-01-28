@@ -730,36 +730,20 @@
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
                                                     </customView>
-                                                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="qVj-gI-5Ux" customClass="VURoundedRectView" customModule="Kollage" customModuleProvider="target">
-                                                        <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="width" secondItem="qVj-gI-5Ux" secondAttribute="height" multiplier="1:1" id="MHK-2h-iky"/>
-                                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="800" id="yCd-eY-yXp"/>
-                                                        </constraints>
-                                                        <userDefinedRuntimeAttributes>
-                                                            <userDefinedRuntimeAttribute type="number" keyPath="radius">
-                                                                <real key="value" value="0.0"/>
-                                                            </userDefinedRuntimeAttribute>
-                                                        </userDefinedRuntimeAttributes>
-                                                    </customView>
                                                 </subviews>
                                                 <constraints>
                                                     <constraint firstItem="aZo-6R-3SV" firstAttribute="top" secondItem="aUR-Pw-ZDa" secondAttribute="top" id="3FV-TU-2v6"/>
-                                                    <constraint firstItem="qVj-gI-5Ux" firstAttribute="top" secondItem="aUR-Pw-ZDa" secondAttribute="top" id="AfK-Ko-FDe"/>
-                                                    <constraint firstItem="qVj-gI-5Ux" firstAttribute="leading" secondItem="aUR-Pw-ZDa" secondAttribute="leading" id="CHr-VZ-h4T"/>
                                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="500" id="CIC-bQ-dCL"/>
-                                                    <constraint firstAttribute="bottom" secondItem="qVj-gI-5Ux" secondAttribute="bottom" id="Gz1-3f-0uh"/>
-                                                    <constraint firstAttribute="trailing" secondItem="qVj-gI-5Ux" secondAttribute="trailing" id="gvm-ou-ocA"/>
                                                     <constraint firstItem="aZo-6R-3SV" firstAttribute="leading" secondItem="aUR-Pw-ZDa" secondAttribute="leading" id="h7P-An-GgK"/>
                                                     <constraint firstAttribute="bottom" secondItem="aZo-6R-3SV" secondAttribute="bottom" id="hMp-bW-FZG"/>
                                                     <constraint firstAttribute="trailing" secondItem="aZo-6R-3SV" secondAttribute="trailing" id="ji8-cO-lfU"/>
                                                 </constraints>
                                             </customView>
                                             <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="16" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Qrv-y0-R6s">
-                                                <rect key="frame" x="1020" y="772" width="300" height="228"/>
+                                                <rect key="frame" x="1020" y="736" width="300" height="264"/>
                                                 <subviews>
                                                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="FsE-p3-RPF">
-                                                        <rect key="frame" x="-7" y="201" width="102" height="32"/>
+                                                        <rect key="frame" x="-7" y="237" width="102" height="32"/>
                                                         <buttonCell key="cell" type="push" title="Background" bezelStyle="rounded" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="yNL-ce-ERY">
                                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                             <font key="font" metaFont="cellTitle"/>
@@ -769,7 +753,7 @@
                                                         </connections>
                                                     </button>
                                                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="kKF-AE-iQO">
-                                                        <rect key="frame" x="-7" y="165" width="84" height="32"/>
+                                                        <rect key="frame" x="-7" y="201" width="84" height="32"/>
                                                         <buttonCell key="cell" type="push" title="Add Text" bezelStyle="rounded" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="QXP-vI-fpG">
                                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                             <font key="font" metaFont="cellTitle"/>
@@ -779,7 +763,7 @@
                                                         </connections>
                                                     </button>
                                                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="vyd-vq-ozX">
-                                                        <rect key="frame" x="-7" y="129" width="48" height="32"/>
+                                                        <rect key="frame" x="-7" y="165" width="48" height="32"/>
                                                         <buttonCell key="cell" type="push" bezelStyle="rounded" image="NSFontPanel" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="n0z-6A-T45">
                                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                             <font key="font" metaFont="system"/>
@@ -789,7 +773,7 @@
                                                         </connections>
                                                     </button>
                                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="nnm-4M-wg5">
-                                                        <rect key="frame" x="-2" y="104" width="44" height="16"/>
+                                                        <rect key="frame" x="-2" y="140" width="44" height="16"/>
                                                         <textFieldCell key="cell" lineBreakMode="clipping" title="Resize" id="6ZL-9x-fQ8">
                                                             <font key="font" metaFont="system"/>
                                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -797,14 +781,14 @@
                                                         </textFieldCell>
                                                     </textField>
                                                     <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="UKX-4v-0pL">
-                                                        <rect key="frame" x="8" y="62" width="284" height="28"/>
+                                                        <rect key="frame" x="8" y="98" width="284" height="28"/>
                                                         <sliderCell key="cell" state="on" alignment="left" maxValue="2" doubleValue="1" tickMarkPosition="above" sliderType="linear" id="wHV-yW-VqF"/>
                                                         <connections>
                                                             <action selector="sizeSliderChanged:" target="XfG-lQ-9wD" id="yCE-AY-zwQ"/>
                                                         </connections>
                                                     </slider>
                                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="XCR-Ud-GVK">
-                                                        <rect key="frame" x="-2" y="36" width="55" height="16"/>
+                                                        <rect key="frame" x="-2" y="72" width="55" height="16"/>
                                                         <textFieldCell key="cell" lineBreakMode="clipping" title="Rotation" id="QQO-Nb-3hT">
                                                             <font key="font" metaFont="system"/>
                                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -812,12 +796,22 @@
                                                         </textFieldCell>
                                                     </textField>
                                                     <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="h2b-Ms-2Ir">
-                                                        <rect key="frame" x="8" y="-6" width="284" height="28"/>
-                                                        <sliderCell key="cell" state="on" alignment="left" maxValue="2" doubleValue="1" tickMarkPosition="above" sliderType="linear" id="B1F-4D-Ugq"/>
+                                                        <rect key="frame" x="8" y="30" width="284" height="28"/>
+                                                        <sliderCell key="cell" state="on" alignment="left" maxValue="360" doubleValue="1" tickMarkPosition="above" sliderType="linear" id="B1F-4D-Ugq"/>
                                                         <connections>
-                                                            <action selector="sizeSliderChanged:" target="XfG-lQ-9wD" id="Q55-je-2O8"/>
+                                                            <action selector="rotationSliderChanged:" target="XfG-lQ-9wD" id="fOl-DX-dAg"/>
                                                         </connections>
                                                     </slider>
+                                                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="8B5-hp-Fpp">
+                                                        <rect key="frame" x="-7" y="-7" width="109" height="32"/>
+                                                        <buttonCell key="cell" type="push" title="Export Image" bezelStyle="rounded" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="dA0-br-Qsj">
+                                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                            <font key="font" metaFont="cellTitle"/>
+                                                        </buttonCell>
+                                                        <connections>
+                                                            <action selector="exportImage:" target="XfG-lQ-9wD" id="fv8-JC-Xxi"/>
+                                                        </connections>
+                                                    </button>
                                                 </subviews>
                                                 <constraints>
                                                     <constraint firstItem="UKX-4v-0pL" firstAttribute="leading" secondItem="Qrv-y0-R6s" secondAttribute="leading" constant="10" id="HFP-n4-XHj"/>
@@ -834,8 +828,10 @@
                                                     <integer value="1000"/>
                                                     <integer value="1000"/>
                                                     <integer value="1000"/>
+                                                    <integer value="1000"/>
                                                 </visibilityPriorities>
                                                 <customSpacing>
+                                                    <real value="3.4028234663852886e+38"/>
                                                     <real value="3.4028234663852886e+38"/>
                                                     <real value="3.4028234663852886e+38"/>
                                                     <real value="3.4028234663852886e+38"/>
