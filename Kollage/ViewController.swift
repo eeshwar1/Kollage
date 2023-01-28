@@ -105,8 +105,6 @@ class ViewController: NSViewController, NSFontChanging {
        
         print("select font")
         
-       
-        
         NSFontManager.shared.setSelectedAttributes([NSAttributedString.Key.foregroundColor.rawValue: NSColor.red], isMultiple: false)
         
         NSFontManager.shared.orderFrontFontPanel(nil)
@@ -117,11 +115,9 @@ class ViewController: NSViewController, NSFontChanging {
         guard let fontManager = sender else {
             return
         }
+        
+        
         let newFont = fontManager.convert(NSFont.systemFont(ofSize: 14))
-        
-        //let newColor = fontManager
-        
-        // print("New font: \(String(describing: newFont.displayName))")
         
         if let canvas = self.kollageCanvas as? VUKollageCanvas {
             
@@ -153,7 +149,12 @@ class ViewController: NSViewController, NSFontChanging {
             if let imageView = canvas.selectedView as? VUDraggableImageView {
 
                 imageView.scale(factor: sender.doubleValue)
+                
+            } else if let textView = canvas.selectedView as? VUDraggableTextView {
+                
+                textView.scale(factor: sender.doubleValue)
             }
+            
         }
 
         
@@ -167,7 +168,13 @@ class ViewController: NSViewController, NSFontChanging {
             if let imageView = canvas.selectedView as? VUDraggableImageView {
 
                 imageView.rotate(angle: sender.doubleValue)
+            } else if let textView = canvas.selectedView as? VUDraggableTextView {
+                
+                
+                textView.rotate(byDegrees: sender.doubleValue)
             }
+                
+                
         }
         
     }

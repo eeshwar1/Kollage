@@ -91,7 +91,6 @@ class VUDraggableTextView: DraggableResizableView {
     func changeFont(_ font: NSFont) {
         
         self.textField?.font = font
-        // self.textField?.textColor =  font.
         self.textField?.sizeToFit()
         self.frame.size = self.fittingSize
         
@@ -107,13 +106,28 @@ class VUDraggableTextView: DraggableResizableView {
     
     override func keyDown(with event: NSEvent) {
         
-        // print("Key Down: \(event.keyCode)")
-        
         if event.keyCode == 51 {
-            
-            // print("delete")
+        
             self.removeFromSuperview()
         }
+        
+    }
+    
+    func scale(factor: Double) {
+        
+        
+        let width = self.frame.width
+        let height = self.frame.height
+        
+        self.setFrameSize(.init(width:  width * factor, height: height * factor))
+        
+        
+    }
+    
+    override func rotate(byDegrees angle: CGFloat) {
+        
+        self.frameCenterRotation = angle
+        
         
     }
 
