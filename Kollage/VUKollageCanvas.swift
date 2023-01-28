@@ -234,7 +234,7 @@ protocol DestinationViewDelegate {
         
         if let image = imageView.image {
             self.background = NSImageView(image: image)
-            self.background!.frame.size = self.frame.size
+            self.background!.frame.size = NSSize(width: self.frame.width-10, height: self.frame.height-10)
         }
         
         

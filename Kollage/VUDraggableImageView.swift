@@ -444,23 +444,11 @@ class VUDraggableImageView: NSImageView {
         
         print("rotate: \(angle)")
         
-//        if let image = self.image {
-            
-//            let maxDimension = image.size.width > image.size.height ? image.size.width : image.size.height
-//            let constrainedSize = image.aspectFitSizeForMaxDimension(maxDimension * factor)
-//
-//            self.setFrameSize(.init(width:  constrainedSize.width, height: constrainedSize.height))
-//        }
-        
-        
+        self.frameCenterRotation = angle
         
         
     }
 }
-
-
-
-
 
 // MARK: - NSDraggingSource
 

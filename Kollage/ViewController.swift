@@ -30,8 +30,6 @@ class ViewController: NSViewController, NSFontChanging {
         super.viewDidLoad()
         
         setupView()
-
-        // setupGridView()
         
     }
 
@@ -170,6 +168,54 @@ class ViewController: NSViewController, NSFontChanging {
 
                 imageView.rotate(angle: sender.doubleValue)
             }
+        }
+        
+    }
+    
+    @IBAction func exportImage(_ sender: NSButton) {
+       
+        print("Export Image")
+            
+        if let canvas = self.kollageCanvas as? VUKollageCanvas {
+            
+            var kollage: NSImage = NSImage(size: canvas.frame.size)
+            
+            if let background = canvas.background {
+                
+                kollage = background.image!.resize(withSize: canvas.frame.size) ?? NSImage()
+            }
+            
+            for view in canvas.subviews
+            {
+                if let imageView = view as? VUDraggableImageView {
+                    
+                    if let image = imageView.image {
+                        
+                        let rotImage = image.rotated(by: imageView.frameCenterRotation)
+                        let resizedImage = rotImage.resize(withSize: imageView.frame.size)
+                        kollage = kollage.addImage(image: resizedImage ?? NSImage(), position: imageView.frame.origin)
+                    }
+                    
+                }
+                
+            }
+            
+            let downloadsURL = FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask).first!
+            
+            let destinationURL = downloadsURL.appendingPathComponent("Kollage2.png")
+            
+            
+            if kollage.pngWrite(to: destinationURL, options: .withoutOverwriting) {
+                
+                
+                print("File saved")
+                
+            } else {
+                
+                print("Error saving kollage")
+            }
+            
+            
         }
 
         
