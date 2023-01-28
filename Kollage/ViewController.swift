@@ -146,6 +146,34 @@ class ViewController: NSViewController, NSFontChanging {
         
     }
    
+    
+    @IBAction func sizeSliderChanged(_ sender: NSSlider) {
+       
+       
+        if let canvas = self.kollageCanvas as? VUKollageCanvas {
+
+            if let imageView = canvas.selectedView as? VUDraggableImageView {
+
+                imageView.scale(factor: sender.doubleValue)
+            }
+        }
+
+        
+    }
+    
+    @IBAction func rotationSliderChanged(_ sender: NSSlider) {
+       
+       
+        if let canvas = self.kollageCanvas as? VUKollageCanvas {
+
+            if let imageView = canvas.selectedView as? VUDraggableImageView {
+
+                imageView.rotate(angle: sender.doubleValue)
+            }
+        }
+
+        
+    }
 
 }
 

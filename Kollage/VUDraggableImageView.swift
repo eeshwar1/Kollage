@@ -42,8 +42,8 @@ class VUDraggableImageView: NSImageView {
             
             if let _image = image {
                
-                let maxDimension: CGFloat =  CGFloat.maximum(self.frame.size.height, self.frame.size.width)
-                self.frame.size = _image.sizeForMaxDimention(maxDimension)
+                let maxDimension: CGFloat =  CGFloat.maximum(self.frame.height, self.frame.width)
+                self.frame.size = _image.sizeForMaxDimension(maxDimension)
                
                 needsDisplay = true
             }
@@ -97,18 +97,6 @@ class VUDraggableImageView: NSImageView {
     }
 
     
-//    override func mouseDragged(with event: NSEvent) {
-//
-//        if self.draggingType == .frame {
-//            let newPoint = (self.window?.contentView?.convert(event.locationInWindow, to: self))!
-//            let offset = NSPoint(x: newPoint.x - firstMouseDownPoint.x, y: newPoint.y - firstMouseDownPoint.y)
-//
-//            let origin = self.frame.origin
-//            let size = self.frame.size
-//
-//            self.frame = NSRect(x: origin.x + offset.x, y: origin.y + offset.y, width: size.width, height: size.height)
-//        }
-//    }
 
     var nonURLTypes: Set<NSPasteboard.PasteboardType>  { return [NSPasteboard.PasteboardType.tiff, NSPasteboard.PasteboardType.png, .fileURL]}
     
@@ -153,37 +141,7 @@ class VUDraggableImageView: NSImageView {
         needsDisplay = true
       }
     }
-    
-//    override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
-//      let allow = shouldAllowDrag(sender)
-//      isReceivingDrag = allow
-//      return allow ? .copy : NSDragOperation()
-//    }
-    
-//    override func prepareForDragOperation(_ sender: NSDraggingInfo) -> Bool {
-//      let allow = shouldAllowDrag(sender)
-//      return allow
-//    }
-//
-//
-//    override func performDragOperation(_ draggingInfo: NSDraggingInfo) -> Bool {
-//
-//      //1.
-//      isReceivingDrag = false
-//      let pasteBoard = draggingInfo.draggingPasteboard
-//
-//      if let urls = pasteBoard.readObjects(forClasses: [NSURL.self], options:filteringOptions) as? [URL], urls.count > 0 {
-//        processImageURLs(urls)
-//        return true
-//      }
-//      else if let image = NSImage(pasteboard: pasteBoard) {
-//        processImage(image)
-//        return true
-//      }
-//
-//      return false
-//
-//    }
+
     
     func processImageURLs(_ urls: [URL]) {
          
@@ -206,6 +164,7 @@ class VUDraggableImageView: NSImageView {
     }
     
     override func updateTrackingAreas() {
+        
         super.updateTrackingAreas()
         
         trackingAreas.forEach({ removeTrackingArea($0) })
@@ -261,97 +220,115 @@ class VUDraggableImageView: NSImageView {
     }
     
     override func mouseDragged(with event: NSEvent) {
-        
+
         guard let superView = superview else { print("returning")
             return }
-        
+
         let deltaX = event.deltaX
         let deltaY = event.deltaY
         
+        var frameWidth = self.frame.width
+        var frameHeight = self.frame.height
+        let aspectRatio = frameHeight/frameWidth
+
         // print("deltaX = \(deltaX) deltaY = \(deltaY)")
-        
+
         switch cursorPosition {
         case .topLeft:
             if superView.frame.width / 3 ..< superView.frame.width ~= self.frame.size.width - deltaX,
                superView.frame.height / 3 ..< superView.frame.height ~= self.frame.size.height - deltaY,
                self.frame.origin.x + deltaX >= superView.frame.minX,
                self.frame.origin.y + self.frame.height - deltaY <= superView.frame.maxY {
-                                
-                self.frame.size.width -= deltaX
-                
-                self.frame.size.height -= deltaY
-                
+
+                frameWidth -= deltaX
+
+                // frameHeight -= deltaY
+                frameHeight = aspectRatio * frameWidth
+
                 self.frame.origin.x += deltaX
-                
+
             }
         case .bottomLeft:
             if superView.frame.width / 3 ..< superView.frame.width ~= self.frame.size.width - deltaX,
                superView.frame.height / 3 ..< superView.frame.height ~= self.frame.size.height + deltaY,
                self.frame.origin.x + deltaX >= superView.frame.minX,
                self.frame.origin.y - deltaY >= superView.frame.minY {
-                
+
                 self.frame.origin.x += deltaX
-                
+
                 self.frame.origin.y -= deltaY
-                
-                self.frame.size.width -= deltaX
-                
-                self.frame.size.height += deltaY
-                
+
+                frameWidth -= deltaX
+
+                //frameHeight += deltaY
+                frameHeight = aspectRatio * frameWidth
+
             }
         case .topRight:
             if superView.frame.width / 3 ..< superView.frame.width ~= self.frame.size.width + deltaX,
                superView.frame.height / 3 ..< superView.frame.height ~= self.frame.size.height - deltaY,
                self.frame.origin.x + self.frame.width + deltaX <= superView.frame.maxX,
                self.frame.origin.y + self.frame.height - deltaY <= superView.frame.maxY {
-                
-                self.frame.size.width += deltaX
-                
-                self.frame.size.height -= deltaY
-                
+
+                frameWidth += deltaX
+
+                // frameHeight -= deltaY
+                frameHeight = aspectRatio * frameWidth
+
             }
         case  .bottomRight:
             if superView.frame.width / 3 ..< superView.frame.width ~= self.frame.size.width + deltaX,
                superView.frame.height / 3 ..< superView.frame.height ~= self.frame.size.height + deltaY,
                self.frame.origin.x + self.frame.width + deltaX <= superView.frame.maxX,
                self.frame.origin.y - deltaY >= superView.frame.minY {
-                
+
                 self.frame.origin.y -= deltaY
-                
-                self.frame.size.width += deltaX
-                
-                self.frame.size.height += deltaY
-                
+
+                frameWidth += deltaX
+
+                // frameHeight += deltaY
+                frameHeight = aspectRatio * frameWidth
+
             }
         case .top:
             if superView.frame.height / 3 ..< superView.frame.height ~= self.frame.size.height - deltaY,
                self.frame.origin.y + self.frame.height - deltaY <= superView.frame.maxY {
-                self.frame.size.height -= deltaY
+                frameHeight -= deltaY
+                frameWidth = frameWidth / aspectRatio
             }
         case .bottom:
             if superView.frame.height / 3 ..< superView.frame.height ~= self.frame.size.height + deltaY,
                self.frame.origin.y - deltaY >= superView.frame.minY {
-                self.frame.size.height += deltaY
+                frameHeight += deltaY
+                frameWidth = frameWidth / aspectRatio
                 self.frame.origin.y -= deltaY
             }
         case .left:
             if superView.frame.width / 3 ..< superView.frame.width ~= self.frame.size.width - deltaX,
                self.frame.origin.x + deltaX >= superView.frame.minX {
-                self.frame.size.width -= deltaX
+                frameWidth -= deltaX
+                frameHeight = aspectRatio * frameWidth
                 self.frame.origin.x += deltaX
             }
         case .right:
             if superView.frame.width / 3 ..< superView.frame.width ~= self.frame.size.width + deltaX,
                self.frame.origin.x + self.frame.size.width + deltaX <= superView.frame.maxX {
-                self.frame.size.width += deltaX
+                frameWidth += deltaX
+                frameHeight = aspectRatio * frameWidth
             }
         case .none:
             self.frame.origin.x += deltaX
             self.frame.origin.y -= deltaY
         }
+
         
-        self.repositionView()
         
+//        print("delta: (\(event.deltaX), \(event.deltaY), frame: \(frameWidth) * \(frameHeight)")
+//
+        
+        self.setFrameSize(.init(width: frameWidth, height: frameHeight))
+        //self.repositionView()
+
     }
     
     override func keyDown(with event: NSEvent) {
@@ -441,6 +418,41 @@ class VUDraggableImageView: NSImageView {
             
             canvas.setAsBackground(self)
         }
+        
+        
+    }
+    
+    func scale(factor: Double) {
+        
+        print("scale: \(factor)")
+        
+        if let image = self.image {
+            
+            let maxDimension = image.size.width > image.size.height ? image.size.width : image.size.height
+            let constrainedSize = image.aspectFitSizeForMaxDimension(maxDimension * factor)
+        
+            self.setFrameSize(.init(width:  constrainedSize.width, height: constrainedSize.height))
+        }
+        
+        
+        
+        
+    }
+    
+    
+    func rotate(angle: Double) {
+        
+        print("rotate: \(angle)")
+        
+//        if let image = self.image {
+            
+//            let maxDimension = image.size.width > image.size.height ? image.size.width : image.size.height
+//            let constrainedSize = image.aspectFitSizeForMaxDimension(maxDimension * factor)
+//
+//            self.setFrameSize(.init(width:  constrainedSize.width, height: constrainedSize.height))
+//        }
+        
+        
         
         
     }

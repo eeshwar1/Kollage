@@ -149,9 +149,11 @@ protocol DestinationViewDelegate {
     func processImage(_ image: NSImage, center: NSPoint) {
         
     
-        let constrainedSize = image.aspectFitSizeForMaxDimension(Appearance.maxStickerDimension)
+        let constrainedSize = image.aspectFitSizeForMaxDimension(self.frame.height/2)
+        
         
         let subview = VUDraggableImageView(frame:NSRect(x: center.x - constrainedSize.width/2, y: center.y - constrainedSize.height/2, width: constrainedSize.width, height: constrainedSize.height))
+        
         subview.image = image
         subview.canvas = self
         self.addSubview(subview)
