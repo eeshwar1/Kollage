@@ -25,6 +25,8 @@ protocol DestinationViewDelegate {
     
     var background: NSImageView?
     
+    var vc: ViewController?
+    
     override func awakeFromNib() {
         setup()
     }
@@ -35,9 +37,8 @@ protocol DestinationViewDelegate {
         
         let path = NSBezierPath(roundedRect: bounds, xRadius: radius, yRadius: radius)
         NSColor.black.set()
-        NSColor.white.setFill()
-        path.fill()
         
+        path.stroke()
     }
     
     
@@ -53,6 +54,16 @@ protocol DestinationViewDelegate {
     
     func setup() {
         registerForDraggedTypes(Array(acceptableTypes))
+    }
+    
+    func viewSelected() -> Bool {
+        
+        if let _ = self.selectedView {
+            
+            return true
+        }
+        
+        return false
     }
     
     
@@ -109,6 +120,7 @@ protocol DestinationViewDelegate {
     override func performDragOperation(_ draggingInfo: NSDraggingInfo) -> Bool {
         
         isReceivingDrag = false
+        
         let pasteBoard = draggingInfo.draggingPasteboard
         
         let point = convert(draggingInfo.draggingLocation, from: nil)
@@ -126,9 +138,16 @@ protocol DestinationViewDelegate {
         
     }
     
+    func addImages(_ urls: [URL]) {
+        
+        let point = NSPoint(x: self.frame.midX, y: self.frame.midY).addRandomNoise(50)
+        
+        processImageURLs(urls, center: point)
+        
+    }
+    
     func processImageURLs(_ urls: [URL], center: NSPoint) {
         
-        // print("processImageURLs")
         
         for (index,url) in urls.enumerated() {
             
@@ -159,6 +178,7 @@ protocol DestinationViewDelegate {
         self.addSubview(subview)
         
         let maxrotation = CGFloat(arc4random_uniform(Appearance.maxRotation)) - Appearance.rotationOffset
+        
         subview.frameCenterRotation = maxrotation
     }
     
@@ -190,6 +210,10 @@ protocol DestinationViewDelegate {
             
         }
         
+        if let vc = self.vc {
+            
+            vc.enableImageControls()
+        }
     }
 
     
@@ -233,10 +257,15 @@ protocol DestinationViewDelegate {
         
         
         if let image = imageView.image {
+            
             self.background = NSImageView(image: image)
-            self.background!.frame.size = NSSize(width: self.frame.width-10, height: self.frame.height-10)
+            
+            let maxDimension: CGFloat =  CGFloat.maximum(self.frame.height, self.frame.width)
+
+            self.background?.frame.size = image.sizeForMaxDimension(maxDimension)
+    
+
         }
-        
         
         self.subviews.insert(self.background!, at: 0)
         imageView.removeFromSuperview()
