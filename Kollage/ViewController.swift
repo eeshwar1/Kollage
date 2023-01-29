@@ -10,10 +10,12 @@ import Cocoa
 
 class ViewController: NSViewController, NSFontChanging {
     
-  
+    
+    @IBOutlet weak var kollageBackground: VUKollageBackground!
     @IBOutlet weak var kollageCanvas: NSView!
     
-    @IBOutlet weak var buttonDragMode: NSButton!
+    @IBOutlet weak var rotateSlider: NSSlider!
+    @IBOutlet weak var resizeSlider: NSSlider!
     
     @IBOutlet weak var gridView: NSView!
     
@@ -31,8 +33,15 @@ class ViewController: NSViewController, NSFontChanging {
         
         setupView()
         
+        self.resizeSlider.isEnabled = false
+        self.rotateSlider.isEnabled = false
+        
+        if let canvas = self.kollageCanvas as? VUKollageCanvas {
+            
+            canvas.vc = self
+        }
     }
-
+    
     
     func setupView() {
         
@@ -42,67 +51,67 @@ class ViewController: NSViewController, NSFontChanging {
         
         center = NSPoint(x: origin.x + bounds.width / 4, y: origin.y + bounds.height / 4)
         
-
+        
     }
     
     override func keyDown(with event: NSEvent) {
-
+        
         kollageCanvas.keyDown(with: event)
-
+        
     }
-
+    
     override func performKeyEquivalent(with event: NSEvent) -> Bool {
         return true
     }
-
+    
     override var acceptsFirstResponder: Bool {
         get {
             return true
         }
     }
     
-//    func addImages() {
-//
-//
-//        for _ in 1...10 {
-//
-//                   let newCenter = center.addRandomNoise(100)
-//                   let newImageView =  VUDraggableImageView(frame: NSRect(x: newCenter.x, y: newCenter.y, width: itemWidth, height: itemHeight))
-//                   newImageView.image = NSImage(named: "Pookkalam") ?? NSImage()
-//                    newImageView.draggingType = .frame
-//
-//                   kollageCanvas.addSubview(newImageView)
-//
-//               }
-//    }
+    //    func addImages() {
+    //
+    //
+    //        for _ in 1...10 {
+    //
+    //                   let newCenter = center.addRandomNoise(100)
+    //                   let newImageView =  VUDraggableImageView(frame: NSRect(x: newCenter.x, y: newCenter.y, width: itemWidth, height: itemHeight))
+    //                   newImageView.image = NSImage(named: "Pookkalam") ?? NSImage()
+    //                    newImageView.draggingType = .frame
+    //
+    //                   kollageCanvas.addSubview(newImageView)
+    //
+    //               }
+    //    }
     
-//    func setupGridView()
-//    {
-//        // print("Setup Grid View")
-//
-//        let storyboard = NSStoryboard(name: "Main", bundle: Bundle.main)
-//        let gridController = storyboard.instantiateController(withIdentifier: "KollageGridController") as! KollageGridController
-//
-//        self.addChild(gridController)
-//        gridController.view.frame = self.gridView.frame
-//
-//        self.gridView.addSubview(gridController.view)
-//
-//    }
+    //    func setupGridView()
+    //    {
+    //        // print("Setup Grid View")
+    //
+    //        let storyboard = NSStoryboard(name: "Main", bundle: Bundle.main)
+    //        let gridController = storyboard.instantiateController(withIdentifier: "KollageGridController") as! KollageGridController
+    //
+    //        self.addChild(gridController)
+    //        gridController.view.frame = self.gridView.frame
+    //
+    //        self.gridView.addSubview(gridController.view)
+    //
+    //    }
     
-   
+    
     
     // MARK: - Actions
     
     @IBAction func addText(_ sender: NSButton) {
-       
+        
         if let canvas = kollageCanvas as? VUKollageCanvas {
             canvas.addText()
         }
     }
     
     @IBAction func selectFont(_ sender: NSButton) {
-       
+        
         print("select font")
         
         NSFontManager.shared.setSelectedAttributes([NSAttributedString.Key.foregroundColor.rawValue: NSColor.red], isMultiple: false)
@@ -111,7 +120,7 @@ class ViewController: NSViewController, NSFontChanging {
     }
     
     func changeFont(_ sender: NSFontManager?) {
-    
+        
         guard let fontManager = sender else {
             return
         }
@@ -126,28 +135,28 @@ class ViewController: NSViewController, NSFontChanging {
     }
     
     @IBAction func setAsBackground(_ sender: NSButton) {
-       
-        print("Set as background")
         
         if let canvas = self.kollageCanvas as? VUKollageCanvas {
             
-            if let imageView = canvas.selectedView as? VUDraggableImageView {
+            if let imageView = canvas.selectedView as? VUDraggableImageView, let image = imageView.image {
                 
-                imageView.setAsBackground()
+                self.kollageBackground.setBackground(image: image)
+                imageView.removeFromSuperview()
+                
             }
         }
         
         
     }
-   
+    
     
     @IBAction func sizeSliderChanged(_ sender: NSSlider) {
-       
-       
+        
+        
         if let canvas = self.kollageCanvas as? VUKollageCanvas {
-
+            
             if let imageView = canvas.selectedView as? VUDraggableImageView {
-
+                
                 imageView.scale(factor: sender.doubleValue)
                 
             } else if let textView = canvas.selectedView as? VUDraggableTextView {
@@ -156,40 +165,129 @@ class ViewController: NSViewController, NSFontChanging {
             }
             
         }
-
+        
         
     }
     
     @IBAction func rotationSliderChanged(_ sender: NSSlider) {
-       
-       
+        
+        
         if let canvas = self.kollageCanvas as? VUKollageCanvas {
-
+            
             if let imageView = canvas.selectedView as? VUDraggableImageView {
-
+                
                 imageView.rotate(angle: sender.doubleValue)
             } else if let textView = canvas.selectedView as? VUDraggableTextView {
                 
                 
                 textView.rotate(byDegrees: sender.doubleValue)
             }
-                
-                
+            
+            
         }
         
     }
     
     @IBAction func exportImage(_ sender: NSButton) {
-       
+        
         print("Export Image")
+        
+        let savePanel = NSSavePanel()
+        savePanel.canCreateDirectories = true
+        savePanel.showsTagField = false
+        savePanel.nameFieldStringValue = "Kollage.png"
+        savePanel.level = NSWindow.Level(rawValue: Int(CGWindowLevelForKey(.modalPanelWindow)))
+        savePanel.begin { (result) in
+            if result.rawValue == NSApplication.ModalResponse.OK.rawValue {
+                
+                let kollage = self.createKollage()
+        
+                if let fileUrl = savePanel.url {
+                    
+                    if kollage.pngWrite(to: fileUrl, options: .withoutOverwriting) {
+                        
+                        print("File saved")
+                        
+                    } else {
+                        
+                        print("Error saving kollage")
+                    }
+                }
+            }
+        }
+        
+    }
+    
+    @IBAction func backgroundColorChanged(_ sender: NSColorWell) {
+        
+        self.kollageBackground.setBackground(color: sender.color)
+        
+    }
+    
+    @IBAction func pickBackgroundImage(_ sender: NSButton) {
+        
+        print("Pick background image")
+        
+        let openPanel = NSOpenPanel()
+        openPanel.allowsMultipleSelection = false
+        openPanel.canChooseDirectories = false
+        openPanel.allowedFileTypes = ["png", "jpg", "jpeg", "gif"]
+        
+        let response = openPanel.runModal()
+        
+        if response == .OK {
             
+            if let url =  openPanel.url {
+                
+                self.kollageBackground.setBackground(image: NSImage(contentsOf: url) ?? NSImage())
+            }
+        }
+        
+    }
+    
+    @IBAction func addImages(_ sender: NSButton) {
+        
+        print("Pick background image")
+        
+        let openPanel = NSOpenPanel()
+        openPanel.allowsMultipleSelection = true
+        openPanel.canChooseDirectories = false
+        openPanel.allowedFileTypes = ["png", "jpg", "jpeg", "gif"]
+        
+        let response = openPanel.runModal()
+        
+        if response == .OK {
+                            
+            if let canvas = kollageCanvas as? VUKollageCanvas {
+                
+                canvas.addImages(openPanel.urls)
+            }
+            
+        }
+        
+    }
+    
+    func createKollage() -> NSImage {
+        
+        var kollage = NSImage()
+        
         if let canvas = self.kollageCanvas as? VUKollageCanvas {
             
-            var kollage: NSImage = NSImage(size: canvas.frame.size)
+            kollage = NSImage(size: canvas.frame.size)
             
-            if let background = canvas.background {
+            if let backgroundView = self.kollageBackground {
                 
-                kollage = background.image!.resize(withSize: canvas.frame.size) ?? NSImage()
+                if let backgroundImage = backgroundView.backgroundImage {
+                    
+                    kollage = backgroundImage.resize(withSize: canvas.frame.size) ?? NSImage()
+                } else {
+                    
+                    kollage = backgroundView.getImage()
+                }
+                
+            } else {
+                
+                kollage = NSImage()
             }
             
             for view in canvas.subviews
@@ -207,28 +305,17 @@ class ViewController: NSViewController, NSFontChanging {
                 
             }
             
-            let downloadsURL = FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask).first!
-            
-            let destinationURL = downloadsURL.appendingPathComponent("Kollage2.png")
-            
-            
-            if kollage.pngWrite(to: destinationURL, options: .withoutOverwriting) {
-                
-                
-                print("File saved")
-                
-            } else {
-                
-                print("Error saving kollage")
-            }
-            
-            
         }
-
+        
+        return kollage
         
     }
-
+    
+    func enableImageControls() {
+        
+        self.resizeSlider.isEnabled = true
+        self.rotateSlider.isEnabled = true
+    }
+    
+    
 }
-
-
-
