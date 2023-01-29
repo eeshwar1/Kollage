@@ -61,6 +61,16 @@ extension NSImage {
         return NSSize(width: width, height: height)
     }
     
+    
+    class func swatchWithColor(color: NSColor, size: NSSize) -> NSImage {
+        let image = NSImage(size: size)
+        image.lockFocus()
+        color.drawSwatch(in: NSRect(origin: .zero, size: size))
+        image.unlockFocus()
+        return image
+    }
+    
+    
     func resize(toPercentage percent: Double) -> NSImage? {
         
         
@@ -160,7 +170,7 @@ extension NSImage {
         var newSmallRect: CGRect = .zero
         newSmallRect.size = image.size
         
-//        newSmallRect.origin = NSPoint(x: newImageRect.midX - newSmallRect.width/2, y: newImageRect.midY - newSmallRect.height/2)
+        //        newSmallRect.origin = NSPoint(x: newImageRect.midX - newSmallRect.width/2, y: newImageRect.midY - newSmallRect.height/2)
         
         newSmallRect.origin = position
         
