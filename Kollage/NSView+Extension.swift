@@ -19,18 +19,18 @@ extension NSView {
     
     
     func bringSubviewToFront(_ view: NSView) {
-            var theView = view
-            self.sortSubviews({(viewA,viewB,rawPointer) in
-                let view = rawPointer?.load(as: NSView.self)
+        var theView = view
+        self.sortSubviews({(viewA,viewB,rawPointer) in
+            let view = rawPointer?.load(as: NSView.self)
 
-                switch view {
-                case viewA:
-                    return ComparisonResult.orderedDescending
-                case viewB:
-                    return ComparisonResult.orderedAscending
-                default:
-                    return ComparisonResult.orderedSame
-                }
-            }, context: &theView)
+            switch view {
+            case viewA:
+                return ComparisonResult.orderedDescending
+            case viewB:
+                return ComparisonResult.orderedAscending
+            default:
+                return ComparisonResult.orderedSame
+            }
+        }, context: &theView)
     }
 }
