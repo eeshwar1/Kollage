@@ -17,18 +17,21 @@ enum DraggingType {
 
 class VUDraggableImageView: NSImageView {
     
-   var firstMouseDownPoint: NSPoint = NSZeroPoint
+    var firstMouseDownPoint: NSPoint = NSZeroPoint
     
-   var draggingType: DraggingType = .frame
+    var draggingType: DraggingType = .frame
     
-   var canvas: VUKollageCanvas?
+    var canvas: VUKollageCanvas?
     
-   var selected: Bool = false {
+    var borderColor: NSColor?
+    var borderWidth: CGFloat = 0.0
+    
+    var selected: Bool = false {
         didSet {
             
             if selected {
-                self.layer?.borderColor = .init(red: 0, green: 255, blue: 0, alpha: 1.0)
-                self.layer?.borderWidth = 2.0
+                self.layer?.borderColor = NSColor.red.cgColor
+                self.layer?.borderWidth = 5.0
             } else {
                 
                 self.layer?.borderWidth = 0.0
@@ -37,18 +40,18 @@ class VUDraggableImageView: NSImageView {
         }
     }
     
-   override var image: NSImage? {
+    override var image: NSImage? {
         didSet {
             
             if let _image = image {
-               
+                
                 let maxDimension: CGFloat =  CGFloat.maximum(self.frame.height, self.frame.width)
                 self.frame.size = _image.sizeForMaxDimension(maxDimension)
-               
+                
                 needsDisplay = true
             }
             
-
+            
         }
     }
     
@@ -79,7 +82,7 @@ class VUDraggableImageView: NSImageView {
         
         super.init(frame: frameRect)
         configureImageView()
-       
+        
     }
     
     required init?(coder: NSCoder) {
@@ -91,76 +94,79 @@ class VUDraggableImageView: NSImageView {
     func configureImageView()
     {
         self.wantsLayer = true
-        self.layer?.borderWidth = 1
-        self.layer?.borderColor = NSColor.gray.cgColor
+        
+        self.layer?.borderWidth = borderWidth
+        
+        if let color = self.borderColor {
+            self.layer?.borderColor = color.cgColor
+        }
+        
         
     }
-
     
-
     var nonURLTypes: Set<NSPasteboard.PasteboardType>  { return [NSPasteboard.PasteboardType.tiff, NSPasteboard.PasteboardType.png, .fileURL]}
     
     var acceptableTypes: Set<NSPasteboard.PasteboardType> { if #available(macOS 10.13, *) {
-      return nonURLTypes.union([NSPasteboard.PasteboardType.URL])
+        return nonURLTypes.union([NSPasteboard.PasteboardType.URL])
     } else {
-      return nonURLTypes
+        return nonURLTypes
     }
-      
+        
     }
     
     func setup() {
-      registerForDraggedTypes(Array(acceptableTypes))
+        registerForDraggedTypes(Array(acceptableTypes))
     }
     
     
     let filteringOptions = [NSPasteboard.ReadingOptionKey.urlReadingContentsConformToTypes:NSImage.imageTypes]
     
     func shouldAllowDrag(_ draggingInfo: NSDraggingInfo) -> Bool {
-      
-      var canAccept = false
-      
-      //2.
-      let pasteBoard = draggingInfo.draggingPasteboard
-      
-      //3.
-      if pasteBoard.canReadObject(forClasses: [NSURL.self], options: filteringOptions) {
-        canAccept = true
-      }
-      
-      else if let types = pasteBoard.types, nonURLTypes.intersection(types).count > 0 {
         
-          canAccept = true
+        var canAccept = false
         
-      }
-      return canAccept
-      
+        //2.
+        let pasteBoard = draggingInfo.draggingPasteboard
+        
+        //3.
+        if pasteBoard.canReadObject(forClasses: [NSURL.self], options: filteringOptions) {
+            canAccept = true
+        }
+        
+        else if let types = pasteBoard.types, nonURLTypes.intersection(types).count > 0 {
+            
+            canAccept = true
+            
+        }
+        return canAccept
+        
     }
     
     var isReceivingDrag = false {
-      didSet {
-        needsDisplay = true
-      }
+        didSet {
+            needsDisplay = true
+        }
     }
-
+    
     
     func processImageURLs(_ urls: [URL]) {
-         
+        
         
         for (_,url) in urls.enumerated() {
-         
+            
             if let image = NSImage(contentsOf:url) {
                 processImage(image)
             }
-          
+            
         }
-    
+        
     }
     
     func processImage(_ image: NSImage) {
-   
+        
         
         self.image = image
-   
+        
     }
     
     override func updateTrackingAreas() {
@@ -168,7 +174,7 @@ class VUDraggableImageView: NSImageView {
         super.updateTrackingAreas()
         
         trackingAreas.forEach({ removeTrackingArea($0) })
-
+        
         addTrackingArea(NSTrackingArea(rect: self.bounds,
                                        options: [.mouseMoved,
                                                  .mouseEnteredAndExited,
@@ -176,7 +182,7 @@ class VUDraggableImageView: NSImageView {
                                        owner: self))
     }
     
-
+    
     override func mouseExited(with event: NSEvent) {
         NSCursor.arrow.set()
     }
@@ -187,7 +193,7 @@ class VUDraggableImageView: NSImageView {
         
         self.cursorPosition = self.cursorCornerBorderPosition(locationInView)
         
-
+        
     }
     
     override func mouseUp(with event: NSEvent) {
@@ -210,7 +216,7 @@ class VUDraggableImageView: NSImageView {
         
         self.selected = false
     }
-
+    
     
     override func mouseMoved(with event: NSEvent) {
         
@@ -220,75 +226,75 @@ class VUDraggableImageView: NSImageView {
     }
     
     override func mouseDragged(with event: NSEvent) {
-
+        
         guard let superView = superview else { print("returning")
             return }
-
+        
         let deltaX = event.deltaX
         let deltaY = event.deltaY
         
         var frameWidth = self.frame.width
         var frameHeight = self.frame.height
         let aspectRatio = frameHeight/frameWidth
-
+        
         // print("deltaX = \(deltaX) deltaY = \(deltaY)")
-
+        
         switch cursorPosition {
         case .topLeft:
             if superView.frame.width / 3 ..< superView.frame.width ~= self.frame.size.width - deltaX,
                superView.frame.height / 3 ..< superView.frame.height ~= self.frame.size.height - deltaY,
                self.frame.origin.x + deltaX >= superView.frame.minX,
                self.frame.origin.y + self.frame.height - deltaY <= superView.frame.maxY {
-
+                
                 frameWidth -= deltaX
-
+                
                 // frameHeight -= deltaY
                 frameHeight = aspectRatio * frameWidth
-
+                
                 self.frame.origin.x += deltaX
-
+                
             }
         case .bottomLeft:
             if superView.frame.width / 3 ..< superView.frame.width ~= self.frame.size.width - deltaX,
                superView.frame.height / 3 ..< superView.frame.height ~= self.frame.size.height + deltaY,
                self.frame.origin.x + deltaX >= superView.frame.minX,
                self.frame.origin.y - deltaY >= superView.frame.minY {
-
+                
                 self.frame.origin.x += deltaX
-
+                
                 self.frame.origin.y -= deltaY
-
+                
                 frameWidth -= deltaX
-
+                
                 //frameHeight += deltaY
                 frameHeight = aspectRatio * frameWidth
-
+                
             }
         case .topRight:
             if superView.frame.width / 3 ..< superView.frame.width ~= self.frame.size.width + deltaX,
                superView.frame.height / 3 ..< superView.frame.height ~= self.frame.size.height - deltaY,
                self.frame.origin.x + self.frame.width + deltaX <= superView.frame.maxX,
                self.frame.origin.y + self.frame.height - deltaY <= superView.frame.maxY {
-
+                
                 frameWidth += deltaX
-
+                
                 // frameHeight -= deltaY
                 frameHeight = aspectRatio * frameWidth
-
+                
             }
         case  .bottomRight:
             if superView.frame.width / 3 ..< superView.frame.width ~= self.frame.size.width + deltaX,
                superView.frame.height / 3 ..< superView.frame.height ~= self.frame.size.height + deltaY,
                self.frame.origin.x + self.frame.width + deltaX <= superView.frame.maxX,
                self.frame.origin.y - deltaY >= superView.frame.minY {
-
+                
                 self.frame.origin.y -= deltaY
-
+                
                 frameWidth += deltaX
-
+                
                 // frameHeight += deltaY
                 frameHeight = aspectRatio * frameWidth
-
+                
             }
         case .top:
             if superView.frame.height / 3 ..< superView.frame.height ~= self.frame.size.height - deltaY,
@@ -320,15 +326,15 @@ class VUDraggableImageView: NSImageView {
             self.frame.origin.x += deltaX
             self.frame.origin.y -= deltaY
         }
-
         
         
-//        print("delta: (\(event.deltaX), \(event.deltaY), frame: \(frameWidth) * \(frameHeight)")
-//
+        
+        //        print("delta: (\(event.deltaX), \(event.deltaY), frame: \(frameWidth) * \(frameHeight)")
+        //
         
         self.setFrameSize(.init(width: frameWidth, height: frameHeight))
         //self.repositionView()
-
+        
     }
     
     override func keyDown(with event: NSEvent) {
@@ -424,25 +430,22 @@ class VUDraggableImageView: NSImageView {
     
     func scale(factor: Double) {
         
-        print("scale: \(factor)")
+        //print("scale: \(factor)")
         
         if let image = self.image {
             
             let maxDimension = image.size.width > image.size.height ? image.size.width : image.size.height
             let constrainedSize = image.aspectFitSizeForMaxDimension(maxDimension * factor)
-        
+            
             self.setFrameSize(.init(width:  constrainedSize.width, height: constrainedSize.height))
         }
-        
-        
-        
-        
+      
     }
     
     
     func rotate(angle: Double) {
         
-        print("rotate: \(angle)")
+        //print("rotate: \(angle)")
         
         self.frameCenterRotation = angle
         
@@ -458,7 +461,7 @@ extension VUDraggableImageView: NSDraggingSource {
         return .generic
     }
     
- 
+    
     
     
 }
@@ -470,7 +473,7 @@ extension VUDraggableImageView: NSPasteboardItemDataProvider {
         
         if let pasteboard = pasteboard, type == NSPasteboard.PasteboardType(kUTTypeTIFF as String), let image = self.image {
             let tiffData  = image.tiffRepresentation
-          pasteboard.setData(tiffData, forType: type)
+            pasteboard.setData(tiffData, forType: type)
         }
     }
     
