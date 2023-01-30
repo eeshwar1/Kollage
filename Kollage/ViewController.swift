@@ -17,6 +17,11 @@ class ViewController: NSViewController, NSFontChanging {
     @IBOutlet weak var rotateSlider: NSSlider!
     @IBOutlet weak var resizeSlider: NSSlider!
     
+    @IBOutlet weak var completeImage: NSImageView!
+    @IBOutlet weak var spinner: NSProgressIndicator!
+    
+    @IBOutlet weak var labelStatus: NSTextField!
+    
     @IBOutlet weak var gridView: NSView!
     
     var imageViews: [VUDraggableImageView] = []
@@ -40,6 +45,10 @@ class ViewController: NSViewController, NSFontChanging {
             
             canvas.vc = self
         }
+        
+        spinner.isHidden = true
+        completeImage.isHidden = true
+        labelStatus.stringValue = "Ready"
     }
     
     
@@ -187,34 +196,43 @@ class ViewController: NSViewController, NSFontChanging {
         }
         
     }
-    
-    @IBAction func exportImage(_ sender: NSButton) {
+
         
-        print("Export Image")
+    @IBAction func exportImage(_ sender: NSButton) {
+    
+                
+        let kollage = self.createKollage()
         
         let savePanel = NSSavePanel()
         savePanel.canCreateDirectories = true
         savePanel.showsTagField = false
         savePanel.nameFieldStringValue = "Kollage.png"
         savePanel.level = NSWindow.Level(rawValue: Int(CGWindowLevelForKey(.modalPanelWindow)))
-        savePanel.begin { (result) in
-            if result.rawValue == NSApplication.ModalResponse.OK.rawValue {
-                
-                let kollage = self.createKollage()
         
-                if let fileUrl = savePanel.url {
+            
+        let result = savePanel.runModal()
+        if result.rawValue == NSApplication.ModalResponse.OK.rawValue  {
+                
+            if let fileUrl = savePanel.url {
+            
+                self.spinner.isHidden = false
+                self.spinner.startAnimation(nil)
+                self.labelStatus.stringValue = "Exporting..."
+                if kollage.pngWrite(to: fileUrl, options: .withoutOverwriting) {
                     
-                    if kollage.pngWrite(to: fileUrl, options: .withoutOverwriting) {
-                        
-                        print("File saved")
-                        
-                    } else {
-                        
-                        print("Error saving kollage")
-                    }
+                    print("File saved")
+                    
+                } else {
+                    
+                    print("Error saving kollage")
+                }
+                    self.spinner.stopAnimation(nil)
+                    self.spinner.isHidden = true
+                    self.completeImage.isHidden = false
+                    self.labelStatus.stringValue = "Ready"
                 }
             }
-        }
+        
         
     }
     
