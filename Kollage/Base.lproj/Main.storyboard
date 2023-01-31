@@ -71,7 +71,11 @@
                                                 <action selector="openDocument:" target="Ady-hI-5gd" id="bVn-NM-KNZ"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Add Images" keyEquivalent="A" id="tXI-mr-wws"/>
+                                        <menuItem title="Add Images" keyEquivalent="A" id="tXI-mr-wws">
+                                            <connections>
+                                                <action selector="addImages:" target="Ady-hI-5gd" id="cuc-BY-L5K"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem isSeparatorItem="YES" id="m54-Is-iLE"/>
                                         <menuItem title="Close" keyEquivalent="w" id="DVo-aG-piG">
                                             <connections>
@@ -705,7 +709,7 @@
                                                         <rect key="frame" x="10" y="0.0" width="280" height="164"/>
                                                         <subviews>
                                                             <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Mvw-Jf-r93">
-                                                                <rect key="frame" x="0.0" y="109" width="20" height="61"/>
+                                                                <rect key="frame" x="0.0" y="109" width="50" height="61"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" constant="50" id="C0m-b8-7i3"/>
                                                                     <constraint firstAttribute="height" constant="50" id="Nmc-HQ-eYi"/>
@@ -717,7 +721,7 @@
                                                                 <symbolConfiguration key="symbolConfiguration" configurationType="font" scale="large"/>
                                                             </imageView>
                                                             <progressIndicator maxValue="100" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="gCD-Su-Hw8">
-                                                                <rect key="frame" x="-207" y="114" width="434" height="50"/>
+                                                                <rect key="frame" x="17" y="114" width="16" height="50"/>
                                                             </progressIndicator>
                                                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="51D-rD-FFX">
                                                                 <rect key="frame" x="245" y="148" width="37" height="16"/>
