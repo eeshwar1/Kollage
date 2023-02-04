@@ -11,8 +11,12 @@ import Cocoa
 class ViewController: NSViewController, NSFontChanging {
     
     
+    @IBOutlet weak var kollageEasel: VUKollageEasel!
     @IBOutlet weak var kollageBackground: VUKollageBackground!
     @IBOutlet weak var kollageCanvas: NSView!
+    
+    @IBOutlet weak var canvasSizeButton: NSPopUpButton!
+    @IBOutlet weak var backgroundColorWell: NSColorWell!
     
     @IBOutlet weak var rotateSlider: NSSlider!
     @IBOutlet weak var resizeSlider: NSSlider!
@@ -33,7 +37,18 @@ class ViewController: NSViewController, NSFontChanging {
     
     var center = NSPoint.zero
     
+    override func viewWillAppear() {
+        
+        self.kollageCanvas.frame = NSRect(x: 0, y: 0, width: 300, height: 500)
+        self.kollageCanvas.needsDisplay = true
+        
+        self.kollageBackground.frame = NSRect(x: 0, y: 0, width: 300, height: 500)
+        self.kollageBackground.needsDisplay = true
+        
+    }
+    
     override func viewDidLoad() {
+        
         super.viewDidLoad()
         
         setupView()
@@ -47,8 +62,10 @@ class ViewController: NSViewController, NSFontChanging {
         }
         
         spinner.isHidden = true
-        completeImage.isHidden = true
         labelStatus.stringValue = "Ready"
+        
+        backgroundColorWell.color = kollageBackground.backgroundColor
+        
     }
     
     
@@ -143,6 +160,38 @@ class ViewController: NSViewController, NSFontChanging {
         }
     }
     
+    // MARK: Actions
+    
+    @IBAction func canvasSizeChanged(_ sender: NSPopUpButton) {
+        
+        let selectedItem  = sender.itemArray[sender.indexOfSelectedItem].title
+        
+        var width: CGFloat = 500
+        var height: CGFloat = 500
+        
+        print("Canvas size changed to \(selectedItem)")
+        
+        if selectedItem == "800x600" {
+            width = 800
+            height = 600
+        } else if selectedItem == "1024x768" {
+            
+            width =  1024
+            height = 768
+        } else {
+            
+            width = 500
+            height = 500
+            
+        }
+        
+        self.kollageCanvas.frame = NSRect(x: 0, y: 0, width: width, height: height)
+        self.kollageCanvas.needsDisplay = true
+        self.kollageBackground.frame = NSRect(x: 0, y: 0, width: width, height: height)
+        self.kollageBackground.needsDisplay = true
+        
+        self.view.needsDisplay = true
+    }
     @IBAction func setAsBackground(_ sender: NSButton) {
         
         if let canvas = self.kollageCanvas as? VUKollageCanvas {
@@ -198,41 +247,56 @@ class ViewController: NSViewController, NSFontChanging {
     }
 
         
-    @IBAction func exportImage(_ sender: NSButton) {
-    
-                
-        let kollage = self.createKollage()
-        
-        let savePanel = NSSavePanel()
-        savePanel.canCreateDirectories = true
-        savePanel.showsTagField = false
-        savePanel.nameFieldStringValue = "Kollage.png"
-        savePanel.level = NSWindow.Level(rawValue: Int(CGWindowLevelForKey(.modalPanelWindow)))
-        
+    @IBAction func exportImage(_ sender: NSButton)  {
             
-        let result = savePanel.runModal()
-        if result.rawValue == NSApplication.ModalResponse.OK.rawValue  {
-                
-            if let fileUrl = savePanel.url {
             
-                self.spinner.isHidden = false
-                self.spinner.startAnimation(nil)
-                self.labelStatus.stringValue = "Exporting..."
-                if kollage.pngWrite(to: fileUrl, options: .withoutOverwriting) {
+        if self.kollageCanvas.subviews.count > 0 {
+            
+            let savePanel = NSSavePanel()
+            savePanel.canCreateDirectories = true
+            savePanel.showsTagField = false
+            savePanel.nameFieldStringValue = "Kollage.png"
+            savePanel.level = NSWindow.Level(rawValue: Int(CGWindowLevelForKey(.modalPanelWindow)))
+            
+            
+            let result = savePanel.runModal()
+            if result.rawValue == NSApplication.ModalResponse.OK.rawValue  {
+                
+                if let fileUrl = savePanel.url {
                     
-                    print("File saved")
                     
-                } else {
+                    DispatchQueue.main.async {
+                        let kollage = self.createKollage()
+                        
+                        if kollage.pngWrite(to: fileUrl, options: .withoutOverwriting) {
+                            
+                            print("File saved")
+                            
+                        } else {
+                            
+                            print("Error saving kollage")
+                        }
+                        self.spinner.stopAnimation(nil)
+                        self.spinner.isHidden = true
+                        self.labelStatus.stringValue = "Ready"
+                    }
                     
-                    print("Error saving kollage")
-                }
-                    self.spinner.stopAnimation(nil)
-                    self.spinner.isHidden = true
-                    self.completeImage.isHidden = false
-                    self.labelStatus.stringValue = "Ready"
+                    
+                    self.spinner.isHidden = false
+                    self.spinner.startAnimation(nil)
+                    self.labelStatus.stringValue = "Exporting..."
+                    
+                    
                 }
             }
-        
+            
+        } else {
+            
+            self.labelStatus.stringValue = "Nothing to export"
+        }
+            
+            
+            
         
     }
     
@@ -285,7 +349,7 @@ class ViewController: NSViewController, NSFontChanging {
         
     }
     
-    func createKollage() -> NSImage {
+    func createKollage() -> NSImage  {
         
         var kollage = NSImage()
         
@@ -308,11 +372,14 @@ class ViewController: NSViewController, NSFontChanging {
                 kollage = NSImage()
             }
             
+            
             for view in canvas.subviews
             {
+                
                 if let imageView = view as? VUDraggableImageView {
                     
                     if let image = imageView.image {
+                        
                         
                         let rotImage = image.rotated(by: imageView.frameCenterRotation)
                         let resizedImage = rotImage.resize(withSize: imageView.frame.size)

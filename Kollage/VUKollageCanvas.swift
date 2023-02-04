@@ -17,7 +17,7 @@ protocol DestinationViewDelegate {
 
 @IBDesignable class VUKollageCanvas: NSView {
     
-    @IBInspectable var radius : CGFloat = 5.0
+    @IBInspectable var radius : CGFloat = 0.0
     
     var delegate: DestinationViewDelegate?
     
@@ -35,7 +35,7 @@ protocol DestinationViewDelegate {
         
         super.draw(dirtyRect)
         
-        let path = NSBezierPath(roundedRect: bounds, xRadius: radius, yRadius: radius)
+        let path = NSBezierPath(rect: bounds)
         NSColor.black.set()
         
         path.stroke()

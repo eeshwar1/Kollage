@@ -52,8 +52,6 @@ class VUKollageBackground: NSView {
         self.backgroundColor = color
         self.clearBackgroundImage()
         
-        
-    
         self.needsDisplay = true
     }
     
@@ -62,6 +60,7 @@ class VUKollageBackground: NSView {
         self.wantsLayer = true
         
         self.layer?.backgroundColor = self.backgroundColor.cgColor
+    
         
     }
     

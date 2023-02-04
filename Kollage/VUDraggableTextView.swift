@@ -6,6 +6,9 @@ class VUDraggableTextView: DraggableResizableView {
     
     var textField: NSTextField?
     
+    var minimumWidth: CGFloat = 200
+    var minimumHeight: CGFloat = 50
+    
     override var acceptsFirstResponder: Bool { return true }
     
     override var canBecomeKeyView: Bool { return true }
@@ -32,6 +35,8 @@ class VUDraggableTextView: DraggableResizableView {
         
         let textField = NSTextField(labelWithAttributedString:  NSAttributedString(string: "Hello World"))
 
+        
+        textField.frame.size = self.frame.size
         textField.sizeToFit()
         
         let recognizer = NSMagnificationGestureRecognizer(target: self, action: #selector(rotateAction))
@@ -109,8 +114,12 @@ class VUDraggableTextView: DraggableResizableView {
         if event.keyCode == 51 {
         
             self.removeFromSuperview()
+            
+        } else {
+            
+            self.textField?.keyDown(with: event)
+            
         }
-        
     }
     
     func scale(factor: Double) {
@@ -119,7 +128,15 @@ class VUDraggableTextView: DraggableResizableView {
         let width = self.frame.width
         let height = self.frame.height
         
-        self.setFrameSize(.init(width:  width * factor, height: height * factor))
+        var newWidth = width * factor
+        var newHeight = height * factor
+        
+        newWidth = newWidth < minimumWidth ? minimumWidth: newWidth
+        newHeight = newHeight < minimumHeight ? minimumHeight: newHeight
+        
+        self.setFrameSize(.init(width:  newWidth, height: newHeight))
+        
+        print("Scale: \(factor) (\(width), \(height)) -> (\(newWidth), \(newHeight))")
         
         
     }
