@@ -206,17 +206,19 @@ class ViewController: NSViewController, NSFontChanging {
                     DispatchQueue.main.async {
                         let kollage = self.kollageEasel.createKollage()
                         
-                        if kollage.pngWrite(to: fileUrl, options: .withoutOverwriting) {
+                        if kollage.pngWrite(to: fileUrl, options: .atomic) {
                             
-                            print("File saved")
+                            self.labelStatus.stringValue = "Kollage exported successfully"
+                            self.labelStatus.textColor = NSColor.textColor
                             
                         } else {
                             
-                            print("Error saving kollage")
+                            self.labelStatus.stringValue = "Error saving kollage"
+                            self.labelStatus.textColor = .red
                         }
                         self.spinner.stopAnimation(nil)
                         self.spinner.isHidden = true
-                        self.labelStatus.stringValue = "Ready"
+                        
                     }
                     
                     

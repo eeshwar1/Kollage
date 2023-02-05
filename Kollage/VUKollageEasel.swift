@@ -10,8 +10,16 @@ import Cocoa
 
 class VUKollageEasel: NSView {
     
-    var kollageCanvas: VUKollageCanvas = VUKollageCanvas(frame: NSRect(x: 0, y: 0, width: 100, height: 100))
-    var kollageBackground: VUKollageBackground = VUKollageBackground(frame: NSRect(x: 0, y: 0, width: 100, height: 100))
+    var scrollView: NSScrollView = NSScrollView(frame: NSRect(x: 0, y: 0, width: 1024, height:768))
+    
+    var clipView: NSClipView = NSClipView()
+    
+    var documentView: NSView = NSView(frame: NSRect(x: 0, y: 0, width: 1200, height:1200))
+
+    var kollageCanvas: VUKollageCanvas = VUKollageCanvas(frame: NSRect(x: 0, y: 0, width: 1024, height: 768))
+    var kollageBackground: VUKollageBackground = VUKollageBackground(frame: NSRect(x: 0, y: 0, width: 1024, height: 768))
+    
+    var canvasSize = NSSize(width: 800, height: 600)
     
     var vc: ViewController? {
         
@@ -41,30 +49,58 @@ class VUKollageEasel: NSView {
         
         self.wantsLayer = true
         self.layer?.backgroundColor = NSColor.windowBackgroundColor.cgColor
+
         
-        //self.setCanvasSize(size: .init(width: 100, height: 100))
-        self.addSubview(kollageBackground)
-        self.addSubview(kollageCanvas)
+        self.documentView.wantsLayer = true
+        self.documentView.layer?.backgroundColor = NSColor.windowBackgroundColor.cgColor
         
-        setupConstraints(view: kollageBackground)
-        setupConstraints(view: kollageCanvas)
+        scrollView.autohidesScrollers = false
+        scrollView.hasVerticalScroller = true
+        scrollView.hasHorizontalScroller = true
         
         
+        let horizontalRuler = NSRulerView.init(scrollView: scrollView, orientation: .horizontalRuler)
+        
+        let verticalRuler = NSRulerView.init(scrollView: scrollView, orientation: .verticalRuler)
+        
+        scrollView.horizontalRulerView = horizontalRuler
+        scrollView.verticalRulerView = verticalRuler
+        scrollView.hasVerticalRuler = true
+        scrollView.hasHorizontalRuler = true
+        
+        self.addSubview(scrollView)
+        
+
+        setupConstraints(view: scrollView, parentView: self)
+
+
+        scrollView.documentView = documentView
+        
+        self.documentView.addSubview(kollageBackground)
+        self.documentView.addSubview(kollageCanvas)
+        
+        kollageBackground.layer?.shadowColor = NSColor.black.cgColor
+        kollageBackground.layer?.shadowOffset = .init(width: 50, height: 50)
+        
+        kollageBackground.frame = NSRect(x: documentView.frame.midX - canvasSize.width/2, y: documentView.frame.midY - canvasSize.height/2, width: canvasSize.width, height: canvasSize.height)
+        kollageBackground.needsDisplay = true
+        kollageCanvas.frame = NSRect(x: documentView.frame.midX - canvasSize.width/2, y: documentView.frame.midY - canvasSize.height/2, width: canvasSize.width, height: canvasSize.height)
+        kollageCanvas.needsDisplay =  true
     }
     
-    func setupConstraints(view: NSView) {
+    func setupConstraints(view: NSView, parentView: NSView) {
         
         view.translatesAutoresizingMaskIntoConstraints = false
         
-        let centerYConstraint: NSLayoutConstraint = NSLayoutConstraint(item: view, attribute: NSLayoutConstraint.Attribute.centerY, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self, attribute: NSLayoutConstraint.Attribute.centerY, multiplier: 1, constant: 0)
-        let centerXConstraint: NSLayoutConstraint = NSLayoutConstraint(item: view, attribute: NSLayoutConstraint.Attribute.centerX, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self, attribute: NSLayoutConstraint.Attribute.centerX, multiplier: 1, constant: 0)
+        let centerYConstraint: NSLayoutConstraint = NSLayoutConstraint(item: view, attribute: NSLayoutConstraint.Attribute.centerY, relatedBy: NSLayoutConstraint.Relation.equal, toItem: parentView, attribute: NSLayoutConstraint.Attribute.centerY, multiplier: 1, constant: 0)
+        let centerXConstraint: NSLayoutConstraint = NSLayoutConstraint(item: view, attribute: NSLayoutConstraint.Attribute.centerX, relatedBy: NSLayoutConstraint.Relation.equal, toItem: parentView, attribute: NSLayoutConstraint.Attribute.centerX, multiplier: 1, constant: 0)
         
-        let leftConstraint: NSLayoutConstraint = NSLayoutConstraint(item: view, attribute: NSLayoutConstraint.Attribute.left, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self, attribute: NSLayoutConstraint.Attribute.left, multiplier: 1, constant: 5)
-        let rightConstraint: NSLayoutConstraint = NSLayoutConstraint(item: view, attribute: NSLayoutConstraint.Attribute.right, relatedBy: NSLayoutConstraint.Relation.greaterThanOrEqual, toItem: self, attribute: NSLayoutConstraint.Attribute.right, multiplier: 1, constant: 5)
+        let leftConstraint: NSLayoutConstraint = NSLayoutConstraint(item: view, attribute: NSLayoutConstraint.Attribute.left, relatedBy: NSLayoutConstraint.Relation.equal, toItem: parentView, attribute: NSLayoutConstraint.Attribute.left, multiplier: 1, constant: 5)
+        let rightConstraint: NSLayoutConstraint = NSLayoutConstraint(item: view, attribute: NSLayoutConstraint.Attribute.right, relatedBy: NSLayoutConstraint.Relation.greaterThanOrEqual, toItem: parentView, attribute: NSLayoutConstraint.Attribute.right, multiplier: 1, constant: 5)
         
-        let topConstraint: NSLayoutConstraint = NSLayoutConstraint(item: view, attribute: NSLayoutConstraint.Attribute.top, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self, attribute: NSLayoutConstraint.Attribute.top, multiplier: 1, constant: 5)
+        let topConstraint: NSLayoutConstraint = NSLayoutConstraint(item: view, attribute: NSLayoutConstraint.Attribute.top, relatedBy: NSLayoutConstraint.Relation.equal, toItem: parentView, attribute: NSLayoutConstraint.Attribute.top, multiplier: 1, constant: 5)
         
-        let bottomConstraint: NSLayoutConstraint = NSLayoutConstraint(item: view, attribute: NSLayoutConstraint.Attribute.bottom, relatedBy: NSLayoutConstraint.Relation.greaterThanOrEqual, toItem: self, attribute: NSLayoutConstraint.Attribute.bottom, multiplier: 1, constant: 5)
+        let bottomConstraint: NSLayoutConstraint = NSLayoutConstraint(item: view, attribute: NSLayoutConstraint.Attribute.bottom, relatedBy: NSLayoutConstraint.Relation.greaterThanOrEqual, toItem: parentView, attribute: NSLayoutConstraint.Attribute.bottom, multiplier: 1, constant: 5)
     
         centerXConstraint.priority = .defaultHigh
         centerYConstraint.priority = .defaultHigh
@@ -73,12 +109,12 @@ class VUKollageEasel: NSView {
         topConstraint.priority = .defaultLow
         leftConstraint.priority = .defaultLow
         
-        self.addConstraint(centerXConstraint)
-        self.addConstraint(centerYConstraint)
-        self.addConstraint(leftConstraint)
-        self.addConstraint(rightConstraint)
-        self.addConstraint(topConstraint)
-        self.addConstraint(bottomConstraint)
+        parentView.addConstraint(centerXConstraint)
+        parentView.addConstraint(centerYConstraint)
+        parentView.addConstraint(leftConstraint)
+        parentView.addConstraint(rightConstraint)
+        parentView.addConstraint(topConstraint)
+        parentView.addConstraint(bottomConstraint)
     }
     
     
@@ -86,12 +122,16 @@ class VUKollageEasel: NSView {
         
         print("Setting canvas size...")
         
-        self.kollageBackground.frame.size = .init(width: size.width, height: size.height)
-        self.kollageCanvas.frame.size = .init(width: size.width, height: size.height)
+        self.canvasSize = size
+        
+        self.kollageBackground.frame = NSRect(x: documentView.frame.midX - size.width/2, y: documentView.frame.midY - size.height/2, width: size.width, height: size.height)
+        self.kollageCanvas.frame = NSRect(x: documentView.frame.midX - size.width/2, y: documentView.frame.midY - size.height/2, width: size.width, height: size.height)
         
         print("\(self.kollageCanvas.frame.size)")
         self.kollageBackground.needsDisplay = true
         self.kollageCanvas.needsDisplay = true
+        
+        self.scrollView.contentView.scroll(to: .zero)
     }
     
     func createKollage() -> NSImage  {
@@ -99,7 +139,7 @@ class VUKollageEasel: NSView {
         
         let canvas = self.kollageCanvas
         
-        var kollage = NSImage(size: canvas.frame.size)
+        var kollage = NSImage(size: self.canvasSize)
 
         let backgroundView = self.kollageBackground
 

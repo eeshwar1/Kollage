@@ -26,9 +26,9 @@ class VUKollageBackground: NSView {
         
     }
     
-    
     func setBackground(image: NSImage) {
         
+        self.clearBackgroundImage()
         self.backgroundImage = image
         self.imageView = NSImageView(image: image)
         
