@@ -2,7 +2,8 @@
 
 A simple macOS Utility for creating collages from Photos. Still Work in Progress
 
-<img width="1187" alt="Screenshot 2023-01-29 at 10 20 35 PM" src="https://user-images.githubusercontent.com/1115336/215386811-06135ec6-7068-41c9-81ce-f4087ea78d3a.png">
+<img width="1252" alt="Screenshot 2023-02-05 at 12 57 08 PM" src="https://user-images.githubusercontent.com/1115336/216839189-9073b65d-3f0d-424b-a6d8-0b4677e44732.png">
+
 
 ## Sample Collages
 
