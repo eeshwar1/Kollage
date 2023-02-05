@@ -152,14 +152,14 @@ protocol DestinationViewDelegate {
     
     func addImages(_ urls: [URL]) {
         
-        let point = NSPoint(x: self.frame.midX, y: self.frame.midY).addRandomNoise(50)
+        
+        let point = NSPoint(x: self.frame.minX, y: self.frame.minY).addRandomNoise(Appearance.randomNoise)
         
         processImageURLs(urls, center: point)
         
     }
     
     func processImageURLs(_ urls: [URL], center: NSPoint) {
-        
         
         for (index,url) in urls.enumerated() {
             
@@ -170,7 +170,7 @@ protocol DestinationViewDelegate {
                 if index > 0 {
                     newCenter = center.addRandomNoise(Appearance.randomNoise)
                 }
-                
+
                 processImage(image, center: newCenter)
             }
         }
@@ -182,16 +182,18 @@ protocol DestinationViewDelegate {
         
         let constrainedSize = image.aspectFitSizeForMaxDimension(self.frame.height/2)
         
-        
         let subview = VUDraggableImageView(frame:NSRect(x: center.x - constrainedSize.width/2, y: center.y - constrainedSize.height/2, width: constrainedSize.width, height: constrainedSize.height))
         
         subview.image = image
         subview.canvas = self
+        
         self.addSubview(subview)
         
-        let maxrotation = CGFloat(arc4random_uniform(Appearance.maxRotation)) - Appearance.rotationOffset
+//        let maxrotation = CGFloat(arc4random_uniform(Appearance.maxRotation)) - Appearance.rotationOffset
         
-        subview.frameCenterRotation = maxrotation
+        let imageRotation = 0.0
+        
+        subview.frameCenterRotation = imageRotation
     }
     
     func selectView(_ view: NSView) {
@@ -208,14 +210,12 @@ protocol DestinationViewDelegate {
             
             if let current_view = cView as? VUDraggableImageView, current_view != view {
                 
-                // print("Image View")
                 current_view.unselect()
                 
             } else {
                 
                 if let current_view = cView as? VUDraggableTextView, current_view != view {
                     
-                    // print("Text View")
                     current_view.unselect()
                 }
             }

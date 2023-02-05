@@ -142,7 +142,7 @@ class VUKollageEasel: NSView {
 
         if let backgroundImage = backgroundView.backgroundImage {
 
-            kollage = backgroundImage.resize(withSize: self.kollageCanvas.frame.size) ?? NSImage()
+            kollage = backgroundImage.resize(withSize: self.canvasSize) ?? NSImage()
         } else {
 
             kollage = backgroundView.getImage()

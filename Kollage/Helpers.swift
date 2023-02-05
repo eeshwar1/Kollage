@@ -37,11 +37,7 @@ enum Appearance {
   static let imageCompressionFactor = 1.0
   static let maxRotation: UInt32 = 12
   static let rotationOffset: CGFloat = 6
-  static let randomNoise: UInt32 = 200
-  static let numStars = 20
-  static let maxStarSize: CGFloat = 30
-  static let randonStarSizeChange: UInt32 = 25
-  static let randomNoiseStar: UInt32 = 100
+  static let randomNoise: UInt32 = 100
 }
 
 enum CornerBorderPosition {

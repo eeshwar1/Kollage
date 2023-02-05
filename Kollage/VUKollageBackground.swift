@@ -65,6 +65,7 @@ class VUKollageBackground: NSView {
     
     func getImage() -> NSImage {
         
+        
         return NSImage.swatchWithColor(color: self.backgroundColor, size: self.frame.size)
        
     }
