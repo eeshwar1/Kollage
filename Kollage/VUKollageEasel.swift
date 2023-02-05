@@ -120,14 +120,11 @@ class VUKollageEasel: NSView {
     
     func setCanvasSize(size: NSSize) {
         
-        print("Setting canvas size...")
-        
         self.canvasSize = size
         
         self.kollageBackground.frame = NSRect(x: documentView.frame.midX - size.width/2, y: documentView.frame.midY - size.height/2, width: size.width, height: size.height)
         self.kollageCanvas.frame = NSRect(x: documentView.frame.midX - size.width/2, y: documentView.frame.midY - size.height/2, width: size.width, height: size.height)
         
-        print("\(self.kollageCanvas.frame.size)")
         self.kollageBackground.needsDisplay = true
         self.kollageCanvas.needsDisplay = true
         
