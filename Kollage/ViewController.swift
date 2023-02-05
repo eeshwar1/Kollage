@@ -122,9 +122,19 @@ class ViewController: NSViewController, NSFontChanging {
     
     @IBAction func addText(_ sender: NSButton) {
         
-//        if let canvas = kollageCanvas as? VUKollageCanvas {
-//            canvas.addText()
-//        }
+        
+        let storyboard = NSStoryboard(name: "Main", bundle: nil)
+        let addTextWindowController = storyboard.instantiateController(withIdentifier: "Add Text Window Controller") as! NSWindowController
+        
+        if let addTextWindow = addTextWindowController.window {
+            let application = NSApplication.shared
+            application.runModal(for: addTextWindow)
+            
+            addTextWindow.close()
+        }
+        
+        
+        
     }
     
     @IBAction func selectFont(_ sender: NSButton) {
