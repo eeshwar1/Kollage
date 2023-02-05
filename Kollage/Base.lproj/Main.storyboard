@@ -502,65 +502,46 @@
             <objects>
                 <viewController id="XfG-lQ-9wD" customClass="ViewController" customModule="Kollage" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="m2S-Jp-Qdl">
-                        <rect key="frame" x="0.0" y="0.0" width="1160" height="800"/>
+                        <rect key="frame" x="0.0" y="0.0" width="1343" height="800"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <stackView distribution="fill" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="i16-Di-Em8" userLabel="Vertical Stack View">
-                                <rect key="frame" x="10" y="10" width="1140" height="780"/>
+                                <rect key="frame" x="10" y="10" width="1323" height="780"/>
                                 <subviews>
                                     <stackView distribution="fill" orientation="horizontal" alignment="top" spacing="20" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SyD-WR-Xcs" userLabel="Horizontal Stack View">
-                                        <rect key="frame" x="10" y="0.0" width="1120" height="780"/>
+                                        <rect key="frame" x="10" y="0.0" width="1303" height="780"/>
                                         <subviews>
-                                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="aUR-Pw-ZDa">
-                                                <rect key="frame" x="0.0" y="180" width="800" height="600"/>
+                                            <stackView distribution="fill" orientation="horizontal" alignment="top" spacing="20" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SGs-02-Nwv">
+                                                <rect key="frame" x="0.0" y="0.0" width="983" height="780"/>
                                                 <subviews>
-                                                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="0OG-Fb-zy3" customClass="VUKollageEasel" customModule="Kollage" customModuleProvider="target">
-                                                        <rect key="frame" x="0.0" y="0.0" width="800" height="600"/>
+                                                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="aUR-Pw-ZDa">
+                                                        <rect key="frame" x="0.0" y="180" width="983" height="600"/>
                                                         <subviews>
-                                                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="Ohu-Ci-zy8" customClass="VUKollageBackground" customModule="Kollage" customModuleProvider="target">
-                                                                <rect key="frame" x="0.0" y="0.0" width="800" height="600"/>
-                                                                <constraints>
-                                                                    <constraint firstAttribute="width" constant="800" id="moD-ez-eaK"/>
-                                                                    <constraint firstAttribute="height" constant="600" id="r7G-bl-aim"/>
-                                                                </constraints>
-                                                            </customView>
-                                                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="aZo-6R-3SV" customClass="VUKollageCanvas" customModule="Kollage" customModuleProvider="target">
-                                                                <rect key="frame" x="0.0" y="0.0" width="800" height="600"/>
-                                                                <constraints>
-                                                                    <constraint firstAttribute="width" constant="800" id="nEx-pA-dPw"/>
-                                                                    <constraint firstAttribute="height" constant="600" id="s7n-Si-YaT"/>
-                                                                </constraints>
-                                                                <gestureRecognizers>
-                                                                    <rotationGestureRecognizer delaysRotationEvents="YES" id="eF2-0f-ZF4"/>
-                                                                </gestureRecognizers>
-                                                                <userDefinedRuntimeAttributes>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="radius">
-                                                                        <real key="value" value="0.0"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                </userDefinedRuntimeAttributes>
+                                                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="0OG-Fb-zy3" customClass="VUKollageEasel" customModule="Kollage" customModuleProvider="target">
+                                                                <rect key="frame" x="0.0" y="0.0" width="983" height="600"/>
                                                             </customView>
                                                         </subviews>
                                                         <constraints>
-                                                            <constraint firstItem="Ohu-Ci-zy8" firstAttribute="centerY" secondItem="0OG-Fb-zy3" secondAttribute="centerY" id="8j2-EM-Fxy"/>
-                                                            <constraint firstItem="Ohu-Ci-zy8" firstAttribute="centerX" secondItem="0OG-Fb-zy3" secondAttribute="centerX" id="ITt-xW-pFn"/>
-                                                            <constraint firstItem="aZo-6R-3SV" firstAttribute="centerY" secondItem="0OG-Fb-zy3" secondAttribute="centerY" id="ZZu-Gu-8Cp"/>
-                                                            <constraint firstItem="aZo-6R-3SV" firstAttribute="centerX" secondItem="0OG-Fb-zy3" secondAttribute="centerX" id="p6m-uw-0nm"/>
+                                                            <constraint firstAttribute="trailing" secondItem="0OG-Fb-zy3" secondAttribute="trailing" id="7NJ-M6-b25"/>
+                                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="500" id="CIC-bQ-dCL"/>
+                                                            <constraint firstItem="0OG-Fb-zy3" firstAttribute="top" secondItem="aUR-Pw-ZDa" secondAttribute="top" id="dmK-u4-SjT"/>
+                                                            <constraint firstAttribute="bottom" secondItem="0OG-Fb-zy3" secondAttribute="bottom" id="fen-Os-iMO"/>
+                                                            <constraint firstItem="0OG-Fb-zy3" firstAttribute="leading" secondItem="aUR-Pw-ZDa" secondAttribute="leading" id="teU-d9-04D"/>
                                                         </constraints>
                                                     </customView>
                                                 </subviews>
-                                                <constraints>
-                                                    <constraint firstAttribute="trailing" secondItem="0OG-Fb-zy3" secondAttribute="trailing" id="7NJ-M6-b25"/>
-                                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="500" id="CIC-bQ-dCL"/>
-                                                    <constraint firstItem="0OG-Fb-zy3" firstAttribute="top" secondItem="aUR-Pw-ZDa" secondAttribute="top" id="dmK-u4-SjT"/>
-                                                    <constraint firstAttribute="bottom" secondItem="0OG-Fb-zy3" secondAttribute="bottom" id="fen-Os-iMO"/>
-                                                    <constraint firstItem="0OG-Fb-zy3" firstAttribute="leading" secondItem="aUR-Pw-ZDa" secondAttribute="leading" id="teU-d9-04D"/>
-                                                </constraints>
-                                            </customView>
+                                                <visibilityPriorities>
+                                                    <integer value="1000"/>
+                                                </visibilityPriorities>
+                                                <customSpacing>
+                                                    <real value="3.4028234663852886e+38"/>
+                                                </customSpacing>
+                                            </stackView>
                                             <stackView distribution="fillProportionally" orientation="vertical" alignment="leading" spacing="20" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Qrv-y0-R6s" userLabel="Control Stack">
-                                                <rect key="frame" x="820" y="0.0" width="300" height="780"/>
+                                                <rect key="frame" x="1003" y="242" width="300" height="538"/>
                                                 <subviews>
                                                     <stackView orientation="horizontal" alignment="firstBaseline" spacing="20" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Xv7-J4-B1y" userLabel="Canvas Setting Stack">
-                                                        <rect key="frame" x="10" y="720" width="280" height="50"/>
+                                                        <rect key="frame" x="10" y="488" width="280" height="50"/>
                                                         <middleViews>
                                                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PiY-0s-4sY">
                                                                 <rect key="frame" x="43" y="33" width="81" height="16"/>
@@ -598,16 +579,16 @@
                                                         </customSpacing>
                                                     </stackView>
                                                     <box title="Background" translatesAutoresizingMaskIntoConstraints="NO" id="FK8-AW-0gW">
-                                                        <rect key="frame" x="-3" y="404" width="306" height="54"/>
+                                                        <rect key="frame" x="-3" y="404" width="306" height="64"/>
                                                         <view key="contentView" id="Lch-Xf-TR3">
-                                                            <rect key="frame" x="4" y="5" width="298" height="34"/>
+                                                            <rect key="frame" x="4" y="5" width="298" height="44"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <stackView distribution="equalSpacing" orientation="horizontal" alignment="top" spacing="20" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="m7q-Ma-LiS" userLabel="Background Stack">
-                                                                    <rect key="frame" x="10" y="10" width="268" height="14"/>
+                                                                    <rect key="frame" x="10" y="10" width="268" height="24"/>
                                                                     <subviews>
                                                                         <colorWell translatesAutoresizingMaskIntoConstraints="NO" id="Qz8-Mw-QIZ">
-                                                                            <rect key="frame" x="-3" y="-2" width="56" height="18"/>
+                                                                            <rect key="frame" x="-3" y="-2" width="56" height="28"/>
                                                                             <constraints>
                                                                                 <constraint firstAttribute="width" constant="50" id="WPs-1K-ip5"/>
                                                                             </constraints>
@@ -617,7 +598,7 @@
                                                                             </connections>
                                                                         </colorWell>
                                                                         <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="FsE-p3-RPF">
-                                                                            <rect key="frame" x="161" y="-7" width="114" height="26"/>
+                                                                            <rect key="frame" x="161" y="-3" width="114" height="32"/>
                                                                             <constraints>
                                                                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="100" id="ZE6-um-dd3"/>
                                                                             </constraints>
@@ -647,9 +628,6 @@
                                                                 <constraint firstAttribute="bottom" secondItem="m7q-Ma-LiS" secondAttribute="bottom" constant="10" id="yrq-Tl-jm2"/>
                                                             </constraints>
                                                         </view>
-                                                        <constraints>
-                                                            <constraint firstAttribute="height" constant="50" id="AMz-cr-G0z"/>
-                                                        </constraints>
                                                     </box>
                                                     <stackView distribution="fill" orientation="horizontal" alignment="top" spacing="10" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fCn-aD-k0P">
                                                         <rect key="frame" x="0.0" y="368" width="211" height="20"/>
@@ -825,8 +803,6 @@
                                                     <constraint firstItem="UKX-4v-0pL" firstAttribute="leading" secondItem="Qrv-y0-R6s" secondAttribute="leading" constant="10" id="HFP-n4-XHj"/>
                                                     <constraint firstAttribute="width" constant="300" id="OH4-6X-zyc"/>
                                                     <constraint firstAttribute="trailing" secondItem="UKX-4v-0pL" secondAttribute="trailing" constant="10" id="ROW-uz-5re"/>
-                                                    <constraint firstItem="FK8-AW-0gW" firstAttribute="top" secondItem="Xv7-J4-B1y" secondAttribute="bottom" constant="10" id="Xvd-86-Sxi"/>
-                                                    <constraint firstItem="Xv7-J4-B1y" firstAttribute="top" secondItem="Qrv-y0-R6s" secondAttribute="top" constant="10" id="bZl-qr-CVG"/>
                                                     <constraint firstItem="FK8-AW-0gW" firstAttribute="leading" secondItem="Qrv-y0-R6s" secondAttribute="leading" id="ie2-PW-tde"/>
                                                     <constraint firstAttribute="trailing" secondItem="FK8-AW-0gW" secondAttribute="trailing" id="n96-MB-TdQ"/>
                                                     <constraint firstItem="Y34-9e-AEF" firstAttribute="leading" secondItem="Qrv-y0-R6s" secondAttribute="leading" constant="10" id="qA6-ft-ZTD"/>
@@ -889,8 +865,6 @@
                     <connections>
                         <outlet property="backgroundColorWell" destination="Qz8-Mw-QIZ" id="KzF-pq-4cE"/>
                         <outlet property="canvasSizeButton" destination="yGV-IF-qCF" id="y2x-gP-keF"/>
-                        <outlet property="kollageBackground" destination="Ohu-Ci-zy8" id="ZY2-02-y5i"/>
-                        <outlet property="kollageCanvas" destination="aZo-6R-3SV" id="YFO-Fp-Ukx"/>
                         <outlet property="kollageEasel" destination="0OG-Fb-zy3" id="ts0-O9-JoV"/>
                         <outlet property="labelStatus" destination="S3O-o3-bJJ" id="JFi-GB-ozP"/>
                         <outlet property="resizeSlider" destination="UKX-4v-0pL" id="5x6-sV-o3w"/>

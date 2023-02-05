@@ -60,8 +60,7 @@ class VUKollageBackground: NSView {
         self.wantsLayer = true
         
         self.layer?.backgroundColor = self.backgroundColor.cgColor
-    
-        
+     
     }
     
     func getImage() -> NSImage {

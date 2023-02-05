@@ -27,6 +27,17 @@ protocol DestinationViewDelegate {
     
     var vc: ViewController?
     
+    override init(frame frameRect: NSRect) {
+        
+        super.init(frame: frameRect)
+        setup()
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setup()
+        
+    }
     override func awakeFromNib() {
         setup()
     }
@@ -35,12 +46,12 @@ protocol DestinationViewDelegate {
         
         super.draw(dirtyRect)
         
-        let path = NSBezierPath(rect: bounds)
+        let path = NSBezierPath(rect: dirtyRect)
         NSColor.black.set()
-        
-        path.stroke()
-    }
     
+        path.stroke()
+        
+    }
     
     var nonURLTypes: Set<NSPasteboard.PasteboardType>  { return [NSPasteboard.PasteboardType.tiff, NSPasteboard.PasteboardType.png, .fileURL]}
     
@@ -89,6 +100,7 @@ protocol DestinationViewDelegate {
     }
     
     var isReceivingDrag = false {
+        
         didSet {
             
             if isReceivingDrag {
@@ -124,7 +136,7 @@ protocol DestinationViewDelegate {
         let pasteBoard = draggingInfo.draggingPasteboard
         
         let point = convert(draggingInfo.draggingLocation, from: nil)
-
+        
         if let urls = pasteBoard.readObjects(forClasses: [NSURL.self], options:filteringOptions) as? [URL], urls.count > 0 {
             processImageURLs(urls, center: point)
             return true
@@ -154,7 +166,7 @@ protocol DestinationViewDelegate {
             if let image = NSImage(contentsOf:url) {
                 
                 var newCenter = center
-        
+                
                 if index > 0 {
                     newCenter = center.addRandomNoise(Appearance.randomNoise)
                 }
@@ -167,7 +179,7 @@ protocol DestinationViewDelegate {
     
     func processImage(_ image: NSImage, center: NSPoint) {
         
-    
+        
         let constrainedSize = image.aspectFitSizeForMaxDimension(self.frame.height/2)
         
         
@@ -215,7 +227,7 @@ protocol DestinationViewDelegate {
             vc.enableImageControls()
         }
     }
-
+    
     
     override var acceptsFirstResponder: Bool {
         get {
@@ -229,10 +241,10 @@ protocol DestinationViewDelegate {
     
     
     override func keyDown(with event: NSEvent) {
-
+        
         // print("KC Key Down: \(event.keyCode)")
         self.selectedView?.keyDown(with: event)
-
+        
     }
     
     func addText() {
@@ -244,9 +256,9 @@ protocol DestinationViewDelegate {
         
         needsDisplay = true
     }
-
-    func changeFont (_ font: NSFont) {
     
+    func changeFont (_ font: NSFont) {
+        
         if let textView = self.selectedView as? VUDraggableTextView {
             textView.changeFont(font)
         }
@@ -261,14 +273,18 @@ protocol DestinationViewDelegate {
             self.background = NSImageView(image: image)
             
             let maxDimension: CGFloat =  CGFloat.maximum(self.frame.height, self.frame.width)
-
+            
             self.background?.frame.size = image.sizeForMaxDimension(maxDimension)
-    
-
+            
+            
         }
         
         self.subviews.insert(self.background!, at: 0)
         imageView.removeFromSuperview()
         
     }
+    
+   
 }
+
+

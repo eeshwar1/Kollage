@@ -12,8 +12,6 @@ class ViewController: NSViewController, NSFontChanging {
     
     
     @IBOutlet weak var kollageEasel: VUKollageEasel!
-    @IBOutlet weak var kollageBackground: VUKollageBackground!
-    @IBOutlet weak var kollageCanvas: NSView!
     
     @IBOutlet weak var canvasSizeButton: NSPopUpButton!
     @IBOutlet weak var backgroundColorWell: NSColorWell!
@@ -39,12 +37,7 @@ class ViewController: NSViewController, NSFontChanging {
     
     override func viewWillAppear() {
         
-        self.kollageCanvas.frame = NSRect(x: 0, y: 0, width: 300, height: 500)
-        self.kollageCanvas.needsDisplay = true
-        
-        self.kollageBackground.frame = NSRect(x: 0, y: 0, width: 300, height: 500)
-        self.kollageBackground.needsDisplay = true
-        
+      
     }
     
     override func viewDidLoad() {
@@ -56,15 +49,13 @@ class ViewController: NSViewController, NSFontChanging {
         self.resizeSlider.isEnabled = false
         self.rotateSlider.isEnabled = false
         
-        if let canvas = self.kollageCanvas as? VUKollageCanvas {
-            
-            canvas.vc = self
-        }
+      
+        self.kollageEasel.vc = self
         
         spinner.isHidden = true
         labelStatus.stringValue = "Ready"
         
-        backgroundColorWell.color = kollageBackground.backgroundColor
+        backgroundColorWell.color = self.kollageEasel.kollageBackground.backgroundColor
         
     }
     
@@ -82,7 +73,7 @@ class ViewController: NSViewController, NSFontChanging {
     
     override func keyDown(with event: NSEvent) {
         
-        kollageCanvas.keyDown(with: event)
+       // kollageCanvas.keyDown(with: event)
         
     }
     
@@ -131,9 +122,9 @@ class ViewController: NSViewController, NSFontChanging {
     
     @IBAction func addText(_ sender: NSButton) {
         
-        if let canvas = kollageCanvas as? VUKollageCanvas {
-            canvas.addText()
-        }
+//        if let canvas = kollageCanvas as? VUKollageCanvas {
+//            canvas.addText()
+//        }
     }
     
     @IBAction func selectFont(_ sender: NSButton) {
@@ -145,20 +136,7 @@ class ViewController: NSViewController, NSFontChanging {
         NSFontManager.shared.orderFrontFontPanel(nil)
     }
     
-    func changeFont(_ sender: NSFontManager?) {
-        
-        guard let fontManager = sender else {
-            return
-        }
-        
-        
-        let newFont = fontManager.convert(NSFont.systemFont(ofSize: 14))
-        
-        if let canvas = self.kollageCanvas as? VUKollageCanvas {
-            
-            canvas.changeFont(newFont)
-        }
-    }
+    
     
     // MARK: Actions
     
@@ -185,44 +163,16 @@ class ViewController: NSViewController, NSFontChanging {
             
         }
         
-        self.kollageCanvas.frame = NSRect(x: 0, y: 0, width: width, height: height)
-        self.kollageCanvas.needsDisplay = true
-        self.kollageBackground.frame = NSRect(x: 0, y: 0, width: width, height: height)
-        self.kollageBackground.needsDisplay = true
+        self.kollageEasel.setCanvasSize(size: .init(width: width, height: height))
         
-        self.view.needsDisplay = true
-    }
-    @IBAction func setAsBackground(_ sender: NSButton) {
-        
-        if let canvas = self.kollageCanvas as? VUKollageCanvas {
-            
-            if let imageView = canvas.selectedView as? VUDraggableImageView, let image = imageView.image {
-                
-                self.kollageBackground.setBackground(image: image)
-                imageView.removeFromSuperview()
-                
-            }
-        }
-        
-        
+    
     }
     
     
     @IBAction func sizeSliderChanged(_ sender: NSSlider) {
         
         
-        if let canvas = self.kollageCanvas as? VUKollageCanvas {
-            
-            if let imageView = canvas.selectedView as? VUDraggableImageView {
-                
-                imageView.scale(factor: sender.doubleValue)
-                
-            } else if let textView = canvas.selectedView as? VUDraggableTextView {
-                
-                textView.scale(factor: sender.doubleValue)
-            }
-            
-        }
+        self.kollageEasel.scaleSelectedView(factor: sender.doubleValue)
         
         
     }
@@ -230,19 +180,7 @@ class ViewController: NSViewController, NSFontChanging {
     @IBAction func rotationSliderChanged(_ sender: NSSlider) {
         
         
-        if let canvas = self.kollageCanvas as? VUKollageCanvas {
-            
-            if let imageView = canvas.selectedView as? VUDraggableImageView {
-                
-                imageView.rotate(angle: sender.doubleValue)
-            } else if let textView = canvas.selectedView as? VUDraggableTextView {
-                
-                
-                textView.rotate(byDegrees: sender.doubleValue)
-            }
-            
-            
-        }
+        self.kollageEasel.rotateSelectedView(angle: sender.doubleValue)
         
     }
 
@@ -250,7 +188,7 @@ class ViewController: NSViewController, NSFontChanging {
     @IBAction func exportImage(_ sender: NSButton)  {
             
             
-        if self.kollageCanvas.subviews.count > 0 {
+        if self.kollageEasel.kollageCanvas.subviews.count > 0 {
             
             let savePanel = NSSavePanel()
             savePanel.canCreateDirectories = true
@@ -266,7 +204,7 @@ class ViewController: NSViewController, NSFontChanging {
                     
                     
                     DispatchQueue.main.async {
-                        let kollage = self.createKollage()
+                        let kollage = self.kollageEasel.createKollage()
                         
                         if kollage.pngWrite(to: fileUrl, options: .withoutOverwriting) {
                             
@@ -302,7 +240,7 @@ class ViewController: NSViewController, NSFontChanging {
     
     @IBAction func backgroundColorChanged(_ sender: NSColorWell) {
         
-        self.kollageBackground.setBackground(color: sender.color)
+        self.kollageEasel.kollageBackground.setBackground(color: sender.color)
         
     }
     
@@ -321,7 +259,7 @@ class ViewController: NSViewController, NSFontChanging {
             
             if let url =  openPanel.url {
                 
-                self.kollageBackground.setBackground(image: NSImage(contentsOf: url) ?? NSImage())
+                self.kollageEasel.kollageBackground.setBackground(image: NSImage(contentsOf: url) ?? NSImage())
             }
         }
         
@@ -340,61 +278,14 @@ class ViewController: NSViewController, NSFontChanging {
         
         if response == .OK {
                             
-            if let canvas = kollageCanvas as? VUKollageCanvas {
-                
-                canvas.addImages(openPanel.urls)
-            }
+            
+            self.kollageEasel.addImages(openPanel.urls)
             
         }
         
     }
     
-    func createKollage() -> NSImage  {
-        
-        var kollage = NSImage()
-        
-        if let canvas = self.kollageCanvas as? VUKollageCanvas {
-            
-            kollage = NSImage(size: canvas.frame.size)
-            
-            if let backgroundView = self.kollageBackground {
-                
-                if let backgroundImage = backgroundView.backgroundImage {
-                    
-                    kollage = backgroundImage.resize(withSize: canvas.frame.size) ?? NSImage()
-                } else {
-                    
-                    kollage = backgroundView.getImage()
-                }
-                
-            } else {
-                
-                kollage = NSImage()
-            }
-            
-            
-            for view in canvas.subviews
-            {
-                
-                if let imageView = view as? VUDraggableImageView {
-                    
-                    if let image = imageView.image {
-                        
-                        
-                        let rotImage = image.rotated(by: imageView.frameCenterRotation)
-                        let resizedImage = rotImage.resize(withSize: imageView.frame.size)
-                        kollage = kollage.addImage(image: resizedImage ?? NSImage(), position: imageView.frame.origin)
-                    }
-                    
-                }
-                
-            }
-            
-        }
-        
-        return kollage
-        
-    }
+    
     
     func enableImageControls() {
         
