@@ -131,6 +131,16 @@ class VUKollageEasel: NSView {
         self.scrollView.contentView.scroll(to: .zero)
     }
     
+    func setBackground(color: NSColor) {
+        
+        self.kollageBackground.setBackground(color: color)
+        
+    }
+    
+    func getBackgroundColor () -> NSColor {
+        
+        return self.kollageBackground.backgroundColor
+    }
     func createKollage() -> NSImage  {
         
         

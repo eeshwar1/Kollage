@@ -182,18 +182,21 @@ protocol DestinationViewDelegate {
         
         let constrainedSize = image.aspectFitSizeForMaxDimension(self.frame.height/2)
         
-        let subview = VUDraggableImageView(frame:NSRect(x: center.x - constrainedSize.width/2, y: center.y - constrainedSize.height/2, width: constrainedSize.width, height: constrainedSize.height))
+        let imageView = VUDraggableImageView(frame:NSRect(x: center.x - constrainedSize.width/2, y: center.y - constrainedSize.height/2, width: constrainedSize.width, height: constrainedSize.height))
         
-        subview.image = image
-        subview.canvas = self
+        imageView.sizeFactor = constrainedSize.width/image.size.width
         
-        self.addSubview(subview)
+        imageView.image = image
+        imageView.canvas = self
+        
+        self.addSubview(imageView)
         
 //        let maxrotation = CGFloat(arc4random_uniform(Appearance.maxRotation)) - Appearance.rotationOffset
         
         let imageRotation = 0.0
         
-        subview.frameCenterRotation = imageRotation
+        imageView.frameCenterRotation = imageRotation
+        imageView.rotationAngle = 0.0
     }
     
     func selectView(_ view: NSView) {
@@ -202,6 +205,12 @@ protocol DestinationViewDelegate {
         
         if let view = view as? VUDraggableImageView {
             view.select()
+            
+            if let vc = self.vc {
+                
+                vc.enableImageControls(factor: view.sizeFactor, angle: view.rotationAngle)
+            }
+            
         } else if let view = view as? VUDraggableTextView {
             view.select()
         }
@@ -222,10 +231,7 @@ protocol DestinationViewDelegate {
             
         }
         
-        if let vc = self.vc {
-            
-            vc.enableImageControls()
-        }
+        
     }
     
     
@@ -247,10 +253,11 @@ protocol DestinationViewDelegate {
         
     }
     
-    func addText() {
+    func addText(text: String) {
         
         let center = NSPoint(x: self.frame.origin.x + self.frame.width/2, y: self.frame.origin.y + self.frame.height/2)
         let textView = VUDraggableTextView(frame: NSRect(x: center.x, y: center.y, width: 200, height: 50))
+        
         self.addSubview(textView)
         textView.canvas = self
         

@@ -9,15 +9,20 @@
 import Cocoa
 
 class AddTextViewController: NSViewController {
+    
+    @IBOutlet weak var textField: NSTextField!
+    
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do view setup here.
+        
     }
     
     @IBAction func dismissAddTextWindow(_ sender: NSButton) {
         
         let application = NSApplication.shared
         application.stopModal()
+        print("Entered text is \(textField.stringValue)")
     }
 }

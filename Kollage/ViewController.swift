@@ -17,7 +17,10 @@ class ViewController: NSViewController, NSFontChanging {
     @IBOutlet weak var backgroundColorWell: NSColorWell!
     
     @IBOutlet weak var rotateSlider: NSSlider!
+    @IBOutlet weak var labelRotationAngle: NSTextField!
+    
     @IBOutlet weak var resizeSlider: NSSlider!
+    @IBOutlet weak var labelSizeFactor: NSTextField!
     
     @IBOutlet weak var completeImage: NSImageView!
     @IBOutlet weak var spinner: NSProgressIndicator!
@@ -48,14 +51,13 @@ class ViewController: NSViewController, NSFontChanging {
         
         self.resizeSlider.isEnabled = false
         self.rotateSlider.isEnabled = false
-        
       
         self.kollageEasel.vc = self
         
         spinner.isHidden = true
         labelStatus.stringValue = "Ready"
         
-        backgroundColorWell.color = self.kollageEasel.kollageBackground.backgroundColor
+        backgroundColorWell.color = self.kollageEasel.getBackgroundColor()
         
     }
     
@@ -146,8 +148,6 @@ class ViewController: NSViewController, NSFontChanging {
         NSFontManager.shared.orderFrontFontPanel(nil)
     }
     
-    
-    
     // MARK: Actions
     
     @IBAction func canvasSizeChanged(_ sender: NSPopUpButton) {
@@ -181,16 +181,24 @@ class ViewController: NSViewController, NSFontChanging {
     
     @IBAction func sizeSliderChanged(_ sender: NSSlider) {
         
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .decimal
+        numberFormatter.maximumFractionDigits = 2
         
         self.kollageEasel.scaleSelectedView(factor: sender.doubleValue)
-        
-        
+        self.labelSizeFactor.stringValue = numberFormatter.string(from: NSNumber(value:sender.doubleValue))!
+    
     }
     
     @IBAction func rotationSliderChanged(_ sender: NSSlider) {
         
         
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .decimal
+        numberFormatter.maximumFractionDigits = 2
+        
         self.kollageEasel.rotateSelectedView(angle: sender.doubleValue)
+        self.labelRotationAngle.stringValue = numberFormatter.string(from: NSNumber(value:sender.doubleValue))!
         
     }
 
@@ -252,13 +260,13 @@ class ViewController: NSViewController, NSFontChanging {
     
     @IBAction func backgroundColorChanged(_ sender: NSColorWell) {
         
-        self.kollageEasel.kollageBackground.setBackground(color: sender.color)
+        self.kollageEasel.setBackground(color: sender.color)
         
     }
     
     @IBAction func pickBackgroundImage(_ sender: NSButton) {
         
-        print("Pick background image")
+        // print("Pick background image")
         
         let openPanel = NSOpenPanel()
         openPanel.allowsMultipleSelection = false
@@ -279,7 +287,7 @@ class ViewController: NSViewController, NSFontChanging {
     
     @IBAction func addImages(_ sender: NSButton) {
         
-        print("Pick background image")
+        // print("Add images")
         
         let openPanel = NSOpenPanel()
         openPanel.allowsMultipleSelection = true
@@ -299,10 +307,22 @@ class ViewController: NSViewController, NSFontChanging {
     
     
     
-    func enableImageControls() {
+    func enableImageControls(factor: Double, angle: Double) {
         
         self.resizeSlider.isEnabled = true
+        self.resizeSlider.doubleValue = factor
+        self.labelSizeFactor.doubleValue = factor
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .decimal
+        numberFormatter.maximumFractionDigits = 2
+        
+        self.labelSizeFactor.stringValue = numberFormatter.string(from: NSNumber(value: factor))!
+        
         self.rotateSlider.isEnabled = true
+        self.rotateSlider.doubleValue = angle
+        self.labelRotationAngle.doubleValue = angle
+        
+        self.labelRotationAngle.stringValue = numberFormatter.string(from: NSNumber(value: angle))!
     }
     
     

@@ -26,12 +26,15 @@ class VUDraggableImageView: NSImageView {
     var borderColor: NSColor?
     var borderWidth: CGFloat = 0.0
     
+    var sizeFactor: Double = 1.0
+    var rotationAngle: Double = 0.0
+    
     var selected: Bool = false {
         didSet {
             
             if selected {
                 self.layer?.borderColor = NSColor.red.cgColor
-                self.layer?.borderWidth = 5.0
+                self.layer?.borderWidth = 3.0
             } else {
                 
                 self.layer?.borderWidth = 0.0
@@ -237,8 +240,6 @@ class VUDraggableImageView: NSImageView {
         var frameHeight = self.frame.height
         let aspectRatio = frameHeight/frameWidth
         
-        // print("deltaX = \(deltaX) deltaY = \(deltaY)")
-        
         switch cursorPosition {
         case .topLeft:
             if superView.frame.width / 3 ..< superView.frame.width ~= self.frame.size.width - deltaX,
@@ -430,11 +431,10 @@ class VUDraggableImageView: NSImageView {
     
     func scale(factor: Double) {
         
-        //print("scale: \(factor)")
-        
         if let image = self.image {
             
             let maxDimension = image.size.width > image.size.height ? image.size.width : image.size.height
+            
             let constrainedSize = image.aspectFitSizeForMaxDimension(maxDimension * factor)
             
             self.setFrameSize(.init(width:  constrainedSize.width, height: constrainedSize.height))
@@ -445,7 +445,6 @@ class VUDraggableImageView: NSImageView {
     
     func rotate(angle: Double) {
         
-        //print("rotate: \(angle)")
         
         self.frameCenterRotation = angle
         

@@ -33,16 +33,25 @@ class VUDraggableTextView: DraggableResizableView {
         
         self.layer?.borderWidth = 2.0
         
+       
+        
+        let recognizer = NSMagnificationGestureRecognizer(target: self, action: #selector(rotateAction))
+        
+        self.addGestureRecognizer(recognizer)
+
+        setupTextField()
+        
+        self.frame.size = self.fittingSize
+    }
+    
+    func setupTextField() {
+        
         let textField = NSTextField(labelWithAttributedString:  NSAttributedString(string: "Hello World"))
 
         
         textField.frame.size = self.frame.size
         textField.sizeToFit()
         
-        let recognizer = NSMagnificationGestureRecognizer(target: self, action: #selector(rotateAction))
-        
-        self.addGestureRecognizer(recognizer)
-
         self.textField = textField
         
         self.addSubview(self.textField!)
@@ -53,34 +62,41 @@ class VUDraggableTextView: DraggableResizableView {
         let centerXConstraint: NSLayoutConstraint = NSLayoutConstraint(item: textField, attribute: NSLayoutConstraint.Attribute.centerX, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self, attribute: NSLayoutConstraint.Attribute.centerX, multiplier: 1, constant: 0)
         
         let leftConstraint: NSLayoutConstraint = NSLayoutConstraint(item: textField, attribute: NSLayoutConstraint.Attribute.left, relatedBy: NSLayoutConstraint.Relation.greaterThanOrEqual, toItem: self, attribute: NSLayoutConstraint.Attribute.left, multiplier: 1, constant: 20)
-//        let rightConstraint: NSLayoutConstraint = NSLayoutConstraint(item: textField, attribute: NSLayoutConstraint.Attribute.right, relatedBy: NSLayoutConstraint.Relation.greaterThanOrEqual, toItem: self, attribute: NSLayoutConstraint.Attribute.right, multiplier: 1, constant: 20)
+        let rightConstraint: NSLayoutConstraint = NSLayoutConstraint(item: textField, attribute: NSLayoutConstraint.Attribute.right, relatedBy: NSLayoutConstraint.Relation.greaterThanOrEqual, toItem: self, attribute: NSLayoutConstraint.Attribute.right, multiplier: 1, constant: 20)
         
         let topConstraint: NSLayoutConstraint = NSLayoutConstraint(item: textField, attribute: NSLayoutConstraint.Attribute.top, relatedBy: NSLayoutConstraint.Relation.greaterThanOrEqual, toItem: self, attribute: NSLayoutConstraint.Attribute.top, multiplier: 1, constant: 10)
         
-//        let bottomConstraint: NSLayoutConstraint = NSLayoutConstraint(item: textField, attribute: NSLayoutConstraint.Attribute.bottom, relatedBy: NSLayoutConstraint.Relation.greaterThanOrEqual, toItem: self, attribute: NSLayoutConstraint.Attribute.bottom, multiplier: 1, constant: 10)
+        let bottomConstraint: NSLayoutConstraint = NSLayoutConstraint(item: textField, attribute: NSLayoutConstraint.Attribute.bottom, relatedBy: NSLayoutConstraint.Relation.greaterThanOrEqual, toItem: self, attribute: NSLayoutConstraint.Attribute.bottom, multiplier: 1, constant: 10)
         
-       // bottomConstraint.priority = .dragThatCanResizeWindow
-       // rightConstraint.priority = .dragThatCanResizeWindow
+        bottomConstraint.priority = .dragThatCanResizeWindow
+        rightConstraint.priority = .dragThatCanResizeWindow
         
         self.addConstraint(centerXConstraint)
         self.addConstraint(centerYConstraint)
         self.addConstraint(leftConstraint)
-       // self.addConstraint(rightConstraint)
+        self.addConstraint(rightConstraint)
         self.addConstraint(topConstraint)
-      //  self.addConstraint(bottomConstraint)
+        self.addConstraint(bottomConstraint)
         
-        self.frame.size = self.fittingSize
         
         
     }
     
+    func setText(text: String) {
+        
+        if let textField = self.textField {
+            
+            textField.stringValue = text
+        }
+    }
     @objc func rotateAction(gestureRecognizer: NSRotationGestureRecognizer) {
         
         print("Rotated")
     }
     
     required init?(coder decoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        
+        super.init(coder: decoder)
     }
     
     func select() {

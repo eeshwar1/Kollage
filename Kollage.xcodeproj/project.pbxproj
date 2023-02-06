@@ -78,6 +78,7 @@
 			isa = PBXGroup;
 			children = (
 				654F7C632327491E00DF6265 /* AppDelegate.swift */,
+				65B0A4A02990509C007D850A /* AddTextViewController.swift */,
 				650E1EEE237844ED00A44E4F /* KollageGridController.swift */,
 				654F7C652327491E00DF6265 /* ViewController.swift */,
 				65BE3718232EE1BA00BE58AA /* VURoundRectView.swift */,
@@ -92,7 +93,6 @@
 				6526D55A2985ADF4003F54CC /* NSImage+Extension.swift */,
 				654F7C672327492000DF6265 /* Assets.xcassets */,
 				654F7C692327492000DF6265 /* Main.storyboard */,
-				65B0A4A02990509C007D850A /* AddTextViewController.swift */,
 				654F7C6C2327492000DF6265 /* Info.plist */,
 				654F7C6D2327492000DF6265 /* Kollage.entitlements */,
 			);
