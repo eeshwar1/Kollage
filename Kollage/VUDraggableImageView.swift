@@ -84,6 +84,8 @@ class VUDraggableImageView: NSImageView {
     override init(frame frameRect: NSRect) {
         
         super.init(frame: frameRect)
+        
+        self.wantsLayer = true
         configureImageView()
         
     }
@@ -91,40 +93,13 @@ class VUDraggableImageView: NSImageView {
     required init?(coder: NSCoder) {
         
         super.init(coder: coder)
+        self.wantsLayer = true
         configureImageView()
         
         
         
     }
     
-    @objc func sendToBack(_ sender: NSMenuItem) {
-        
-        print("Send to back")
-        self.superview?.sendSubviewToBack(self)
-        
-    }
-    
-    @objc func bringToFront(_ sender: NSMenuItem) {
-        
-        print("Bring to front")
-        self.superview?.bringSubviewToFront(self)
-        
-    }
-    
-    override func rightMouseDown(with event: NSEvent) {
-        
-        // print("right click")
-        
-        let menu = NSMenu()
-        menu.autoenablesItems = false
-        menu.addItem(withTitle: "Send to Back", action: #selector(sendToBack(_:)), keyEquivalent: "").target = self
-        menu.addItem(withTitle: "Bring to Front", action: #selector(bringToFront(_:)), keyEquivalent: "").target = self
-        self.menu = menu
-        
-        let eventLocation = event.locationInWindow
-        menu.popUp(positioning: nil, at: self.convert(eventLocation, from: nil), in: self)
-        
-    }
     func configureImageView()
     {
         self.wantsLayer = true
@@ -137,6 +112,64 @@ class VUDraggableImageView: NSImageView {
         
         
     }
+    
+    func select() {
+        
+        self.selected = true
+    }
+
+    func unselect() {
+        
+        self.selected = false
+    }
+    
+    // MARK: Reordering in Z Index
+    @objc func sendToBack(_ sender: NSMenuItem) {
+        
+        // print("Send to back")
+        self.superview?.sendSubviewToBack(self)
+        
+    }
+    
+    @objc func bringToFront(_ sender: NSMenuItem) {
+        
+        // print("Bring to front")
+        self.superview?.bringSubviewToFront(self)
+        
+    }
+    
+    @objc func sendBackward(_ sender: NSMenuItem) {
+        
+        // print("Send Backward")
+        self.superview?.sendSubviewBackward(self)
+        
+    }
+    
+    @objc func bringForward(_ sender: NSMenuItem) {
+        
+        // print("Bring forward")
+        self.superview?.bringSubviewForward(self)
+        
+    }
+    
+    override func rightMouseDown(with event: NSEvent) {
+        
+        // print("right click")
+        
+        let menu = NSMenu()
+        menu.autoenablesItems = false
+        menu.addItem(withTitle: "Send to Back", action: #selector(sendToBack(_:)), keyEquivalent: "").target = self
+        menu.addItem(withTitle: "Send Backward", action: #selector(sendBackward(_:)), keyEquivalent: "").target = self
+        menu.addItem(withTitle: "Bring Forward", action: #selector(bringForward(_:)), keyEquivalent: "").target = self
+        menu.addItem(withTitle: "Bring to Front", action: #selector(bringToFront(_:)), keyEquivalent: "").target = self
+        self.menu = menu
+        
+        let eventLocation = event.locationInWindow
+        menu.popUp(positioning: nil, at: self.convert(eventLocation, from: nil), in: self)
+        
+    }
+   
+    // MARK: Drag and Drop
     
     var nonURLTypes: Set<NSPasteboard.PasteboardType>  { return [NSPasteboard.PasteboardType.tiff, NSPasteboard.PasteboardType.png, .fileURL]}
     
@@ -237,17 +270,6 @@ class VUDraggableImageView: NSImageView {
         self.canvas?.selectView(self)
         
     }
-    
-    func select() {
-        
-        self.selected = true
-    }
-
-    func unselect() {
-        
-        self.selected = false
-    }
-    
     
     override func mouseMoved(with event: NSEvent) {
         
@@ -365,7 +387,7 @@ class VUDraggableImageView: NSImageView {
         //self.repositionView()
         
     }
-    
+   
     override func keyDown(with event: NSEvent) {
         
         // print("Key Down: \(event.keyCode)")
@@ -445,17 +467,6 @@ class VUDraggableImageView: NSImageView {
         }
     }
     
-    func setAsBackground() {
-        
-        print("Fill background")
-        
-        if let canvas = self.canvas {
-            
-            canvas.setAsBackground(self)
-        }
-        
-        
-    }
     
     func scale(factor: Double) {
         
@@ -473,9 +484,7 @@ class VUDraggableImageView: NSImageView {
     
     func rotate(angle: Double) {
         
-        
         self.frameCenterRotation = angle
-        
         
     }
 }
