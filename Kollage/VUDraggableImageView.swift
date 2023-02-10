@@ -92,8 +92,39 @@ class VUDraggableImageView: NSImageView {
         
         super.init(coder: coder)
         configureImageView()
+        
+        
+        
     }
     
+    @objc func sendToBack(_ sender: NSMenuItem) {
+        
+        print("Send to back")
+        self.superview?.sendSubviewToBack(self)
+        
+    }
+    
+    @objc func bringToFront(_ sender: NSMenuItem) {
+        
+        print("Bring to front")
+        self.superview?.bringSubviewToFront(self)
+        
+    }
+    
+    override func rightMouseDown(with event: NSEvent) {
+        
+        // print("right click")
+        
+        let menu = NSMenu()
+        menu.autoenablesItems = false
+        menu.addItem(withTitle: "Send to Back", action: #selector(sendToBack(_:)), keyEquivalent: "").target = self
+        menu.addItem(withTitle: "Bring to Front", action: #selector(bringToFront(_:)), keyEquivalent: "").target = self
+        self.menu = menu
+        
+        let eventLocation = event.locationInWindow
+        menu.popUp(positioning: nil, at: self.convert(eventLocation, from: nil), in: self)
+        
+    }
     func configureImageView()
     {
         self.wantsLayer = true
@@ -202,10 +233,8 @@ class VUDraggableImageView: NSImageView {
     override func mouseUp(with event: NSEvent) {
         
         self.cursorPosition = .none
-        
         selected = true
         self.canvas?.selectView(self)
-        self.superview?.bringSubviewToFront(self)
         
     }
     
@@ -213,8 +242,7 @@ class VUDraggableImageView: NSImageView {
         
         self.selected = true
     }
-    
-    
+
     func unselect() {
         
         self.selected = false
@@ -460,9 +488,7 @@ extension VUDraggableImageView: NSDraggingSource {
         return .generic
     }
     
-    
-    
-    
+   
 }
 
 // MARK: - NSPasteboardItemDataProvider

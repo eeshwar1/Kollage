@@ -169,9 +169,7 @@ extension NSImage {
         
         var newSmallRect: CGRect = .zero
         newSmallRect.size = image.size
-        
-        //        newSmallRect.origin = NSPoint(x: newImageRect.midX - newSmallRect.width/2, y: newImageRect.midY - newSmallRect.height/2)
-        
+ 
         newSmallRect.origin = position
         
         overlay.draw(in: newSmallRect)
@@ -192,7 +190,6 @@ extension NSImage {
         
         let newSize = CGSize(width: size.height * sinDegrees + size.width * cosDegrees,
                              height: size.width * sinDegrees + size.height * cosDegrees)
-        
         
         
         let imageBounds = NSRect(x: (newSize.width - size.width) / 2,

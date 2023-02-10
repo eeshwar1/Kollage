@@ -33,4 +33,21 @@ extension NSView {
             }
         }, context: &theView)
     }
+    
+    func sendSubviewToBack(_ view: NSView) {
+        
+        var theView = view
+        self.sortSubviews({(viewA,viewB,rawPointer) in
+            let view = rawPointer?.load(as: NSView.self)
+
+            switch view {
+            case viewA:
+                return ComparisonResult.orderedAscending
+            case viewB:
+                return ComparisonResult.orderedDescending
+            default:
+                return ComparisonResult.orderedSame
+            }
+        }, context: &theView)
+    }
 }

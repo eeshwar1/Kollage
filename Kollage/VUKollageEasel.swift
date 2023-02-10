@@ -157,7 +157,6 @@ class VUKollageEasel: NSView {
 
             kollage = backgroundView.getImage()
         }
-
        
         for view in canvas.subviews
         {
@@ -165,7 +164,6 @@ class VUKollageEasel: NSView {
             if let imageView = view as? VUDraggableImageView {
 
                 if let image = imageView.image {
-
 
                     let rotImage = image.rotated(by: imageView.frameCenterRotation)
                     let resizedImage = rotImage.resize(withSize: imageView.frame.size)
@@ -223,7 +221,6 @@ class VUKollageEasel: NSView {
             
             imageView.rotate(angle: angle)
         } else if let textView = canvas.selectedView as? VUDraggableTextView {
-            
             
             textView.rotate(byDegrees: angle)
         }

@@ -10,7 +10,6 @@ import Cocoa
 
 class ViewController: NSViewController, NSFontChanging {
     
-    
     @IBOutlet weak var kollageEasel: VUKollageEasel!
     
     @IBOutlet weak var canvasSizeButton: NSPopUpButton!
@@ -64,7 +63,6 @@ class ViewController: NSViewController, NSFontChanging {
     
     func setupView() {
         
-        
         let bounds = self.view.bounds
         let origin = bounds.origin
         
@@ -89,20 +87,6 @@ class ViewController: NSViewController, NSFontChanging {
         }
     }
     
-    //    func addImages() {
-    //
-    //
-    //        for _ in 1...10 {
-    //
-    //                   let newCenter = center.addRandomNoise(100)
-    //                   let newImageView =  VUDraggableImageView(frame: NSRect(x: newCenter.x, y: newCenter.y, width: itemWidth, height: itemHeight))
-    //                   newImageView.image = NSImage(named: "Pookkalam") ?? NSImage()
-    //                    newImageView.draggingType = .frame
-    //
-    //                   kollageCanvas.addSubview(newImageView)
-    //
-    //               }
-    //    }
     
     //    func setupGridView()
     //    {
@@ -117,8 +101,6 @@ class ViewController: NSViewController, NSFontChanging {
     //        self.gridView.addSubview(gridController.view)
     //
     //    }
-    
-    
     
     // MARK: - Actions
     
@@ -154,10 +136,10 @@ class ViewController: NSViewController, NSFontChanging {
         
         let selectedItem  = sender.itemArray[sender.indexOfSelectedItem].title
         
-        var width: CGFloat = 500
-        var height: CGFloat = 500
+        var width: CGFloat = 0
+        var height: CGFloat = 0
         
-        print("Canvas size changed to \(selectedItem)")
+        // print("Canvas size changed to \(selectedItem)")
         
         if selectedItem == "800x600" {
             width = 800
@@ -253,8 +235,6 @@ class ViewController: NSViewController, NSFontChanging {
             self.labelStatus.stringValue = "Nothing to export"
         }
             
-            
-            
         
     }
     
@@ -287,8 +267,6 @@ class ViewController: NSViewController, NSFontChanging {
     
     @IBAction func addImages(_ sender: NSButton) {
         
-        // print("Add images")
-        
         let openPanel = NSOpenPanel()
         openPanel.allowsMultipleSelection = true
         openPanel.canChooseDirectories = false
@@ -304,8 +282,6 @@ class ViewController: NSViewController, NSFontChanging {
         }
         
     }
-    
-    
     
     func enableImageControls(factor: Double, angle: Double) {
         
