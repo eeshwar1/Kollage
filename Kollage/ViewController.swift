@@ -185,7 +185,7 @@ class ViewController: NSViewController, NSFontChanging {
     }
 
         
-    @IBAction func exportImage(_ sender: NSButton)  {
+    @IBAction func exportKollage(_ sender: NSButton)  {
             
             
         if self.kollageEasel.kollageCanvas.subviews.count > 0 {

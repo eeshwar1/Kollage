@@ -241,10 +241,6 @@ protocol DestinationViewDelegate {
         }
     }
     
-    override func performKeyEquivalent(with event: NSEvent) -> Bool {
-        return true
-    }
-    
     
     override func keyDown(with event: NSEvent) {
         

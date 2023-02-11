@@ -58,7 +58,6 @@ class VUKollageEasel: NSView {
         scrollView.hasVerticalScroller = true
         scrollView.hasHorizontalScroller = true
         
-        
         let horizontalRuler = NSRulerView.init(scrollView: scrollView, orientation: .horizontalRuler)
         
         let verticalRuler = NSRulerView.init(scrollView: scrollView, orientation: .verticalRuler)
@@ -67,12 +66,11 @@ class VUKollageEasel: NSView {
         scrollView.verticalRulerView = verticalRuler
         scrollView.hasVerticalRuler = true
         scrollView.hasHorizontalRuler = true
+        scrollView.rulersVisible = true
         
         self.addSubview(scrollView)
         
-
         setupConstraints(view: scrollView, parentView: self)
-
 
         scrollView.documentView = documentView
         
