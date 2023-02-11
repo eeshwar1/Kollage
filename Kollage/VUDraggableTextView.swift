@@ -89,6 +89,7 @@ class VUDraggableTextView: DraggableResizableView {
             textField.stringValue = text
         }
     }
+    
     @objc func rotateAction(gestureRecognizer: NSRotationGestureRecognizer) {
         
         print("Rotated")
@@ -127,26 +128,39 @@ class VUDraggableTextView: DraggableResizableView {
     
     @objc func sendToBack(_ sender: NSMenuItem) {
         
-        print("Send to back")
+   
         self.superview?.sendSubviewToBack(self)
         
     }
     
     @objc func bringToFront(_ sender: NSMenuItem) {
         
-        print("Bring to front")
         self.superview?.bringSubviewToFront(self)
+        
+    }
+    
+    @objc func sendBackward(_ sender: NSMenuItem) {
+        
+        self.superview?.sendSubviewBackward(self)
+        
+    }
+    
+    @objc func bringForward(_ sender: NSMenuItem) {
+        
+        
+        self.superview?.bringSubviewForward(self)
         
     }
     
     override func rightMouseDown(with event: NSEvent) {
         
-        // print("right click")
-        
         let menu = NSMenu()
         menu.autoenablesItems = false
-        menu.addItem(withTitle: "Send to Back", action: #selector(sendToBack(_:)), keyEquivalent: "").target = self
         menu.addItem(withTitle: "Bring to Front", action: #selector(bringToFront(_:)), keyEquivalent: "").target = self
+        menu.addItem(withTitle: "Bring Forward", action: #selector(bringForward(_:)), keyEquivalent: "").target = self
+        menu.addItem(withTitle: "Send Backward", action: #selector(sendBackward(_:)), keyEquivalent: "").target = self
+        menu.addItem(withTitle: "Send to Back", action: #selector(sendToBack(_:)), keyEquivalent: "").target = self
+      
         self.menu = menu
         
         let eventLocation = event.locationInWindow

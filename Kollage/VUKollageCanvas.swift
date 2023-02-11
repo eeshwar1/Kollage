@@ -21,7 +21,7 @@ protocol DestinationViewDelegate {
     
     var delegate: DestinationViewDelegate?
     
-    var selectedView: NSView?
+    var selectedViews: [NSView] = []
     
     var background: NSImageView?
     
@@ -69,12 +69,8 @@ protocol DestinationViewDelegate {
     
     func viewSelected() -> Bool {
         
-        if let _ = self.selectedView {
-            
-            return true
-        }
+        return self.selectedViews.count > 0
         
-        return false
     }
     
     
@@ -199,9 +195,48 @@ protocol DestinationViewDelegate {
         imageView.rotationAngle = 0.0
     }
     
+    func selectAllViews() {
+        
+        for cView in self.subviews {
+            
+            if let current_view = cView as? VUDraggableImageView {
+                
+                current_view.select()
+                
+            } else {
+                
+                if let current_view = cView as? VUDraggableTextView {
+                    
+                    current_view.select()
+                }
+            }
+            
+        }
+        
+    }
+    
+    func unselectAllViews() {
+        
+        for cView in self.subviews {
+            
+            if let current_view = cView as? VUDraggableImageView {
+                
+                current_view.unselect()
+                
+            } else {
+                
+                if let current_view = cView as? VUDraggableTextView {
+                    
+                    current_view.unselect()
+                }
+            }
+            
+        }
+        
+    }
     func selectView(_ view: NSView) {
         
-        self.selectedView = view
+        self.selectedViews.append(view)
         
         if let view = view as? VUDraggableImageView {
             view.select()
@@ -241,10 +276,13 @@ protocol DestinationViewDelegate {
         }
     }
     
-    
     override func keyDown(with event: NSEvent) {
         
-        self.selectedView?.keyDown(with: event)
+        for (_,view) in selectedViews.enumerated() {
+            
+            view.keyDown(with: event)
+        }
+        
         
     }
     
@@ -259,11 +297,16 @@ protocol DestinationViewDelegate {
         needsDisplay = true
     }
     
+    
     func changeFont (_ font: NSFont) {
         
-        if let textView = self.selectedView as? VUDraggableTextView {
-            textView.changeFont(font)
+        for (_, view) in selectedViews.enumerated() {
+            
+            if let textView = view as? VUDraggableTextView {
+                textView.changeFont(font)
+            }
         }
+       
         
     }
     
@@ -292,6 +335,10 @@ protocol DestinationViewDelegate {
         menu.autoenablesItems = false
         menu.addItem(withTitle: "Add Images...", action: #selector(addPhotos(_:)), keyEquivalent: "").target = self
         menu.addItem(withTitle: "Clear", action: #selector(clearCanvas(_:)), keyEquivalent: "").target = self
+        
+        if (self.subviews.count == 0) {
+            menu.item(withTitle: "Clear")?.isEnabled = false
+        }
        
         self.menu = menu
         

@@ -58,8 +58,11 @@ class VUKollageEasel: NSView {
         scrollView.hasVerticalScroller = true
         scrollView.hasHorizontalScroller = true
         scrollView.rulersVisible = true
-        
-        
+        scrollView.allowsMagnification = true
+        scrollView.magnification = 1.0
+        scrollView.maxMagnification = 5.0
+        scrollView.minMagnification = 0.25
+
     
         
         if let horizontalRulerView = scrollView.horizontalRulerView {
@@ -215,14 +218,20 @@ class VUKollageEasel: NSView {
         
         let canvas = self.kollageCanvas
             
-        if let imageView = canvas.selectedView as? VUDraggableImageView {
+    
+        for (_, view) in canvas.selectedViews.enumerated() {
             
-            imageView.scale(factor: factor)
+            if let imageView = view as? VUDraggableImageView {
+                
+                imageView.scale(factor: factor)
+                
+            } else if let textView = view as? VUDraggableTextView {
+                
+                textView.scale(factor: factor)
+            }
             
-        } else if let textView = canvas.selectedView as? VUDraggableTextView {
-            
-            textView.scale(factor: factor)
         }
+        
             
         
     }
@@ -231,12 +240,44 @@ class VUKollageEasel: NSView {
         
         let canvas = self.kollageCanvas
         
-        if let imageView = canvas.selectedView as? VUDraggableImageView {
+        for (_, view) in canvas.selectedViews.enumerated() {
             
-            imageView.rotate(angle: angle)
-        } else if let textView = canvas.selectedView as? VUDraggableTextView {
+            if let imageView = view as? VUDraggableImageView {
+                
+                imageView.rotate(angle: angle)
+            } else if let textView = view as? VUDraggableTextView {
+                
+                textView.rotate(byDegrees: angle)
+            }
             
-            textView.rotate(byDegrees: angle)
         }
+        
+    }
+    
+    func zoomIn() {
+        
+        self.scrollView.magnification += 0.25
+    }
+    
+    func zoomOut() {
+        
+        self.scrollView.magnification -= 0.25
+    }
+    
+    func zoomToFit() {
+        
+        self.scrollView.magnify(toFit: self.kollageCanvas.frame)
+    }
+    
+    func selectAllViews() {
+        
+        self.kollageCanvas.selectAllViews()
+    }
+    
+    func unselectAllViews() {
+        
+        self.kollageCanvas.unselectAllViews()
     }
 }
+
+

@@ -14,7 +14,6 @@ import Quartz
 extension NSImage {
     
     
-    
     /**
      Tint image with supplied color
      

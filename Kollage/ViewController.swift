@@ -321,4 +321,35 @@ class ViewController: NSViewController, NSFontChanging {
         self.labelRotationAngle.stringValue = ""
     }
     
+    @IBAction func canvasZoomIn(_ sender: Any) {
+        
+        self.kollageEasel.zoomIn()
+        
+        
+    }
+    
+    @IBAction func canvasZoomOut(_ sender: Any) {
+        
+        self.kollageEasel.zoomOut()
+        
+    }
+    
+    @IBAction func canvasZoomToFit(_ sender: Any) {
+        
+        self.kollageEasel.zoomToFit()
+    
+        
+    }
+    
+    @IBAction override func selectAll(_ sender: (Any)?) {
+        
+        self.kollageEasel.selectAllViews()
+        
+    }
+    
+    @IBAction func selectNone(_ sender: Any) {
+        
+        self.kollageEasel.unselectAllViews()
+        
+    }
 }

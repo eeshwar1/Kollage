@@ -18,7 +18,6 @@
 		654F7C682327492000DF6265 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 654F7C672327492000DF6265 /* Assets.xcassets */; };
 		654F7C6B2327492000DF6265 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 654F7C692327492000DF6265 /* Main.storyboard */; };
 		65B0A4A12990509C007D850A /* AddTextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B0A4A02990509C007D850A /* AddTextViewController.swift */; };
-		65BE3719232EE1BA00BE58AA /* VURoundRectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65BE3718232EE1BA00BE58AA /* VURoundRectView.swift */; };
 		65C948052337F250004D8015 /* VUDraggableImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C948042337F250004D8015 /* VUDraggableImageView.swift */; };
 		65C9480923387ACA004D8015 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C9480823387ACA004D8015 /* Helpers.swift */; };
 		65C9480B23387EED004D8015 /* VUKollageCanvas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C9480A23387EED004D8015 /* VUKollageCanvas.swift */; };
@@ -40,7 +39,6 @@
 		654F7C6C2327492000DF6265 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		654F7C6D2327492000DF6265 /* Kollage.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Kollage.entitlements; sourceTree = "<group>"; };
 		65B0A4A02990509C007D850A /* AddTextViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTextViewController.swift; sourceTree = "<group>"; };
-		65BE3718232EE1BA00BE58AA /* VURoundRectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VURoundRectView.swift; sourceTree = "<group>"; };
 		65C948042337F250004D8015 /* VUDraggableImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VUDraggableImageView.swift; sourceTree = "<group>"; };
 		65C9480823387ACA004D8015 /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		65C9480A23387EED004D8015 /* VUKollageCanvas.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VUKollageCanvas.swift; sourceTree = "<group>"; };
@@ -81,7 +79,6 @@
 				65B0A4A02990509C007D850A /* AddTextViewController.swift */,
 				650E1EEE237844ED00A44E4F /* KollageGridController.swift */,
 				654F7C652327491E00DF6265 /* ViewController.swift */,
-				65BE3718232EE1BA00BE58AA /* VURoundRectView.swift */,
 				6526D5602986EAAA003F54CC /* VUKollageBackground.swift */,
 				65C9480A23387EED004D8015 /* VUKollageCanvas.swift */,
 				6526D584298EFAE3003F54CC /* VUKollageEasel.swift */,
@@ -174,7 +171,6 @@
 				6526D55B2985ADF4003F54CC /* NSImage+Extension.swift in Sources */,
 				6526D55F2985E2B0003F54CC /* DraggableResizableView.swift in Sources */,
 				65E384D32840F2570042C0A8 /* VUDraggableTextView.swift in Sources */,
-				65BE3719232EE1BA00BE58AA /* VURoundRectView.swift in Sources */,
 				6526D5612986EAAA003F54CC /* VUKollageBackground.swift in Sources */,
 				65C9480923387ACA004D8015 /* Helpers.swift in Sources */,
 				6526D585298EFAE3003F54CC /* VUKollageEasel.swift in Sources */,
@@ -331,6 +327,7 @@
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = XZ9VWRV6AW;
 				INFOPLIST_FILE = Kollage/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -355,6 +352,7 @@
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = XZ9VWRV6AW;
 				INFOPLIST_FILE = Kollage/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",

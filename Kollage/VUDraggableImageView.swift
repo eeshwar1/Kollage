@@ -154,14 +154,13 @@ class VUDraggableImageView: NSImageView {
     
     override func rightMouseDown(with event: NSEvent) {
         
-        // print("right click")
-        
         let menu = NSMenu()
         menu.autoenablesItems = false
-        menu.addItem(withTitle: "Send to Back", action: #selector(sendToBack(_:)), keyEquivalent: "").target = self
-        menu.addItem(withTitle: "Send Backward", action: #selector(sendBackward(_:)), keyEquivalent: "").target = self
-        menu.addItem(withTitle: "Bring Forward", action: #selector(bringForward(_:)), keyEquivalent: "").target = self
         menu.addItem(withTitle: "Bring to Front", action: #selector(bringToFront(_:)), keyEquivalent: "").target = self
+        menu.addItem(withTitle: "Bring Forward", action: #selector(bringForward(_:)), keyEquivalent: "").target = self
+        menu.addItem(withTitle: "Send Backward", action: #selector(sendBackward(_:)), keyEquivalent: "").target = self
+        menu.addItem(withTitle: "Send to Back", action: #selector(sendToBack(_:)), keyEquivalent: "").target = self
+      
         self.menu = menu
         
         let eventLocation = event.locationInWindow
@@ -390,11 +389,8 @@ class VUDraggableImageView: NSImageView {
    
     override func keyDown(with event: NSEvent) {
         
-        // print("Key Down: \(event.keyCode)")
-        
         if event.keyCode == 51 {
             
-            // print("delete")
             self.removeFromSuperview()
         }
         
@@ -404,10 +400,6 @@ class VUDraggableImageView: NSImageView {
         get {
             return true
         }
-    }
-    
-    override func performKeyEquivalent(with event: NSEvent) -> Bool {
-        return true
     }
     
     @discardableResult
