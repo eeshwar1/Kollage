@@ -25,4 +25,16 @@ class AddTextViewController: NSViewController {
         application.stopModal()
         print("Entered text is \(textField.stringValue)")
     }
+    
+    @IBAction func cancelAddText(_ sender: NSButton) {
+        
+        let application = NSApplication.shared
+        application.stopModal()
+        
+    }
+    
+    @IBAction func testMenu(_ sender: Any) {
+        
+        print("from add text controller...")
+    }
 }

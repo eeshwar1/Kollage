@@ -286,6 +286,46 @@ protocol DestinationViewDelegate {
         
     }
     
+    override func rightMouseDown(with event: NSEvent) {
+        
+        let menu = NSMenu()
+        menu.autoenablesItems = false
+        menu.addItem(withTitle: "Add Images...", action: #selector(addPhotos(_:)), keyEquivalent: "").target = self
+        menu.addItem(withTitle: "Clear", action: #selector(clearCanvas(_:)), keyEquivalent: "").target = self
+       
+        self.menu = menu
+        
+        let eventLocation = event.locationInWindow
+        menu.popUp(positioning: nil, at: self.convert(eventLocation, from: nil), in: self)
+        
+    }
+    
+    @objc func addPhotos(_ sender: NSMenuItem) {
+        
+        if let vc = self.vc {
+            vc.addPhotos()
+        }
+    }
+   
+    @objc func clearCanvas(_ sender: NSMenuItem) {
+        
+        let clearConfirmation = NSAlert()
+        
+        clearConfirmation.messageText = "Clear Canvas"
+        clearConfirmation.informativeText = "Do you really want to clear the canvas?"
+        clearConfirmation.addButton(withTitle: "Yes")
+        clearConfirmation.addButton(withTitle: "No")
+        clearConfirmation.alertStyle = .warning
+        
+        if clearConfirmation.runModal() == .alertFirstButtonReturn {
+            self.subviews.removeAll()
+            self.vc?.disableImageControls()
+        }
+        
+        
+    }
+   
+    
    
 }
 

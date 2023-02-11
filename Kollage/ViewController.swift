@@ -20,8 +20,7 @@ class ViewController: NSViewController, NSFontChanging {
     
     @IBOutlet weak var resizeSlider: NSSlider!
     @IBOutlet weak var labelSizeFactor: NSTextField!
-    
-    @IBOutlet weak var completeImage: NSImageView!
+  
     @IBOutlet weak var spinner: NSProgressIndicator!
     
     @IBOutlet weak var labelStatus: NSTextField!
@@ -71,15 +70,15 @@ class ViewController: NSViewController, NSFontChanging {
         
     }
     
-    override func keyDown(with event: NSEvent) {
-        
-       // kollageCanvas.keyDown(with: event)
-        
-    }
+//    override func keyDown(with event: NSEvent) {
+//
+//       // kollageCanvas.keyDown(with: event)
+//
+//    }
     
-    override func performKeyEquivalent(with event: NSEvent) -> Bool {
-        return true
-    }
+//    override func performKeyEquivalent(with event: NSEvent) -> Bool {
+//        return true
+//    }
     
     override var acceptsFirstResponder: Bool {
         get {
@@ -265,7 +264,15 @@ class ViewController: NSViewController, NSFontChanging {
         
     }
     
-    @IBAction func addImages(_ sender: NSButton) {
+    @IBAction func addImages(_ sender: Any) {
+        
+       addPhotos()
+        
+    }
+    
+   
+    
+    func addPhotos() {
         
         let openPanel = NSOpenPanel()
         openPanel.allowsMultipleSelection = true
@@ -276,11 +283,9 @@ class ViewController: NSViewController, NSFontChanging {
         
         if response == .OK {
                             
-            
             self.kollageEasel.addImages(openPanel.urls)
             
         }
-        
     }
     
     func enableImageControls(factor: Double, angle: Double) {
@@ -301,5 +306,19 @@ class ViewController: NSViewController, NSFontChanging {
         self.labelRotationAngle.stringValue = numberFormatter.string(from: NSNumber(value: angle))!
     }
     
+    func disableImageControls() {
+        
+        self.resizeSlider.isEnabled = false
+        self.resizeSlider.doubleValue = 0
+        self.labelSizeFactor.doubleValue = 0
+        
+        self.labelSizeFactor.stringValue = ""
+        
+        self.rotateSlider.isEnabled = false
+        self.rotateSlider.doubleValue = 0
+        self.labelRotationAngle.doubleValue = 0
+        
+        self.labelRotationAngle.stringValue = ""
+    }
     
 }

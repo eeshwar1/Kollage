@@ -57,6 +57,22 @@ class VUKollageEasel: NSView {
         scrollView.autohidesScrollers = false
         scrollView.hasVerticalScroller = true
         scrollView.hasHorizontalScroller = true
+        scrollView.rulersVisible = true
+        
+        
+    
+        
+        if let horizontalRulerView = scrollView.horizontalRulerView {
+            
+            horizontalRulerView.measurementUnits = .points
+            horizontalRulerView.clientView = self.documentView
+        }
+        
+        if let verticalRulerView = scrollView.verticalRulerView {
+            
+            verticalRulerView.measurementUnits = .points
+            verticalRulerView.clientView = self.documentView
+        }
         
         let horizontalRuler = NSRulerView.init(scrollView: scrollView, orientation: .horizontalRuler)
         
