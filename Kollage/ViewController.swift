@@ -159,6 +159,25 @@ class ViewController: NSViewController, NSFontChanging {
     
     }
     
+    @IBAction func imageEffectChanged(_ sender: NSPopUpButton) {
+        
+        let selectedItem  = sender.itemArray[sender.indexOfSelectedItem].title
+
+        
+        if selectedItem == "Monochrome" {
+            
+            print("Monochrome")
+            
+            self.kollageEasel.applyFilter()
+        } else if selectedItem == "Normal" {
+            
+            self.kollageEasel.removeFilter()
+        }
+        
+        
+    
+    }
+    
     
     @IBAction func sizeSliderChanged(_ sender: NSSlider) {
         

@@ -29,6 +29,8 @@ class VUDraggableImageView: NSImageView {
     var sizeFactor: Double = 1.0
     var rotationAngle: Double = 0.0
     
+    var imageData: Data?
+    
     var selected: Bool = false {
         didSet {
             
@@ -44,6 +46,7 @@ class VUDraggableImageView: NSImageView {
     }
     
     override var image: NSImage? {
+        
         didSet {
             
             if let _image = image {
@@ -52,6 +55,7 @@ class VUDraggableImageView: NSImageView {
                 self.frame.size = _image.sizeForMaxDimension(maxDimension)
                 
                 needsDisplay = true
+                
             }
             
             
@@ -81,6 +85,7 @@ class VUDraggableImageView: NSImageView {
         }
     }
     
+    
     override init(frame frameRect: NSRect) {
         
         super.init(frame: frameRect)
@@ -97,7 +102,12 @@ class VUDraggableImageView: NSImageView {
         configureImageView()
         
         
+    }
+    
+    func setImage(image: NSImage) {
         
+        self.image = image
+        self.imageData = image.tiffRepresentation
     }
     
     func configureImageView()
@@ -213,27 +223,7 @@ class VUDraggableImageView: NSImageView {
             needsDisplay = true
         }
     }
-    
-    
-    func processImageURLs(_ urls: [URL]) {
-        
-        
-        for (_,url) in urls.enumerated() {
-            
-            if let image = NSImage(contentsOf:url) {
-                processImage(image)
-            }
-            
-        }
-        
-    }
-    
-    func processImage(_ image: NSImage) {
-        
-        
-        self.image = image
-        
-    }
+
     
     override func updateTrackingAreas() {
         
@@ -477,6 +467,33 @@ class VUDraggableImageView: NSImageView {
     func rotate(angle: Double) {
         
         self.frameCenterRotation = angle
+        
+    }
+    
+    // MARK: Filters
+    
+    func applyFilter() {
+        
+        if let imageData = self.imageData {
+            
+            let imageFilter  = ImageFilter.filter(fromString: "mono")
+            let filter = imageFilter.createFilter(forImageWithData: imageData, additionalParameters: nil)
+            self.image = filter?.outputImage?.toNSImage()
+            
+        }
+        
+        
+    }
+    
+    func removeFilter() {
+        
+        if let imageData = self.imageData {
+            
+            
+            self.image = NSImage(data: imageData)
+            
+        }
+        
         
     }
 }

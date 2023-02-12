@@ -278,6 +278,16 @@ class VUKollageEasel: NSView {
         
         self.kollageCanvas.unselectAllViews()
     }
+    
+    func applyFilter() {
+        
+        self.kollageCanvas.applyFilter()
+    }
+    
+    func removeFilter() {
+        
+        self.kollageCanvas.removeFilter()
+    }
 }
 
 

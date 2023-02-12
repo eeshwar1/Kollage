@@ -182,12 +182,10 @@ protocol DestinationViewDelegate {
         
         imageView.sizeFactor = constrainedSize.width/image.size.width
         
-        imageView.image = image
+        imageView.setImage(image: image)
         imageView.canvas = self
         
         self.addSubview(imageView)
-        
-//        let maxrotation = CGFloat(arc4random_uniform(Appearance.maxRotation)) - Appearance.rotationOffset
         
         let imageRotation = 0.0
         
@@ -372,7 +370,28 @@ protocol DestinationViewDelegate {
         
     }
    
+    func applyFilter() {
+        
+        for (_,view) in selectedViews.enumerated() {
+            
+            if let imageView = view as? VUDraggableImageView {
+                imageView.applyFilter()
+            }
+        }
+        
+        
+    }
     
+    func removeFilter() {
+        
+        for (_,view) in selectedViews.enumerated() {
+            
+            if let imageView = view as? VUDraggableImageView {
+                imageView.removeFilter()
+            }
+        }
+        
+    }
    
 }
 
