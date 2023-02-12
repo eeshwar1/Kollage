@@ -247,10 +247,10 @@
                                                 </customSpacing>
                                             </stackView>
                                             <stackView distribution="fillProportionally" orientation="vertical" alignment="leading" spacing="20" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Qrv-y0-R6s" userLabel="Control Stack">
-                                                <rect key="frame" x="1003" y="170" width="300" height="610"/>
+                                                <rect key="frame" x="1003" y="100" width="300" height="680"/>
                                                 <subviews>
                                                     <stackView orientation="horizontal" alignment="firstBaseline" spacing="20" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Xv7-J4-B1y" userLabel="Canvas Setting Stack">
-                                                        <rect key="frame" x="10" y="560" width="280" height="50"/>
+                                                        <rect key="frame" x="10" y="630" width="280" height="50"/>
                                                         <middleViews>
                                                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PiY-0s-4sY">
                                                                 <rect key="frame" x="43" y="33" width="81" height="16"/>
@@ -262,7 +262,7 @@
                                                             </textField>
                                                             <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yGV-IF-qCF">
                                                                 <rect key="frame" x="139" y="26" width="100" height="25"/>
-                                                                <popUpButtonCell key="cell" type="push" title="800x600" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="TX4-42-t1C" id="9if-zN-EsA">
+                                                                <popUpButtonCell key="cell" type="push" title="800x600" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="TX4-42-t1C" id="9if-zN-EsA" userLabel="Canvas Size">
                                                                     <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                                                     <font key="font" metaFont="menu"/>
                                                                     <menu key="menu" id="27x-gT-OPF">
@@ -275,6 +275,46 @@
                                                                 </popUpButtonCell>
                                                                 <connections>
                                                                     <action selector="canvasSizeChanged:" target="XfG-lQ-9wD" id="Lsd-TT-F07"/>
+                                                                </connections>
+                                                            </popUpButton>
+                                                        </middleViews>
+                                                        <visibilityPriorities>
+                                                            <integer value="1000"/>
+                                                            <integer value="1000"/>
+                                                        </visibilityPriorities>
+                                                        <customSpacing>
+                                                            <real value="3.4028234663852886e+38"/>
+                                                            <real value="3.4028234663852886e+38"/>
+                                                        </customSpacing>
+                                                    </stackView>
+                                                    <stackView orientation="horizontal" alignment="firstBaseline" spacing="10" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pwi-nC-xzL" userLabel="Canvas Setting Stack">
+                                                        <rect key="frame" x="0.0" y="560" width="300" height="50"/>
+                                                        <middleViews>
+                                                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="28b-yb-pfL">
+                                                                <rect key="frame" x="66" y="33" width="47" height="16"/>
+                                                                <textFieldCell key="cell" lineBreakMode="clipping" title="Effects" id="mNj-Ff-uVO">
+                                                                    <font key="font" metaFont="system"/>
+                                                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                                </textFieldCell>
+                                                            </textField>
+                                                            <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1DU-u8-x6S" userLabel="Effects">
+                                                                <rect key="frame" x="118" y="26" width="119" height="25"/>
+                                                                <popUpButtonCell key="cell" type="push" title="Normal" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="JD7-pF-d99" id="doV-Ui-vOF">
+                                                                    <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                                                                    <font key="font" metaFont="menu"/>
+                                                                    <menu key="menu" title="Normal" id="RDx-jR-KVq">
+                                                                        <items>
+                                                                            <menuItem title="Normal" id="JD7-pF-d99"/>
+                                                                            <menuItem title="Monochrome" id="za9-nc-2YM"/>
+                                                                            <menuItem title="Sepia" id="BBR-GY-Y7q"/>
+                                                                            <menuItem title="Comic" id="Tad-hf-duF"/>
+                                                                            <menuItem title="Blur" id="OiA-lw-2bY"/>
+                                                                        </items>
+                                                                    </menu>
+                                                                </popUpButtonCell>
+                                                                <connections>
+                                                                    <action selector="imageEffectChanged:" target="rPt-NT-nkU" id="2M3-hZ-ikQ"/>
                                                                 </connections>
                                                             </popUpButton>
                                                         </middleViews>
@@ -526,6 +566,7 @@
                                                     <constraint firstAttribute="trailing" secondItem="Y34-9e-AEF" secondAttribute="trailing" constant="10" id="Ecg-W2-7Wk"/>
                                                     <constraint firstAttribute="trailing" secondItem="Xv7-J4-B1y" secondAttribute="trailing" constant="10" id="FGU-Rg-tDb"/>
                                                     <constraint firstItem="UKX-4v-0pL" firstAttribute="leading" secondItem="Qrv-y0-R6s" secondAttribute="leading" constant="10" id="HFP-n4-XHj"/>
+                                                    <constraint firstItem="pwi-nC-xzL" firstAttribute="centerX" secondItem="Qrv-y0-R6s" secondAttribute="centerX" id="JUN-pb-JNU"/>
                                                     <constraint firstAttribute="width" constant="300" id="OH4-6X-zyc"/>
                                                     <constraint firstAttribute="trailing" secondItem="UKX-4v-0pL" secondAttribute="trailing" constant="10" id="ROW-uz-5re"/>
                                                     <constraint firstItem="yXT-jf-W40" firstAttribute="centerX" secondItem="Qrv-y0-R6s" secondAttribute="centerX" id="UlR-1P-xHh"/>
@@ -548,8 +589,10 @@
                                                     <integer value="1000"/>
                                                     <integer value="1000"/>
                                                     <integer value="1000"/>
+                                                    <integer value="1000"/>
                                                 </visibilityPriorities>
                                                 <customSpacing>
+                                                    <real value="3.4028234663852886e+38"/>
                                                     <real value="3.4028234663852886e+38"/>
                                                     <real value="3.4028234663852886e+38"/>
                                                     <real value="3.4028234663852886e+38"/>
@@ -607,7 +650,7 @@
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="76" y="1009"/>
+            <point key="canvasLocation" x="75.5" y="1009"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="jbA-MD-pcs">
