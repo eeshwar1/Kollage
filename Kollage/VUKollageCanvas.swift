@@ -218,7 +218,7 @@ protocol DestinationViewDelegate {
         
         if let index = self.selectedViews.firstIndex(of: view) {
             
-            print("Removing view from selection")
+            // print("Removing view from selection")
             self.selectedViews.remove(at: index)
         }
         
@@ -244,7 +244,7 @@ protocol DestinationViewDelegate {
     
     func selectView(_ view: NSView, unselectOther: Bool = false) {
         
-        print("selectView: \(unselectOther)")
+        // print("selectView: \(unselectOther)")
         
         self.selectedViews.append(view)
         
