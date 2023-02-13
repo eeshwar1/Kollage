@@ -239,6 +239,7 @@ class VUDraggableImageView: NSImageView {
     }
     
     
+    // MARK: Mouse events
     override func mouseExited(with event: NSEvent) {
         NSCursor.arrow.set()
     }
@@ -259,7 +260,7 @@ class VUDraggableImageView: NSImageView {
     
         let unselectOther = event.modifierFlags.contains(.shift)
         
-        print("mouseUp: \(unselectOther)")
+        // print("mouseUp: \(unselectOther)")
             
         self.canvas?.selectView(self, unselectOther: !unselectOther)
         
@@ -383,6 +384,7 @@ class VUDraggableImageView: NSImageView {
         
     }
    
+    // MARK: Keyboard events
     override func keyDown(with event: NSEvent) {
         
         if event.keyCode == 51 {
