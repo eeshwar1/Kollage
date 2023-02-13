@@ -15,6 +15,8 @@ class ViewController: NSViewController, NSFontChanging {
     @IBOutlet weak var canvasSizeButton: NSPopUpButton!
     @IBOutlet weak var backgroundColorWell: NSColorWell!
     
+    // Image Controls
+    @IBOutlet weak var effectsButton: NSPopUpButton!
     @IBOutlet weak var rotateSlider: NSSlider!
     @IBOutlet weak var labelRotationAngle: NSTextField!
     
@@ -47,8 +49,7 @@ class ViewController: NSViewController, NSFontChanging {
         
         setupView()
         
-        self.resizeSlider.isEnabled = false
-        self.rotateSlider.isEnabled = false
+        disableImageControls()
       
         self.kollageEasel.vc = self
         
@@ -161,21 +162,29 @@ class ViewController: NSViewController, NSFontChanging {
     
     @IBAction func imageEffectChanged(_ sender: NSPopUpButton) {
         
-        let selectedItem  = sender.itemArray[sender.indexOfSelectedItem].title
-
+        guard self.kollageEasel.hasItemsSelected() else { return }
         
-        if selectedItem == "Monochrome" {
+        let selectedItem  = sender.itemArray[sender.indexOfSelectedItem].title
             
-            print("Monochrome")
+        DispatchQueue.main.async {
             
-            self.kollageEasel.applyFilter()
-        } else if selectedItem == "Normal" {
+            self.kollageEasel.applyEffect(effect: selectedItem)
             
-            self.kollageEasel.removeFilter()
+            self.labelStatus.stringValue = "Ready"
+            self.labelStatus.textColor = NSColor.textColor
+                
+            
+            self.spinner.stopAnimation(nil)
+            self.spinner.isHidden = true
+            
         }
         
+        self.spinner.isHidden = false
+        self.spinner.startAnimation(nil)
+        self.labelStatus.stringValue = "Applying effects..."
         
-    
+        
+        
     }
     
     
@@ -263,9 +272,7 @@ class ViewController: NSViewController, NSFontChanging {
     }
     
     @IBAction func pickBackgroundImage(_ sender: NSButton) {
-        
-        // print("Pick background image")
-        
+   
         let openPanel = NSOpenPanel()
         openPanel.allowsMultipleSelection = false
         openPanel.canChooseDirectories = false
@@ -323,6 +330,8 @@ class ViewController: NSViewController, NSFontChanging {
         self.labelRotationAngle.doubleValue = angle
         
         self.labelRotationAngle.stringValue = numberFormatter.string(from: NSNumber(value: angle))!
+        
+        self.effectsButton.isEnabled = true
     }
     
     func disableImageControls() {
@@ -338,8 +347,14 @@ class ViewController: NSViewController, NSFontChanging {
         self.labelRotationAngle.doubleValue = 0
         
         self.labelRotationAngle.stringValue = ""
+        
+        self.effectsButton.isEnabled = false
     }
     
+    func setStatus(message: String) {
+        
+        self.labelStatus.stringValue = message
+    }
     @IBAction func canvasZoomIn(_ sender: Any) {
         
         self.kollageEasel.zoomIn()
@@ -362,6 +377,7 @@ class ViewController: NSViewController, NSFontChanging {
     
     @IBAction override func selectAll(_ sender: (Any)?) {
         
+        
         self.kollageEasel.selectAllViews()
         
     }
@@ -371,4 +387,6 @@ class ViewController: NSViewController, NSFontChanging {
         self.kollageEasel.unselectAllViews()
         
     }
+    
+    
 }

@@ -62,6 +62,7 @@ class VUKollageEasel: NSView {
         scrollView.magnification = 1.0
         scrollView.maxMagnification = 5.0
         scrollView.minMagnification = 0.25
+        
 
     
         
@@ -103,6 +104,8 @@ class VUKollageEasel: NSView {
         kollageBackground.needsDisplay = true
         kollageCanvas.frame = NSRect(x: documentView.frame.midX - canvasSize.width/2, y: documentView.frame.midY - canvasSize.height/2, width: canvasSize.width, height: canvasSize.height)
         kollageCanvas.needsDisplay =  true
+        
+        zoomToFit()
     }
     
     func setupConstraints(view: NSView, parentView: NSView) {
@@ -279,14 +282,19 @@ class VUKollageEasel: NSView {
         self.kollageCanvas.unselectAllViews()
     }
     
-    func applyFilter() {
+    func applyEffect(effect: String) {
         
-        self.kollageCanvas.applyFilter()
+        self.kollageCanvas.applyEffect(effect: effect)
     }
     
     func removeFilter() {
         
         self.kollageCanvas.removeFilter()
+    }
+    
+    func hasItemsSelected() -> Bool {
+        
+        return self.kollageCanvas.selectedViews.count > 0
     }
 }
 

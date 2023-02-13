@@ -256,7 +256,13 @@ class VUDraggableImageView: NSImageView {
         
         self.cursorPosition = .none
         selected = true
-        self.canvas?.selectView(self)
+    
+        let unselectOther = event.modifierFlags.contains(.shift)
+        
+        print("mouseUp: \(unselectOther)")
+            
+        self.canvas?.selectView(self, unselectOther: !unselectOther)
+        
         
     }
     
@@ -472,13 +478,11 @@ class VUDraggableImageView: NSImageView {
     
     // MARK: Filters
     
-    func applyFilter() {
+    func applyEffect(effect: String) {
         
-        if let imageData = self.imageData {
+        if let imageData = self.imageData, let image = NSImage(data: imageData) {
             
-            let imageFilter  = ImageFilter.filter(fromString: "mono")
-            let filter = imageFilter.createFilter(forImageWithData: imageData, additionalParameters: nil)
-            self.image = filter?.outputImage?.toNSImage()
+            self.image = image.withEffect(effect: effect)
             
         }
         

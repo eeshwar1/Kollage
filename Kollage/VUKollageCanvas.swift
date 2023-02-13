@@ -193,21 +193,12 @@ protocol DestinationViewDelegate {
         imageView.rotationAngle = 0.0
     }
     
+    // MARK: Selection
     func selectAllViews() {
         
-        for cView in self.subviews {
+        for view in self.subviews {
             
-            if let current_view = cView as? VUDraggableImageView {
-                
-                current_view.select()
-                
-            } else {
-                
-                if let current_view = cView as? VUDraggableTextView {
-                    
-                    current_view.select()
-                }
-            }
+            selectView(view)
             
         }
         
@@ -215,51 +206,78 @@ protocol DestinationViewDelegate {
     
     func unselectAllViews() {
         
-        for cView in self.subviews {
+        for view in self.selectedViews {
             
-            if let current_view = cView as? VUDraggableImageView {
-                
-                current_view.unselect()
-                
-            } else {
-                
-                if let current_view = cView as? VUDraggableTextView {
-                    
-                    current_view.unselect()
-                }
-            }
+           unselectView(view)
             
         }
         
     }
-    func selectView(_ view: NSView) {
+    
+    func unselectView(_ view: NSView) {
+        
+        if let index = self.selectedViews.firstIndex(of: view) {
+            
+            print("Removing view from selection")
+            self.selectedViews.remove(at: index)
+        }
+        
+        if let imageView = view as? VUDraggableImageView {
+            
+            imageView.unselect()
+            
+            if let vc = self.vc {
+                
+                if self.selectedViews.count == 0 {
+                    
+                    vc.disableImageControls()
+                }
+            }
+            
+        }
+        else if let textView = view as? VUDraggableTextView {
+            textView.unselect()
+        }
+   
+        
+    }
+    
+    func selectView(_ view: NSView, unselectOther: Bool = false) {
+        
+        print("selectView: \(unselectOther)")
         
         self.selectedViews.append(view)
         
         if let view = view as? VUDraggableImageView {
+            
             view.select()
             
             if let vc = self.vc {
                 
-                vc.enableImageControls(factor: view.sizeFactor, angle: view.rotationAngle)
+                if self.selectedViews.count >= 1 {
+                    
+                    vc.enableImageControls(factor: view.sizeFactor, angle: view.rotationAngle)
+                    
+                } else {
+                    
+                    vc.disableImageControls()
+                }
+                
             }
             
-        } else if let view = view as? VUDraggableTextView {
+        }
+        else if let view = view as? VUDraggableTextView {
             view.select()
         }
         
-        for cView in self.subviews {
+        if unselectOther {
             
-            if let current_view = cView as? VUDraggableImageView, current_view != view {
+            for subView in self.selectedViews {
                 
-                current_view.unselect()
-                
-            } else {
-                
-                if let current_view = cView as? VUDraggableTextView, current_view != view {
-                    
-                    current_view.unselect()
+                if subView != view {
+                    unselectView(subView)
                 }
+                
             }
             
         }
@@ -267,6 +285,25 @@ protocol DestinationViewDelegate {
         
     }
     
+    @objc func selectAllItems(_ sender: NSMenuItem) {
+        
+        self.selectAllViews()
+    }
+    
+    @objc func selectNone(_ sender: NSMenuItem) {
+        
+        self.unselectAllViews()
+    }
+    
+    override func mouseUp(with event: NSEvent) {
+        
+        
+        self.unselectAllViews()
+        
+        
+    }
+    
+    // Mark: First Responder
     
     override var acceptsFirstResponder: Bool {
         get {
@@ -274,9 +311,11 @@ protocol DestinationViewDelegate {
         }
     }
     
+    // MARK: Keyboard
+    
     override func keyDown(with event: NSEvent) {
         
-        for (_,view) in selectedViews.enumerated() {
+        for (_, view) in selectedViews.enumerated() {
             
             view.keyDown(with: event)
         }
@@ -332,12 +371,19 @@ protocol DestinationViewDelegate {
         let menu = NSMenu()
         menu.autoenablesItems = false
         menu.addItem(withTitle: "Add Images...", action: #selector(addPhotos(_:)), keyEquivalent: "").target = self
+        menu.addItem(withTitle: "Select All", action: #selector(selectAllItems(_:)), keyEquivalent: "").target = self
+        menu.addItem(withTitle: "Select None", action: #selector(selectNone(_:)), keyEquivalent: "").target = self
         menu.addItem(withTitle: "Clear", action: #selector(clearCanvas(_:)), keyEquivalent: "").target = self
         
         if (self.subviews.count == 0) {
             menu.item(withTitle: "Clear")?.isEnabled = false
+            menu.item(withTitle: "Select All")?.isEnabled = false
+            
         }
        
+        if (self.selectedViews.count == 0) {
+            menu.item(withTitle: "Select None")?.isEnabled = false
+        }
         self.menu = menu
         
         let eventLocation = event.locationInWindow
@@ -370,12 +416,15 @@ protocol DestinationViewDelegate {
         
     }
    
-    func applyFilter() {
+    
+    
+    func applyEffect(effect: String) {
         
-        for (_,view) in selectedViews.enumerated() {
+        for (_, view) in selectedViews.enumerated() {
             
             if let imageView = view as? VUDraggableImageView {
-                imageView.applyFilter()
+                imageView.applyEffect(effect: effect)
+                
             }
         }
         
@@ -384,7 +433,7 @@ protocol DestinationViewDelegate {
     
     func removeFilter() {
         
-        for (_,view) in selectedViews.enumerated() {
+        for (_, view) in selectedViews.enumerated() {
             
             if let imageView = view as? VUDraggableImageView {
                 imageView.removeFilter()

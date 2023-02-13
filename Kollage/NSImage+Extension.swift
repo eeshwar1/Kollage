@@ -11,6 +11,15 @@ import Cocoa
 import Quartz
 
 
+enum ImageFilter {
+    
+    case normal
+    case blur
+    case comic
+    case mono
+    case sepia
+    
+}
 extension NSImage {
     
     
@@ -229,6 +238,119 @@ extension NSImage {
         } catch {
             print(error)
             return false
+        }
+    }
+    
+    func makeMonochrome() -> NSImage {
+        
+        if let image = applyFilter(filter: .mono) {
+            
+            return image
+            
+        } else {
+            
+            return self
+        }
+    }
+    
+    func makeSepia() -> NSImage {
+        
+        if let image = applyFilter(filter: .sepia) {
+            
+            return image
+            
+        } else {
+            
+            return self
+        }
+    }
+    
+    func makeBlurry() -> NSImage {
+        
+        if let image = applyFilter(filter: .blur) {
+            
+            return image
+            
+        } else {
+            
+            return self
+        }
+    }
+    
+    func makeComic() -> NSImage {
+        
+        if let image = applyFilter(filter: .comic) {
+            
+            return image
+            
+        } else {
+            
+            return self
+        }
+    }
+    
+    func withEffect(effect: String) -> NSImage {
+        
+        var filter: ImageFilter = .normal
+        
+        switch effect {
+            
+        case "Monochrome":
+            filter = .mono
+        case "Sepia":
+            filter = .sepia
+        case "Blur":
+            filter = .blur
+        case "Comic":
+            filter = .comic
+        default:
+            filter = .normal
+            
+        }
+        
+        if filter != .normal {
+            
+            return self.applyFilter(filter: filter) ?? self
+        }
+        
+        return self
+    }
+    
+    func applyFilter(filter: ImageFilter) -> NSImage? {
+        
+        guard let _ = self.tiffRepresentation else { return nil }
+        guard let imageFilter  = CIFilter(name: getFilterName(filter: filter)) else {
+            return nil }
+        if let cgImage = self.cgImage(forProposedRect: nil, context: nil, hints: nil) {
+            let ciImage = CIImage(cgImage: cgImage)
+            imageFilter.setValue(ciImage, forKey: "inputImage")
+            return imageFilter.outputImage?.toNSImage()
+        } else  {
+            
+            return nil
+        }
+    }
+    
+    /**
+     It returns the actual CIFilter name as a String based on filter name.
+    */
+    private func getFilterName(filter: ImageFilter) -> String {
+        
+        switch filter {
+            case .sepia:
+                return "CISepiaTone"
+                
+            case .mono:
+                return "CIPhotoEffectMono"
+                
+            case .blur:
+                return "CIDiscBlur"
+                
+            case .comic:
+                return "CIComicEffect"
+            
+            case .normal:
+                return "Normal"
         }
     }
 }
