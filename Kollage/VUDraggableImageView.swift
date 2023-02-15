@@ -129,6 +129,8 @@ class VUDraggableImageView: NSImageView {
         self.layer?.shadowColor = NSColor.black.cgColor
         self.layer?.shadowOffset = NSMakeSize(10, 10)
         self.layer?.shadowRadius = 10
+        
+        // self.layer?.opacity = 0.5
     }
     
     func select() {
