@@ -246,10 +246,10 @@
                                                 </customSpacing>
                                             </stackView>
                                             <stackView distribution="fillProportionally" orientation="vertical" alignment="leading" spacing="20" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Qrv-y0-R6s" userLabel="Control Stack">
-                                                <rect key="frame" x="1013" y="178" width="300" height="702"/>
+                                                <rect key="frame" x="1013" y="138" width="300" height="742"/>
                                                 <subviews>
                                                     <stackView orientation="horizontal" alignment="firstBaseline" spacing="20" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Xv7-J4-B1y" userLabel="Canvas Setting Stack">
-                                                        <rect key="frame" x="10" y="652" width="280" height="50"/>
+                                                        <rect key="frame" x="10" y="692" width="280" height="50"/>
                                                         <middleViews>
                                                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PiY-0s-4sY">
                                                                 <rect key="frame" x="43" y="33" width="81" height="16"/>
@@ -289,6 +289,19 @@
                                                             <real value="3.4028234663852886e+38"/>
                                                         </customSpacing>
                                                     </stackView>
+                                                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="59a-kH-MvA">
+                                                        <rect key="frame" x="8" y="651" width="75" height="22"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="20" id="OsY-G3-OLa"/>
+                                                        </constraints>
+                                                        <buttonCell key="cell" type="check" title="Shadow" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="sX0-vA-Fue">
+                                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                            <font key="font" metaFont="system"/>
+                                                        </buttonCell>
+                                                        <connections>
+                                                            <action selector="toggleShadow:" target="XfG-lQ-9wD" id="lcf-Q3-G07"/>
+                                                        </connections>
+                                                    </button>
                                                     <box translatesAutoresizingMaskIntoConstraints="NO" id="xUX-nD-eA3">
                                                         <rect key="frame" x="7" y="328" width="286" height="304"/>
                                                         <view key="contentView" id="I5M-I0-SeD">
@@ -301,7 +314,7 @@
                                                                         <stackView orientation="horizontal" alignment="centerY" spacing="10" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pwi-nC-xzL" userLabel="Image Effects Stack">
                                                                             <rect key="frame" x="10" y="184" width="258" height="100"/>
                                                                             <middleViews>
-                                                                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="28b-yb-pfL">
+                                                                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="28b-yb-pfL">
                                                                                     <rect key="frame" x="45" y="42" width="47" height="16"/>
                                                                                     <textFieldCell key="cell" lineBreakMode="clipping" title="Effects" id="mNj-Ff-uVO">
                                                                                         <font key="font" metaFont="system"/>
@@ -333,8 +346,6 @@
                                                                                 </popUpButton>
                                                                             </middleViews>
                                                                             <constraints>
-                                                                                <constraint firstAttribute="trailing" secondItem="1DU-u8-x6S" secondAttribute="trailing" constant="46" id="X0Z-7t-yWv"/>
-                                                                                <constraint firstItem="28b-yb-pfL" firstAttribute="leading" secondItem="pwi-nC-xzL" secondAttribute="leading" constant="47" id="vC6-hc-5Vh"/>
                                                                                 <constraint firstAttribute="width" constant="258" id="w7o-Xq-M8g"/>
                                                                                 <constraint firstAttribute="height" constant="100" id="wlQ-gG-39Q"/>
                                                                             </constraints>
@@ -657,6 +668,7 @@
                                                     <constraint firstAttribute="trailing" secondItem="xUX-nD-eA3" secondAttribute="trailing" constant="10" id="apI-Z0-MSD"/>
                                                     <constraint firstItem="FK8-AW-0gW" firstAttribute="leading" secondItem="Qrv-y0-R6s" secondAttribute="leading" id="ie2-PW-tde"/>
                                                     <constraint firstAttribute="trailing" secondItem="FK8-AW-0gW" secondAttribute="trailing" id="n96-MB-TdQ"/>
+                                                    <constraint firstItem="59a-kH-MvA" firstAttribute="leading" secondItem="Qrv-y0-R6s" secondAttribute="leading" constant="10" id="nHl-38-dP4"/>
                                                     <constraint firstItem="Y34-9e-AEF" firstAttribute="leading" secondItem="Qrv-y0-R6s" secondAttribute="leading" constant="10" id="qA6-ft-ZTD"/>
                                                     <constraint firstItem="xUX-nD-eA3" firstAttribute="leading" secondItem="Qrv-y0-R6s" secondAttribute="leading" constant="10" id="sPC-EY-K7K"/>
                                                 </constraints>
@@ -667,8 +679,10 @@
                                                     <integer value="1000"/>
                                                     <integer value="1000"/>
                                                     <integer value="1000"/>
+                                                    <integer value="1000"/>
                                                 </visibilityPriorities>
                                                 <customSpacing>
+                                                    <real value="3.4028234663852886e+38"/>
                                                     <real value="3.4028234663852886e+38"/>
                                                     <real value="3.4028234663852886e+38"/>
                                                     <real value="3.4028234663852886e+38"/>
@@ -718,7 +732,7 @@
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="76" y="1053"/>
+            <point key="canvasLocation" x="75.5" y="1053"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="jbA-MD-pcs">
