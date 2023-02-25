@@ -388,5 +388,8 @@ class ViewController: NSViewController, NSFontChanging {
         
     }
     
-    
+    @IBAction func toggleShadow(_ sender: NSButton) {
+        
+        self.kollageEasel.setShadow(enabled: sender.state == .on)
+    }
 }

@@ -21,6 +21,9 @@ class VUKollageEasel: NSView {
     
     var canvasSize = NSSize(width: 800, height: 600)
     
+    var enableShadow = true
+    
+    
     var vc: ViewController? {
         
         didSet {
@@ -185,9 +188,27 @@ class VUKollageEasel: NSView {
 
                 if let image = imageView.image {
 
+                    
                     let rotImage = image.rotated(by: imageView.frameCenterRotation)
                     let resizedImage = rotImage.resize(withSize: imageView.frame.size)
+                    
+                    if imageView.enableShadow {
+                        
+                        let shadowPosition = NSPoint(x: imageView.frame.origin.x + 20, y: imageView.frame.origin.y + 20)
+                        
+                        let shadowSize = NSSize(width: imageView.frame.size.width + 20, height: imageView.frame.size.height + 20)
+                        let baseShadow = NSImage.swatchWithColor(color: .black, size: shadowSize)
+                        
+                        let rotShadow = baseShadow.rotated(by: imageView.frameCenterRotation).applyGaussianBlur()
+                        
+                        let shadow = rotShadow.resize(withSize: imageView.frame.size)!
+                        kollage = kollage.addImageAlpha(image: shadow, position: shadowPosition, alpha: 1.0)
+                    }
+                    
                     kollage = kollage.addImage(image: resizedImage ?? NSImage(), position: imageView.frame.origin)
+                    
+//                    kollage = kollage.addImage(image: shadowImage ?? NSImage(), position: imageView.frame.origin)
+                    
                 }
 
             }
@@ -295,6 +316,39 @@ class VUKollageEasel: NSView {
     func hasItemsSelected() -> Bool {
         
         return self.kollageCanvas.selectedViews.count > 0
+    }
+    
+    func setShadow(enabled: Bool) {
+        
+        self.enableShadow = enabled
+        
+        let canvas = self.kollageCanvas
+        
+        if canvas.selectedViews.count > 0 {
+            
+            for (_, view) in canvas.selectedViews.enumerated() {
+                
+                if let imageView = view as? VUDraggableImageView {
+                    
+                    imageView.setShadow(enabled: self.enableShadow)
+                }
+                
+            }
+        } else {
+            
+            for (_, view) in canvas.subviews.enumerated() {
+                
+                if let imageView = view as? VUDraggableImageView {
+                    
+                    imageView.setShadow(enabled: self.enableShadow)
+                }
+                
+            }
+            
+        }
+        
+        
+        
     }
 }
 

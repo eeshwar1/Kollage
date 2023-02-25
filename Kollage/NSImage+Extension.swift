@@ -9,6 +9,8 @@
 import Foundation
 import Cocoa
 import Quartz
+import Accelerate
+import CoreImage
 
 
 enum ImageFilter {
@@ -73,7 +75,9 @@ extension NSImage {
     class func swatchWithColor(color: NSColor, size: NSSize) -> NSImage {
         let image = NSImage(size: size)
         image.lockFocus()
-        color.drawSwatch(in: NSRect(origin: .zero, size: size))
+        
+        let newColor = color
+        newColor.drawSwatch(in: NSRect(origin: .zero, size: size))
         image.unlockFocus()
         return image
     }
@@ -189,7 +193,38 @@ extension NSImage {
         
     }
     
-    
+    func addImageAlpha(image: NSImage, position: NSPoint, alpha: CGFloat) -> NSImage {
+        
+        
+        let newImage = NSImage(size: self.size)
+        
+        let background = self
+        let overlay = image
+        
+        newImage.lockFocus()
+        
+        var imageRect: CGRect = .zero
+        imageRect.size = newImage.size
+        
+        
+        var newImageRect: CGRect = .zero
+        newImageRect.size = newImage.size
+        
+        background.draw(in: imageRect)
+        
+        var newSmallRect: CGRect = .zero
+        newSmallRect.size = image.size
+ 
+        newSmallRect.origin = position
+        
+        overlay.draw(in: newSmallRect, from: .zero, operation: .sourceAtop, fraction: alpha)
+        
+        newImage.unlockFocus()
+        
+        return newImage
+        
+        
+    }
     
     func rotated(by degrees: CGFloat) -> NSImage {
         
@@ -331,6 +366,21 @@ extension NSImage {
         }
     }
     
+    func applyGaussianBlur() -> NSImage {
+        
+        if let blurFilter  = CIFilter(name: "CIGaussianBlur", parameters: [kCIInputRadiusKey: 6.0]) {
+        
+            if let cgImage = self.cgImage(forProposedRect: nil, context: nil, hints: nil) {
+                let ciImage = CIImage(cgImage: cgImage)
+                blurFilter.setValue(ciImage, forKey: "inputImage")
+                return blurFilter.outputImage?.toNSImage() ?? self
+            }
+            
+        }
+        
+        return NSImage()
+        
+    }
     /**
      It returns the actual CIFilter name as a String based on filter name.
     */
@@ -353,4 +403,6 @@ extension NSImage {
                 return "Normal"
         }
     }
+    
+
 }

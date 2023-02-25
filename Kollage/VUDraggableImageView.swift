@@ -29,6 +29,8 @@ class VUDraggableImageView: NSImageView {
     var sizeFactor: Double = 1.0
     var rotationAngle: Double = 0.0
     
+    var enableShadow: Bool = true
+    
     var imageData: Data?
     
     var selected: Bool = false {
@@ -92,8 +94,6 @@ class VUDraggableImageView: NSImageView {
         
         self.wantsLayer = true
         
-       
-        
         configureImageView()
         
     }
@@ -123,16 +123,35 @@ class VUDraggableImageView: NSImageView {
             self.layer?.borderColor = color.cgColor
         }
         
-        self.shadow = NSShadow()
-        self.layer?.cornerRadius = 5.0
-        self.layer?.shadowOpacity = 1.0
-        self.layer?.shadowColor = NSColor.black.cgColor
-        self.layer?.shadowOffset = NSMakeSize(10, 10)
-        self.layer?.shadowRadius = 10
         
-        // self.layer?.opacity = 0.5
+        self.configureShadow()
+        
+        
     }
     
+    func setShadow(enabled: Bool) {
+        
+        self.enableShadow = enabled
+        self.configureShadow()
+        self.needsDisplay = true
+    }
+    func configureShadow() {
+        
+        if self.enableShadow {
+            
+            self.shadow = NSShadow()
+            self.layer?.cornerRadius = 5.0
+            self.layer?.shadowOpacity = 1.0
+            self.layer?.shadowColor = NSColor.black.cgColor
+            self.layer?.shadowOffset = NSMakeSize(10, 10)
+            self.layer?.shadowRadius = 6.0
+        } else {
+            
+            self.shadow = nil
+        }
+        
+        
+    }
     func select() {
         
         self.selected = true
