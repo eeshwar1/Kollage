@@ -244,7 +244,6 @@ protocol DestinationViewDelegate {
     
     func selectView(_ view: NSView, unselectOther: Bool = false) {
         
-        // print("selectView: \(unselectOther)")
         
         self.selectedViews.append(view)
         
@@ -256,7 +255,7 @@ protocol DestinationViewDelegate {
                 
                 if self.selectedViews.count >= 1 {
                     
-                    vc.enableImageControls(factor: view.sizeFactor, angle: view.rotationAngle)
+                    vc.enableImageControls(factor: view.sizeFactor, angle: view.rotationAngle, shadow: view.enableShadow, border: view.enableBorder, borderColor: view.borderColor)
                     
                 } else {
                     
@@ -437,6 +436,17 @@ protocol DestinationViewDelegate {
             
             if let imageView = view as? VUDraggableImageView {
                 imageView.removeFilter()
+            }
+        }
+        
+    }
+    
+    func setShadowColor(color: NSColor) {
+        
+        for (_, view) in selectedViews.enumerated() {
+            
+            if let imageView = view as? VUDraggableImageView {
+                imageView.setShadowColor(color: color)
             }
         }
         

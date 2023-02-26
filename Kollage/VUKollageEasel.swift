@@ -160,6 +160,13 @@ class VUKollageEasel: NSView {
         
     }
     
+    func setShadowColor(color: NSColor) {
+        
+        self.kollageCanvas.setShadowColor(color: color)
+        
+    }
+    
+    
     func getBackgroundColor () -> NSColor {
         
         return self.kollageBackground.backgroundColor
@@ -318,6 +325,63 @@ class VUKollageEasel: NSView {
         return self.kollageCanvas.selectedViews.count > 0
     }
     
+    func setBorder(enabled: Bool) {
+        
+        
+        let canvas = self.kollageCanvas
+        
+        if canvas.selectedViews.count > 0 {
+            
+            for (_, view) in canvas.selectedViews.enumerated() {
+                
+                if let imageView = view as? VUDraggableImageView {
+                    
+                    imageView.setBorder(enabled: enabled)
+                }
+                
+            }
+        } else {
+            
+            for (_, view) in canvas.subviews.enumerated() {
+                
+                if let imageView = view as? VUDraggableImageView {
+                    
+                    imageView.setBorder(enabled: enabled)
+                }
+                
+            }
+            
+        }
+    }
+    
+    func setBorderColor(color: NSColor) {
+        
+        
+        let canvas = self.kollageCanvas
+        
+        if canvas.selectedViews.count > 0 {
+            
+            for (_, view) in canvas.selectedViews.enumerated() {
+                
+                if let imageView = view as? VUDraggableImageView {
+                    
+                    imageView.setBorderColor(color: color)
+                }
+                
+            }
+        } else {
+            
+            for (_, view) in canvas.subviews.enumerated() {
+                
+                if let imageView = view as? VUDraggableImageView {
+                    
+                    imageView.setBorderColor(color: color)
+                }
+                
+            }
+            
+        }
+    }
     func setShadow(enabled: Bool) {
         
         self.enableShadow = enabled

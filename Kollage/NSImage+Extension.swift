@@ -160,6 +160,14 @@ extension NSImage {
         
     }
     
+    func withBorder(color: NSColor, width: CGFloat) -> NSImage{
+        
+        let borderImage = NSImage.swatchWithColor(color: color, size: NSSize(width: self.size.width + 2 * width, height: self.size.height + 2 * width))
+        
+        return borderImage.addImage(image: self, position: NSPoint(x: width, y: width))
+        
+        
+    }
     func addImage(image: NSImage, position: NSPoint) -> NSImage {
         
         

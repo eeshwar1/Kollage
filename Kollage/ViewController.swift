@@ -15,6 +15,13 @@ class ViewController: NSViewController, NSFontChanging {
     @IBOutlet weak var canvasSizeButton: NSPopUpButton!
     @IBOutlet weak var backgroundColorWell: NSColorWell!
     
+    @IBOutlet weak var enableShadow: NSButton!
+    @IBOutlet weak var shadowColorWell: NSColorWell!
+    
+    @IBOutlet weak var borderColorWell: NSColorWell!
+    
+    @IBOutlet weak var labelBorderWidth: NSTextField!
+    
     // Image Controls
     @IBOutlet weak var effectsButton: NSPopUpButton!
     @IBOutlet weak var rotateSlider: NSSlider!
@@ -271,6 +278,14 @@ class ViewController: NSViewController, NSFontChanging {
         
     }
     
+    
+    @IBAction func shadowColorChanged(_ sender: NSColorWell) {
+        
+        self.kollageEasel.setShadowColor(color: sender.color)
+        
+    }
+    
+    
     @IBAction func pickBackgroundImage(_ sender: NSButton) {
    
         let openPanel = NSOpenPanel()
@@ -314,7 +329,7 @@ class ViewController: NSViewController, NSFontChanging {
         }
     }
     
-    func enableImageControls(factor: Double, angle: Double) {
+    func enableImageControls(factor: Double, angle: Double, shadow: Bool, border: Bool, borderColor: NSColor) {
         
         self.resizeSlider.isEnabled = true
         self.resizeSlider.doubleValue = factor
@@ -332,6 +347,25 @@ class ViewController: NSViewController, NSFontChanging {
         self.labelRotationAngle.stringValue = numberFormatter.string(from: NSNumber(value: angle))!
         
         self.effectsButton.isEnabled = true
+        
+        if shadow {
+            self.enableShadow.state = .on
+        } else {
+            self.enableShadow.state = .off
+        }
+        
+        if border {
+            
+            self.enableShadow.state = .on
+            
+        } else {
+            
+            self.enableShadow.state = .off
+        }
+        
+        self.borderColorWell.color = borderColor
+        
+        
     }
     
     func disableImageControls() {
@@ -358,7 +392,6 @@ class ViewController: NSViewController, NSFontChanging {
     @IBAction func canvasZoomIn(_ sender: Any) {
         
         self.kollageEasel.zoomIn()
-        
         
     }
     
@@ -391,5 +424,20 @@ class ViewController: NSViewController, NSFontChanging {
     @IBAction func toggleShadow(_ sender: NSButton) {
         
         self.kollageEasel.setShadow(enabled: sender.state == .on)
+    }
+    
+    @IBAction func toggleBorder(_ sender: NSButton) {
+        
+        self.kollageEasel.setBorder(enabled: sender.state == .on)
+    }
+    
+    @IBAction func borderWidthChanged(_ sender: NSStepper) {
+        
+        self.labelBorderWidth.integerValue = sender.integerValue
+    }
+
+    @IBAction func borderColorChanged(_ sender: NSColorWell) {
+        
+        self.kollageEasel.setBorderColor(color: sender.color)
     }
 }
