@@ -299,10 +299,10 @@
                                                                     <rect key="frame" x="0.0" y="0.0" width="288" height="384"/>
                                                                     <subviews>
                                                                         <stackView distribution="fill" orientation="horizontal" alignment="top" spacing="20" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8lY-Ok-ZSv" userLabel="Shadow Setting Stack">
-                                                                            <rect key="frame" x="10" y="352" width="143" height="24"/>
+                                                                            <rect key="frame" x="10" y="352" width="143" height="32"/>
                                                                             <subviews>
                                                                                 <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="59a-kH-MvA">
-                                                                                    <rect key="frame" x="-2" y="3" width="75" height="22"/>
+                                                                                    <rect key="frame" x="-2" y="11" width="75" height="22"/>
                                                                                     <constraints>
                                                                                         <constraint firstAttribute="height" constant="20" id="OsY-G3-OLa"/>
                                                                                     </constraints>
@@ -315,7 +315,7 @@
                                                                                     </connections>
                                                                                 </button>
                                                                                 <colorWell translatesAutoresizingMaskIntoConstraints="NO" id="hAs-U4-0lK">
-                                                                                    <rect key="frame" x="90" y="-2" width="56" height="28"/>
+                                                                                    <rect key="frame" x="90" y="6" width="56" height="28"/>
                                                                                     <constraints>
                                                                                         <constraint firstAttribute="width" constant="50" id="DGF-Pi-AZ9"/>
                                                                                     </constraints>
@@ -560,7 +560,6 @@
                                                                         <constraint firstItem="8lY-Ok-ZSv" firstAttribute="leading" secondItem="YLE-bN-okm" secondAttribute="leading" constant="10" id="Cx8-Ts-gZJ"/>
                                                                         <constraint firstAttribute="trailing" secondItem="fXz-De-fmp" secondAttribute="trailing" constant="10" id="LJN-tP-oM1"/>
                                                                         <constraint firstItem="oF8-cG-nyh" firstAttribute="leading" secondItem="YLE-bN-okm" secondAttribute="leading" constant="10" id="cza-n2-pK8"/>
-                                                                        <constraint firstItem="8lY-Ok-ZSv" firstAttribute="top" secondItem="YLE-bN-okm" secondAttribute="top" constant="10" id="hat-zn-FJZ"/>
                                                                         <constraint firstAttribute="trailing" secondItem="BtP-FD-nVW" secondAttribute="trailing" constant="10" id="qbO-yp-U5U"/>
                                                                     </constraints>
                                                                     <visibilityPriorities>
@@ -837,6 +836,7 @@
                         <outlet property="rotateSlider" destination="h2b-Ms-2Ir" id="aHJ-I8-mSM"/>
                         <outlet property="shadowColorWell" destination="hAs-U4-0lK" id="ki9-uv-Iyp"/>
                         <outlet property="spinner" destination="gCD-Su-Hw8" id="99V-pu-qnQ"/>
+                        <outlet property="stepperBorderWidth" destination="jiD-Ou-RBI" id="Org-YO-uXS"/>
                     </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
