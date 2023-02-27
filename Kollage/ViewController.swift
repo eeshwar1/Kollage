@@ -20,6 +20,7 @@ class ViewController: NSViewController, NSFontChanging {
     
     @IBOutlet weak var borderColorWell: NSColorWell!
     
+    @IBOutlet weak var stepperBorderWidth: NSStepper!
     @IBOutlet weak var labelBorderWidth: NSTextField!
     
     // Image Controls
@@ -45,10 +46,7 @@ class ViewController: NSViewController, NSFontChanging {
     
     var center = NSPoint.zero
     
-    override func viewWillAppear() {
-        
-      
-    }
+   
     
     override func viewDidLoad() {
         
@@ -64,6 +62,10 @@ class ViewController: NSViewController, NSFontChanging {
         labelStatus.stringValue = "Ready"
         
         backgroundColorWell.color = self.kollageEasel.getBackgroundColor()
+        
+        stepperBorderWidth.integerValue = 10
+        labelBorderWidth.integerValue = 10
+        
         
     }
     
@@ -329,32 +331,30 @@ class ViewController: NSViewController, NSFontChanging {
         }
     }
     
-    func enableImageControls(factor: Double, angle: Double, shadow: Bool, border: Bool, borderColor: NSColor) {
+    func enableImageControls(attributes: ImageViewAttributes) {
         
         self.resizeSlider.isEnabled = true
-        self.resizeSlider.doubleValue = factor
-        self.labelSizeFactor.doubleValue = factor
+        self.resizeSlider.doubleValue = attributes.sizefactor
         let numberFormatter = NumberFormatter()
         numberFormatter.numberStyle = .decimal
         numberFormatter.maximumFractionDigits = 2
         
-        self.labelSizeFactor.stringValue = numberFormatter.string(from: NSNumber(value: factor))!
+        self.labelSizeFactor.stringValue = numberFormatter.string(from: NSNumber(value: attributes.sizefactor))!
         
         self.rotateSlider.isEnabled = true
-        self.rotateSlider.doubleValue = angle
-        self.labelRotationAngle.doubleValue = angle
+        self.rotateSlider.doubleValue = attributes.angle
         
-        self.labelRotationAngle.stringValue = numberFormatter.string(from: NSNumber(value: angle))!
+        self.labelRotationAngle.stringValue = numberFormatter.string(from: NSNumber(value: attributes.angle))!
         
         self.effectsButton.isEnabled = true
         
-        if shadow {
+        if attributes.shadow {
             self.enableShadow.state = .on
         } else {
             self.enableShadow.state = .off
         }
         
-        if border {
+        if attributes.border {
             
             self.enableShadow.state = .on
             
@@ -363,7 +363,8 @@ class ViewController: NSViewController, NSFontChanging {
             self.enableShadow.state = .off
         }
         
-        self.borderColorWell.color = borderColor
+        self.borderColorWell.color = attributes.borderColor
+        self.stepperBorderWidth.integerValue = attributes.borderWidthRatio
         
         
     }
@@ -383,6 +384,8 @@ class ViewController: NSViewController, NSFontChanging {
         self.labelRotationAngle.stringValue = ""
         
         self.effectsButton.isEnabled = false
+        
+        
     }
     
     func setStatus(message: String) {
@@ -434,6 +437,8 @@ class ViewController: NSViewController, NSFontChanging {
     @IBAction func borderWidthChanged(_ sender: NSStepper) {
         
         self.labelBorderWidth.integerValue = sender.integerValue
+        
+        self.kollageEasel.setBorderWidth(width: CGFloat(sender.integerValue))
     }
 
     @IBAction func borderColorChanged(_ sender: NSColorWell) {

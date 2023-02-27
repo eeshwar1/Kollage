@@ -15,6 +15,17 @@ enum DraggingType {
     
 }
 
+struct ImageViewAttributes {
+    
+    var sizefactor: CGFloat
+    var angle: CGFloat
+    var shadow: Bool
+    var border: Bool
+    var borderColor: NSColor
+    var borderWidthRatio: Int
+    
+}
+
 class VUDraggableImageView: NSImageView {
     
     var firstMouseDownPoint: NSPoint = NSZeroPoint
@@ -24,7 +35,7 @@ class VUDraggableImageView: NSImageView {
     var canvas: VUKollageCanvas?
     
     var borderColor: NSColor = .white
-    var borderWidth: CGFloat = 20.0
+    var borderWidthRatio: CGFloat = 0.10
     
     var shadowColor: NSColor = .black
     
@@ -38,6 +49,23 @@ class VUDraggableImageView: NSImageView {
     var borderAdded: Bool = false
     
     var imageData: Data?
+    
+    
+    var attributes: ImageViewAttributes {
+        
+        get {
+            
+            return ImageViewAttributes(
+                
+                sizefactor: self.sizeFactor,
+                angle: self.frameCenterRotation,
+                shadow: self.enableShadow,
+                border: self.enableBorder,
+                borderColor: self.borderColor,
+                borderWidthRatio: Int(self.borderWidthRatio * 100)
+            )
+        }
+    }
     
     var selected: Bool = false {
         
@@ -71,15 +99,6 @@ class VUDraggableImageView: NSImageView {
     override func draw(_ dirtyRect: NSRect) {
         
         super.draw(dirtyRect)
-        
-        if enableBorder {
-            
-            borderColor.set()
-            let borderPath = NSBezierPath(rect: dirtyRect)
-            borderPath.lineWidth = borderWidth
-            borderPath.stroke()
-            
-        }
         
         if selected {
             
@@ -159,26 +178,22 @@ class VUDraggableImageView: NSImageView {
 
         configureImageView()
         
-        
     }
     
     
     func setImage(image: NSImage) {
         
-        self.image = image
         self.imageData = image.tiffRepresentation
+        
+        setBorderedImage()
+        
     }
     
     func configureImageView()
     {
         self.wantsLayer = true
-        
-        self.imageFrameStyle = .groove
-      
-//        if enableBorder {
-//            let frameRect = self.frame
-//            self.frame = NSRect(origin: frameRect.origin, size: NSSize(width: frameRect.width + 2 * borderWidth, height: frameRect.height + 2 * borderWidth))
-//        }
+
+    
         self.configureShadow()
         
         
@@ -220,7 +235,7 @@ class VUDraggableImageView: NSImageView {
         
         self.enableBorder = enabled
         
-        self.needsDisplay = true
+        setBorderedImage()
         
         
     }
@@ -229,10 +244,36 @@ class VUDraggableImageView: NSImageView {
         
         self.borderColor = color
         
-        self.needsDisplay = true
+        self.setBorderedImage()
         
     }
 
+    func setBorderWidth(percent: CGFloat) {
+        
+        self.borderWidthRatio = percent/100
+        
+        self.setBorderedImage()
+        
+        
+    }
+    
+    func setBorderedImage() {
+        
+        if let data = self.imageData, let image = NSImage(data: data) {
+            
+            if self.enableBorder {
+                
+                let borderWidth = image.size.width * self.borderWidthRatio
+                self.image = image.withBorder(color: borderColor, width: borderWidth)
+                
+            } else {
+                
+                self.image = image
+            }
+            
+            self.needsDisplay = true
+        }
+    }
     
     func select() {
         
@@ -245,6 +286,7 @@ class VUDraggableImageView: NSImageView {
     }
     
     // MARK: Reordering in Z Index
+    
     @objc func sendToBack(_ sender: NSMenuItem) {
         
         self.superview?.sendSubviewToBack(self)

@@ -15,6 +15,7 @@ protocol DestinationViewDelegate {
     func processAction(_ action: String, center: NSPoint)
 }
 
+
 @IBDesignable class VUKollageCanvas: NSView {
     
     @IBInspectable var radius : CGFloat = 0.0
@@ -255,7 +256,7 @@ protocol DestinationViewDelegate {
                 
                 if self.selectedViews.count >= 1 {
                     
-                    vc.enableImageControls(factor: view.sizeFactor, angle: view.rotationAngle, shadow: view.enableShadow, border: view.enableBorder, borderColor: view.borderColor)
+                    vc.enableImageControls(attributes: view.attributes)
                     
                 } else {
                     

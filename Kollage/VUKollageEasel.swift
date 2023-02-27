@@ -204,7 +204,7 @@ class VUKollageEasel: NSView {
                         let shadowPosition = NSPoint(x: imageView.frame.origin.x + 20, y: imageView.frame.origin.y + 20)
                         
                         let shadowSize = NSSize(width: imageView.frame.size.width + 20, height: imageView.frame.size.height + 20)
-                        let baseShadow = NSImage.swatchWithColor(color: .black, size: shadowSize)
+                        let baseShadow = NSImage.swatchWithColor(color: imageView.shadowColor, size: shadowSize)
                         
                         let rotShadow = baseShadow.rotated(by: imageView.frameCenterRotation).applyGaussianBlur()
                         
@@ -381,6 +381,26 @@ class VUKollageEasel: NSView {
             }
             
         }
+    }
+    
+    func setBorderWidth(width: CGFloat) {
+        
+        
+        let canvas = self.kollageCanvas
+        
+        let views = canvas.selectedViews.count > 0 ? canvas.selectedViews : canvas.subviews
+        
+        
+        for (_, view) in views.enumerated() {
+                
+                if let imageView = view as? VUDraggableImageView {
+                    
+                    imageView.setBorderWidth(percent: width)
+
+                }
+                
+        }
+        
     }
     func setShadow(enabled: Bool) {
         
