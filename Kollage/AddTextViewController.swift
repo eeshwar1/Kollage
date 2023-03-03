@@ -11,8 +11,6 @@ import Cocoa
 class AddTextViewController: NSViewController {
     
     @IBOutlet weak var textField: NSTextField!
-    
-    
 
     override func viewDidLoad() {
         super.viewDidLoad()

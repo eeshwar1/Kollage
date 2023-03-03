@@ -8,25 +8,10 @@
 
 import Cocoa
 
-enum DraggingType {
-    
-    case frame
-    case contents
-    
-}
 
-struct ImageViewAttributes {
+class VUDraggableBorderedImageView: NSView {
     
-    var sizefactor: CGFloat
-    var angle: CGFloat
-    var shadow: Bool
-    var border: Bool
-    var borderColor: NSColor
-    var borderWidthRatio: Int
-    
-}
-
-class VUDraggableImageView: NSImageView {
+    var imageView = NSImageView()
     
     var firstMouseDownPoint: NSPoint = NSZeroPoint
     
@@ -74,7 +59,7 @@ class VUDraggableImageView: NSImageView {
         }
     }
     
-    override var image: NSImage? {
+    var image: NSImage? {
         
         didSet {
             
@@ -84,7 +69,11 @@ class VUDraggableImageView: NSImageView {
                 
                 let imageSize = _image.sizeForMaxDimension(maxDimension)
                 
-                self.frame.size = imageSize
+                let borderWidth = self.borderWidthRatio * imageSize.width
+                
+                self.frame.size = NSSize(width: imageSize.width + 2 * borderWidth, height: imageSize.height + 2 * borderWidth)
+                
+                self.imageView.image = _image
                 
                 needsDisplay = true
                 
@@ -94,9 +83,103 @@ class VUDraggableImageView: NSImageView {
         }
     }
     
+    override init(frame frameRect: NSRect) {
+        
+        super.init(frame: frameRect)
+        
+        self.wantsLayer = true
+ 
+        self.addSubview(self.imageView)
+        configureImageView()
+        
+        
+    }
+    
+    required init?(coder: NSCoder) {
+        
+        super.init(coder: coder)
+        self.wantsLayer = true
+        
+        if let imageView = NSImageView(coder: coder) {
+            
+            self.imageView = imageView
+            self.addSubview(self.imageView)
+
+            configureImageView()
+        }
+        
+        
+    }
+    
+    func configureImageView()
+    {
+        self.wantsLayer = true
+        
+        addConstraints()
+    
+        self.configureShadow()
+        
+        
+        
+    }
+    
+    func addConstraints() {
+        
+        var borderWidth = self.frame.width * self.borderWidthRatio
+        
+        if let image = self.image {
+            
+            borderWidth = image.size.width * self.borderWidthRatio
+        }
+        
+    
+        self.imageView.translatesAutoresizingMaskIntoConstraints = false
+        
+        let centerYConstraint: NSLayoutConstraint = NSLayoutConstraint(item: self.imageView, attribute: NSLayoutConstraint.Attribute.centerY, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self, attribute: NSLayoutConstraint.Attribute.centerY, multiplier: 1, constant: 0)
+        let centerXConstraint: NSLayoutConstraint = NSLayoutConstraint(item: self.imageView, attribute: NSLayoutConstraint.Attribute.centerX, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self, attribute: NSLayoutConstraint.Attribute.centerX, multiplier: 1, constant: 0)
+        
+        let leftConstraint: NSLayoutConstraint = NSLayoutConstraint(item: self.imageView, attribute: NSLayoutConstraint.Attribute.left, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self, attribute: NSLayoutConstraint.Attribute.left, multiplier: 1, constant: borderWidth)
+        let rightConstraint: NSLayoutConstraint = NSLayoutConstraint(item: self.imageView, attribute: NSLayoutConstraint.Attribute.right, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self, attribute: NSLayoutConstraint.Attribute.right, multiplier: 1, constant: borderWidth)
+        
+        let topConstraint: NSLayoutConstraint = NSLayoutConstraint(item: self.imageView, attribute: NSLayoutConstraint.Attribute.top, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self, attribute: NSLayoutConstraint.Attribute.top, multiplier: 1, constant: borderWidth)
+        
+        let bottomConstraint: NSLayoutConstraint = NSLayoutConstraint(item: self.imageView, attribute: NSLayoutConstraint.Attribute.bottom, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self, attribute: NSLayoutConstraint.Attribute.bottom, multiplier: 1, constant: borderWidth)
+        
+        bottomConstraint.priority = .dragThatCanResizeWindow
+        rightConstraint.priority = .dragThatCanResizeWindow
+        
+        self.addConstraint(centerXConstraint)
+        self.addConstraint(centerYConstraint)
+        self.addConstraint(leftConstraint)
+        self.addConstraint(rightConstraint)
+        self.addConstraint(topConstraint)
+        self.addConstraint(bottomConstraint)
+    }
+
+    func configureShadow() {
+        
+        if self.enableShadow {
+            
+            self.shadow = NSShadow()
+            self.layer?.shadowOpacity = 1.0
+            self.layer?.shadowColor = self.shadowColor.cgColor
+            self.layer?.shadowOffset = NSMakeSize(10, 10)
+            self.layer?.shadowRadius = 6.0
+            
+        } else {
+            
+            self.shadow = nil
+        }
+        
+        
+    }
+    
     override func draw(_ dirtyRect: NSRect) {
         
         super.draw(dirtyRect)
+        
+        self.borderColor.set()
+        self.bounds.fill()
         
         if selected {
             
@@ -112,37 +195,39 @@ class VUDraggableImageView: NSImageView {
         
         let handlesPath = NSBezierPath()
         
-        let shorterDimension = CGFloat.minimum(self.bounds.width, self.bounds.height)
+        let rect = self.bounds
+        
+        let shorterDimension = CGFloat.minimum(rect.width, rect.height)
         let handleLength = shorterDimension / 5
         let halfHandleLength = handleLength / 2
         
-        handlesPath.move(to: NSPoint(x: self.bounds.minX, y: self.bounds.minY + handleLength))
-        handlesPath.line(to: NSPoint(x: self.bounds.minX, y: self.bounds.minY))
-        handlesPath.line(to: NSPoint(x: self.bounds.minX + handleLength, y: self.bounds.minY))
+        handlesPath.move(to: NSPoint(x: rect.minX, y: rect.minY + handleLength))
+        handlesPath.line(to: NSPoint(x: rect.minX, y: rect.minY))
+        handlesPath.line(to: NSPoint(x: rect.minX + handleLength, y: rect.minY))
         
-        handlesPath.move(to: NSPoint(x: self.bounds.midX - halfHandleLength, y: self.bounds.minY))
-        handlesPath.line(to: NSPoint(x: self.bounds.midX + halfHandleLength, y: self.bounds.minY))
+        handlesPath.move(to: NSPoint(x: rect.midX - halfHandleLength, y: rect.minY))
+        handlesPath.line(to: NSPoint(x: rect.midX + halfHandleLength, y: rect.minY))
         
-        handlesPath.move(to: NSPoint(x: self.bounds.maxX - handleLength, y: self.bounds.minY))
-        handlesPath.line(to: NSPoint(x: self.bounds.maxX, y: self.bounds.minY))
-        handlesPath.line(to: NSPoint(x: self.bounds.maxX, y: self.bounds.minY + handleLength))
+        handlesPath.move(to: NSPoint(x: rect.maxX - handleLength, y: rect.minY))
+        handlesPath.line(to: NSPoint(x: rect.maxX, y: rect.minY))
+        handlesPath.line(to: NSPoint(x: rect.maxX, y: rect.minY + handleLength))
         
-        handlesPath.move(to: NSPoint(x: self.bounds.maxX, y: self.bounds.midY - halfHandleLength))
-        handlesPath.line(to: NSPoint(x: self.bounds.maxX, y: self.bounds.midY + halfHandleLength))
+        handlesPath.move(to: NSPoint(x: rect.maxX, y: rect.midY - halfHandleLength))
+        handlesPath.line(to: NSPoint(x: rect.maxX, y: rect.midY + halfHandleLength))
         
-        handlesPath.move(to: NSPoint(x: self.bounds.maxX, y: self.bounds.maxY - handleLength))
-        handlesPath.line(to: NSPoint(x: self.bounds.maxX, y: self.bounds.maxY))
-        handlesPath.line(to: NSPoint(x: self.bounds.maxX - handleLength, y: self.bounds.maxY))
+        handlesPath.move(to: NSPoint(x: rect.maxX, y: rect.maxY - handleLength))
+        handlesPath.line(to: NSPoint(x: rect.maxX, y: rect.maxY))
+        handlesPath.line(to: NSPoint(x: rect.maxX - handleLength, y: rect.maxY))
         
-        handlesPath.move(to: NSPoint(x: self.bounds.midX - halfHandleLength, y: self.bounds.maxY))
-        handlesPath.line(to: NSPoint(x: self.bounds.midX + halfHandleLength, y: self.bounds.maxY))
+        handlesPath.move(to: NSPoint(x: rect.midX - halfHandleLength, y: rect.maxY))
+        handlesPath.line(to: NSPoint(x: rect.midX + halfHandleLength, y: rect.maxY))
         
-        handlesPath.move(to: NSPoint(x: self.bounds.minX + handleLength, y: self.bounds.maxY))
-        handlesPath.line(to: NSPoint(x: self.bounds.minX, y: self.bounds.maxY))
-        handlesPath.line(to: NSPoint(x: self.bounds.minX, y: self.bounds.maxY - handleLength))
+        handlesPath.move(to: NSPoint(x: rect.minX + handleLength, y: rect.maxY))
+        handlesPath.line(to: NSPoint(x: rect.minX, y: rect.maxY))
+        handlesPath.line(to: NSPoint(x: rect.minX, y: rect.maxY - handleLength))
         
-        handlesPath.move(to: NSPoint(x: self.bounds.minX, y: self.bounds.midY - halfHandleLength))
-        handlesPath.line(to: NSPoint(x: self.bounds.minX, y: self.bounds.midY + halfHandleLength))
+        handlesPath.move(to: NSPoint(x: rect.minX, y: rect.midY - halfHandleLength))
+        handlesPath.line(to: NSPoint(x: rect.minX, y: rect.midY + halfHandleLength))
         
         handlesPath.lineWidth = 10.0
         handlesPath.stroke()
@@ -173,43 +258,16 @@ class VUDraggableImageView: NSImageView {
     }
     
     
-    override init(frame frameRect: NSRect) {
-        
-        super.init(frame: frameRect)
-        
-        self.wantsLayer = true
-        
-     
-        configureImageView()
-        
-        
-    }
-    
-    required init?(coder: NSCoder) {
-        
-        super.init(coder: coder)
-        self.wantsLayer = true
-
-        configureImageView()
-        
-    }
+   
     
     
     func setImage(image: NSImage) {
         
         self.imageData = image.tiffRepresentation
-        
-        setBorderedImage()
-        
-    }
-    
-    func configureImageView()
-    {
-        self.wantsLayer = true
+      
+        self.image = image
 
-    
-        self.configureShadow()
-        
+        self.needsDisplay = true
         
     }
     
@@ -227,68 +285,50 @@ class VUDraggableImageView: NSImageView {
         self.needsDisplay = true
     }
     
-    func configureShadow() {
-        
-        if self.enableShadow {
-            
-            self.shadow = NSShadow()
-            self.layer?.shadowOpacity = 1.0
-            self.layer?.shadowColor = self.shadowColor.cgColor
-            self.layer?.shadowOffset = NSMakeSize(10, 10)
-            self.layer?.shadowRadius = 6.0
-            
-        } else {
-            
-            self.shadow = nil
-        }
-        
-        
-    }
+    
     
     func setBorder(enabled: Bool) {
         
         self.enableBorder = enabled
         
-        setBorderedImage()
-        
+        self.needsDisplay = true
+       
         
     }
     
     func setBorderColor(color: NSColor) {
         
         self.borderColor = color
-        
-        self.setBorderedImage()
-        
+      
+        self.needsDisplay = true
     }
 
     func setBorderWidth(percent: CGFloat) {
         
         self.borderWidthRatio = percent/100
         
-        self.setBorderedImage()
-        
+        self.needsDisplay = true
         
     }
     
-    func setBorderedImage() {
+
+    func getImage() -> NSImage? {
         
-        if let data = self.imageData, let image = NSImage(data: data) {
+        guard let image = self.image else { return nil }
+        
             
-            if self.enableBorder {
-                
-                let borderWidth = image.size.width * self.borderWidthRatio
-                self.image = image.withBorder(color: borderColor, width: borderWidth)
-                
-            } else {
-                
-                self.image = image
-            }
+        var borderWidth = self.frame.width * self.borderWidthRatio
+        
+        if let image = self.image {
             
-            self.needsDisplay = true
+            borderWidth = image.size.width * self.borderWidthRatio
         }
+        
+        return image.withBorder(color: borderColor, width: borderWidth)
+            
+        
     }
-    
+        
     func select() {
         
         self.selected = true
@@ -670,7 +710,7 @@ class VUDraggableImageView: NSImageView {
 
 // MARK: - NSDraggingSource
 
-extension VUDraggableImageView: NSDraggingSource {
+extension VUDraggableBorderedImageView: NSDraggingSource {
     
     func draggingSession(_ session: NSDraggingSession, sourceOperationMaskFor context: NSDraggingContext) -> NSDragOperation {
         return .generic
@@ -680,7 +720,8 @@ extension VUDraggableImageView: NSDraggingSource {
 }
 
 // MARK: - NSPasteboardItemDataProvider
-extension VUDraggableImageView: NSPasteboardItemDataProvider {
+
+extension VUDraggableBorderedImageView: NSPasteboardItemDataProvider {
     
     func pasteboard(_ pasteboard: NSPasteboard?, item: NSPasteboardItem, provideDataForType type: NSPasteboard.PasteboardType) {
         

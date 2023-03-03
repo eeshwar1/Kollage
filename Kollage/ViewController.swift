@@ -37,16 +37,12 @@ class ViewController: NSViewController, NSFontChanging {
     
     @IBOutlet weak var gridView: NSView!
     
-    var imageViews: [VUDraggableImageView] = []
-    
     var dragMode: DraggingType = .contents
     
     let itemWidth: CGFloat = 200
     let itemHeight: CGFloat = 100
     
     var center = NSPoint.zero
-    
-   
     
     override func viewDidLoad() {
         
@@ -69,7 +65,6 @@ class ViewController: NSViewController, NSFontChanging {
         
     }
     
-    
     func setupView() {
         
         let bounds = self.view.bounds
@@ -80,15 +75,6 @@ class ViewController: NSViewController, NSFontChanging {
         
     }
     
-//    override func keyDown(with event: NSEvent) {
-//
-//       // kollageCanvas.keyDown(with: event)
-//
-//    }
-    
-//    override func performKeyEquivalent(with event: NSEvent) -> Bool {
-//        return true
-//    }
     
     override var acceptsFirstResponder: Bool {
         get {
@@ -130,6 +116,7 @@ class ViewController: NSViewController, NSFontChanging {
         
     }
     
+    
     @IBAction func selectFont(_ sender: NSButton) {
         
         print("select font")
@@ -139,7 +126,6 @@ class ViewController: NSViewController, NSFontChanging {
         NSFontManager.shared.orderFrontFontPanel(nil)
     }
     
-    // MARK: Actions
     
     @IBAction func canvasSizeChanged(_ sender: NSPopUpButton) {
         

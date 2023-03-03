@@ -17,6 +17,7 @@ class VUKollageEasel: NSView {
     var documentView: NSView = NSView(frame: NSRect(x: 0, y: 0, width: 1200, height:1200))
 
     var kollageCanvas: VUKollageCanvas = VUKollageCanvas(frame: NSRect(x: 0, y: 0, width: 1024, height: 768))
+    
     var kollageBackground: VUKollageBackground = VUKollageBackground(frame: NSRect(x: 0, y: 0, width: 1024, height: 768))
     
     var canvasSize = NSSize(width: 800, height: 600)
@@ -52,7 +53,7 @@ class VUKollageEasel: NSView {
         
         self.wantsLayer = true
         self.layer?.backgroundColor = NSColor.windowBackgroundColor.cgColor
-
+        
         
         self.documentView.wantsLayer = true
         self.documentView.layer?.backgroundColor = NSColor.windowBackgroundColor.cgColor
@@ -66,24 +67,13 @@ class VUKollageEasel: NSView {
         scrollView.maxMagnification = 5.0
         scrollView.minMagnification = 0.25
         
-
-    
         
-        if let horizontalRulerView = scrollView.horizontalRulerView {
-            
-            horizontalRulerView.measurementUnits = .points
-            horizontalRulerView.clientView = self.documentView
-        }
+        let horizontalRuler = NSRulerView(scrollView: scrollView, orientation: .horizontalRuler)
         
-        if let verticalRulerView = scrollView.verticalRulerView {
-            
-            verticalRulerView.measurementUnits = .points
-            verticalRulerView.clientView = self.documentView
-        }
+        horizontalRuler.originOffset = 200
+        let verticalRuler = NSRulerView(scrollView: scrollView, orientation: .verticalRuler)
         
-        let horizontalRuler = NSRulerView.init(scrollView: scrollView, orientation: .horizontalRuler)
-        
-        let verticalRuler = NSRulerView.init(scrollView: scrollView, orientation: .verticalRuler)
+        verticalRuler.originOffset = 200
         
         scrollView.horizontalRulerView = horizontalRuler
         scrollView.verticalRulerView = verticalRuler
@@ -191,11 +181,10 @@ class VUKollageEasel: NSView {
         for view in canvas.subviews
         {
 
-            if let imageView = view as? VUDraggableImageView {
+            if let imageView = view as? VUDraggableBorderedImageView {
 
-                if let image = imageView.image {
+                if let image = imageView.getImage() {
 
-                    
                     let rotImage = image.rotated(by: imageView.frameCenterRotation)
                     let resizedImage = rotImage.resize(withSize: imageView.frame.size)
                     
@@ -327,64 +316,41 @@ class VUKollageEasel: NSView {
     
     func setBorder(enabled: Bool) {
         
-        
         let canvas = self.kollageCanvas
         
-        if canvas.selectedViews.count > 0 {
+        let views = canvas.selectedViews.count > 0 ? canvas.selectedViews : canvas.subviews
+
+        for (_, view) in views.enumerated() {
             
-            for (_, view) in canvas.selectedViews.enumerated() {
+            if let imageView = view as? VUDraggableBorderedImageView {
                 
-                if let imageView = view as? VUDraggableImageView {
-                    
-                    imageView.setBorder(enabled: enabled)
-                }
-                
-            }
-        } else {
-            
-            for (_, view) in canvas.subviews.enumerated() {
-                
-                if let imageView = view as? VUDraggableImageView {
-                    
-                    imageView.setBorder(enabled: enabled)
-                }
-                
+                imageView.setBorder(enabled: enabled)
             }
             
         }
+    
     }
     
     func setBorderColor(color: NSColor) {
         
-        
         let canvas = self.kollageCanvas
         
-        if canvas.selectedViews.count > 0 {
+        let views = canvas.selectedViews.count > 0 ? canvas.selectedViews : canvas.subviews
+        
+   
+        for (_, view) in views.enumerated() {
             
-            for (_, view) in canvas.selectedViews.enumerated() {
+            if let imageView = view as? VUDraggableBorderedImageView {
                 
-                if let imageView = view as? VUDraggableImageView {
-                    
-                    imageView.setBorderColor(color: color)
-                }
-                
-            }
-        } else {
-            
-            for (_, view) in canvas.subviews.enumerated() {
-                
-                if let imageView = view as? VUDraggableImageView {
-                    
-                    imageView.setBorderColor(color: color)
-                }
-                
+                imageView.setBorderColor(color: color)
             }
             
         }
+        
+        
     }
     
     func setBorderWidth(width: CGFloat) {
-        
         
         let canvas = self.kollageCanvas
         
@@ -393,7 +359,7 @@ class VUKollageEasel: NSView {
         
         for (_, view) in views.enumerated() {
                 
-                if let imageView = view as? VUDraggableImageView {
+                if let imageView = view as? VUDraggableBorderedImageView {
                     
                     imageView.setBorderWidth(percent: width)
 
@@ -402,36 +368,25 @@ class VUKollageEasel: NSView {
         }
         
     }
+    
     func setShadow(enabled: Bool) {
         
         self.enableShadow = enabled
         
         let canvas = self.kollageCanvas
         
-        if canvas.selectedViews.count > 0 {
+        let views = canvas.selectedViews.count > 0 ? canvas.selectedViews : canvas.subviews
+    
             
-            for (_, view) in canvas.selectedViews.enumerated() {
-                
-                if let imageView = view as? VUDraggableImageView {
-                    
-                    imageView.setShadow(enabled: self.enableShadow)
-                }
-                
-            }
-        } else {
+        for (_, view) in views.enumerated() {
             
-            for (_, view) in canvas.subviews.enumerated() {
+            if let imageView = view as? VUDraggableBorderedImageView {
                 
-                if let imageView = view as? VUDraggableImageView {
-                    
-                    imageView.setShadow(enabled: self.enableShadow)
-                }
-                
+                imageView.setShadow(enabled: self.enableShadow)
             }
             
         }
-        
-        
+     
         
     }
 }
