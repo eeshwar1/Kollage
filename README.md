@@ -2,7 +2,8 @@
 
 A simple macOS Utility for creating collages from Photos.
 
-<img width="1455" alt="Screenshot 2023-02-24 at 10 30 10 PM" src="https://user-images.githubusercontent.com/1115336/221338235-3475ad72-779c-4ac5-974c-ad863e830a6b.png">
+<img width="1515" alt="Screenshot 2023-03-01 at 9 20 42 AM" src="https://user-images.githubusercontent.com/1115336/222183204-01453283-acf9-4fae-8570-624a6e59d4fe.png">
+
 
 ## Sample Collages
 
@@ -15,3 +16,5 @@ A simple macOS Utility for creating collages from Photos.
 <img width="800" alt="Kollage Onam" src="https://user-images.githubusercontent.com/1115336/218362169-9e9282d2-58a3-4ce5-9d57-3d70bb84e034.png">
 
 <img width="800" alt="Kollage With Shadow" src="https://user-images.githubusercontent.com/1115336/221338357-7baff77f-5473-4586-af51-b35d6977fe02.png">
+
+<img width="800" alt="Kollage New 3" src="https://user-images.githubusercontent.com/1115336/222181847-56b040b4-2b60-4116-b6bb-2d617ee70c69.png">
