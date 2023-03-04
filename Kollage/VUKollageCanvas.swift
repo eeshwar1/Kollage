@@ -179,7 +179,7 @@ protocol DestinationViewDelegate {
         
         let constrainedSize = image.aspectFitSizeForMaxDimension(self.frame.height/2)
         
-        let imageView = VUDraggableBorderedImageView(frame:NSRect(x: center.x - constrainedSize.width/2, y: center.y - constrainedSize.height/2, width: constrainedSize.width, height: constrainedSize.height))
+        let imageView = VUDraggableImageView(frame:NSRect(x: center.x - constrainedSize.width/2, y: center.y - constrainedSize.height/2, width: constrainedSize.width, height: constrainedSize.height))
         
         imageView.sizeFactor = constrainedSize.width/image.size.width
         
@@ -223,7 +223,7 @@ protocol DestinationViewDelegate {
             self.selectedViews.remove(at: index)
         }
         
-        if let imageView = view as? VUDraggableBorderedImageView {
+        if let imageView = view as? VUDraggableImageView {
             
             imageView.unselect()
             
@@ -248,7 +248,7 @@ protocol DestinationViewDelegate {
         
         self.selectedViews.append(view)
         
-        if let view = view as? VUDraggableBorderedImageView {
+        if let view = view as? VUDraggableImageView {
             
             view.select()
             
@@ -422,7 +422,7 @@ protocol DestinationViewDelegate {
         
         for (_, view) in selectedViews.enumerated() {
             
-            if let imageView = view as? VUDraggableBorderedImageView {
+            if let imageView = view as? VUDraggableImageView {
                 imageView.applyEffect(effect: effect)
                 
             }
@@ -435,7 +435,7 @@ protocol DestinationViewDelegate {
         
         for (_, view) in selectedViews.enumerated() {
             
-            if let imageView = view as? VUDraggableBorderedImageView {
+            if let imageView = view as? VUDraggableImageView {
                 imageView.removeFilter()
             }
         }
@@ -446,7 +446,7 @@ protocol DestinationViewDelegate {
         
         for (_, view) in selectedViews.enumerated() {
             
-            if let imageView = view as? VUDraggableBorderedImageView {
+            if let imageView = view as? VUDraggableImageView {
                 imageView.setShadowColor(color: color)
             }
         }

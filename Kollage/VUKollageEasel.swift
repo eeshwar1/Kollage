@@ -181,7 +181,7 @@ class VUKollageEasel: NSView {
         for view in canvas.subviews
         {
 
-            if let imageView = view as? VUDraggableBorderedImageView {
+            if let imageView = view as? VUDraggableImageView {
 
                 if let image = imageView.getImage() {
 
@@ -322,7 +322,7 @@ class VUKollageEasel: NSView {
 
         for (_, view) in views.enumerated() {
             
-            if let imageView = view as? VUDraggableBorderedImageView {
+            if let imageView = view as? VUDraggableImageView {
                 
                 imageView.setBorder(enabled: enabled)
             }
@@ -340,7 +340,7 @@ class VUKollageEasel: NSView {
    
         for (_, view) in views.enumerated() {
             
-            if let imageView = view as? VUDraggableBorderedImageView {
+            if let imageView = view as? VUDraggableImageView {
                 
                 imageView.setBorderColor(color: color)
             }
@@ -359,7 +359,7 @@ class VUKollageEasel: NSView {
         
         for (_, view) in views.enumerated() {
                 
-                if let imageView = view as? VUDraggableBorderedImageView {
+                if let imageView = view as? VUDraggableImageView {
                     
                     imageView.setBorderWidth(percent: width)
 
@@ -380,7 +380,7 @@ class VUKollageEasel: NSView {
             
         for (_, view) in views.enumerated() {
             
-            if let imageView = view as? VUDraggableBorderedImageView {
+            if let imageView = view as? VUDraggableImageView {
                 
                 imageView.setShadow(enabled: self.enableShadow)
             }
