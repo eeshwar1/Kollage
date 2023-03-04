@@ -18,7 +18,8 @@
 		654F7C662327491E00DF6265 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654F7C652327491E00DF6265 /* ViewController.swift */; };
 		654F7C682327492000DF6265 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 654F7C672327492000DF6265 /* Assets.xcassets */; };
 		654F7C6B2327492000DF6265 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 654F7C692327492000DF6265 /* Main.storyboard */; };
-		6584F99829B16A7400ABE24D /* VUDraggableBorderedImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6584F99729B16A7400ABE24D /* VUDraggableBorderedImageView.swift */; };
+		6584F99A29B2913A00ABE24D /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 6584F99929B2913A00ABE24D /* README.md */; };
+		6584F99C29B2914000ABE24D /* license.md in Resources */ = {isa = PBXBuildFile; fileRef = 6584F99B29B2914000ABE24D /* license.md */; };
 		65B0A4A12990509C007D850A /* AddTextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B0A4A02990509C007D850A /* AddTextViewController.swift */; };
 		65C948052337F250004D8015 /* VUDraggableImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C948042337F250004D8015 /* VUDraggableImageView.swift */; };
 		65C9480923387ACA004D8015 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C9480823387ACA004D8015 /* Helpers.swift */; };
@@ -41,7 +42,8 @@
 		654F7C6A2327492000DF6265 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		654F7C6C2327492000DF6265 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		654F7C6D2327492000DF6265 /* Kollage.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Kollage.entitlements; sourceTree = "<group>"; };
-		6584F99729B16A7400ABE24D /* VUDraggableBorderedImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VUDraggableBorderedImageView.swift; sourceTree = "<group>"; };
+		6584F99929B2913A00ABE24D /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
+		6584F99B29B2914000ABE24D /* license.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = license.md; sourceTree = SOURCE_ROOT; };
 		65B0A4A02990509C007D850A /* AddTextViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTextViewController.swift; sourceTree = "<group>"; };
 		65C948042337F250004D8015 /* VUDraggableImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VUDraggableImageView.swift; sourceTree = "<group>"; };
 		65C9480823387ACA004D8015 /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
@@ -88,7 +90,6 @@
 				6526D584298EFAE3003F54CC /* VUKollageEasel.swift */,
 				6526D55E2985E2B0003F54CC /* DraggableResizableView.swift */,
 				65C948042337F250004D8015 /* VUDraggableImageView.swift */,
-				6584F99729B16A7400ABE24D /* VUDraggableBorderedImageView.swift */,
 				65E384D22840F2570042C0A8 /* VUDraggableTextView.swift */,
 				65C9480823387ACA004D8015 /* Helpers.swift */,
 				6526D55C2985AE54003F54CC /* NSView+Extension.swift */,
@@ -98,6 +99,8 @@
 				654F7C692327492000DF6265 /* Main.storyboard */,
 				654F7C6C2327492000DF6265 /* Info.plist */,
 				654F7C6D2327492000DF6265 /* Kollage.entitlements */,
+				6584F99929B2913A00ABE24D /* README.md */,
+				6584F99B29B2914000ABE24D /* license.md */,
 			);
 			path = Kollage;
 			sourceTree = "<group>";
@@ -160,6 +163,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6584F99C29B2914000ABE24D /* license.md in Resources */,
+				6584F99A29B2913A00ABE24D /* README.md in Resources */,
 				654F7C682327492000DF6265 /* Assets.xcassets in Resources */,
 				654F7C6B2327492000DF6265 /* Main.storyboard in Resources */,
 			);
@@ -173,7 +178,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				654F7C662327491E00DF6265 /* ViewController.swift in Sources */,
-				6584F99829B16A7400ABE24D /* VUDraggableBorderedImageView.swift in Sources */,
 				65C948052337F250004D8015 /* VUDraggableImageView.swift in Sources */,
 				6526D55B2985ADF4003F54CC /* NSImage+Extension.swift in Sources */,
 				6526D55F2985E2B0003F54CC /* DraggableResizableView.swift in Sources */,
