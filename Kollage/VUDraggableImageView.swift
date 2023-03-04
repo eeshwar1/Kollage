@@ -367,6 +367,21 @@ class VUDraggableImageView: NSView {
             
         
     }
+    
+    func getShadow() -> NSImage? {
+        
+        guard self.enableShadow else { return nil }
+            
+        let shadowSize = NSSize(width: imageView.frame.size.width + 20, height: imageView.frame.size.height + 20)
+        let baseShadow = NSImage.swatchWithColor(color: self.shadowColor, size: shadowSize)
+        
+        let rotShadow = baseShadow.rotated(by: imageView.frameCenterRotation).applyGaussianBlur()
+        
+        let shadow = rotShadow.resize(withSize: imageView.frame.size)!
+        
+        return shadow
+        
+    }
         
     func select() {
         
