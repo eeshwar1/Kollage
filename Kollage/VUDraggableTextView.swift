@@ -49,13 +49,15 @@ class VUDraggableTextView: DraggableResizableView {
         
         super.init(frame: NSRect(x: 0, y: 0, width: 200, height: 200))
         
-        self.textField.stringValue = text
+        self.textField.attributedStringValue = NSAttributedString(string: text)
         
         setupTextField()
     }
     
     func setupTextField() {
     
+        self.textField.isEditable = false
+        self.textField.isBordered = false
         self.addSubview(self.textField)
         textField.translatesAutoresizingMaskIntoConstraints = false
         
