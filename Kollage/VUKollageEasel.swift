@@ -23,8 +23,7 @@ class VUKollageEasel: NSView {
     var canvasSize = NSSize(width: 800, height: 600)
     
     var enableShadow = true
-    
-    
+
     var vc: ViewController? {
         
         didSet {
@@ -187,13 +186,10 @@ class VUKollageEasel: NSView {
 
                     let rotImage = image.rotated(by: imageView.frameCenterRotation)
                     let resizedImage = rotImage.resize(withSize: imageView.frame.size)
-                    
                
-                    if let shadow = imageView.getShadow() {
+                    if let shadow =  imageView.getShadow() {
                         
-                        let shadowPosition = NSPoint(x: imageView.frame.origin.x + 20, y: imageView.frame.origin.y + 20)
-                        
-                        kollage = kollage.addImageAlpha(image: shadow, position: shadowPosition, alpha: 1.0)
+                        kollage = kollage.addImageAlpha(image: shadow.image, position: shadow.position, alpha: 0.7)
                     }
                     
                     kollage = kollage.addImage(image: resizedImage ?? NSImage(), position: imageView.frame.origin)
@@ -219,7 +215,6 @@ class VUKollageEasel: NSView {
         
         kollageCanvas.changeFont(newFont)
             
-        
     }
     
     func addImages(_ urls: [URL]) {
@@ -228,6 +223,12 @@ class VUKollageEasel: NSView {
         
     }
     
+    func addText(text: String) {
+        
+        
+        self.kollageCanvas.addText(text: text)
+        
+    }
     func scaleSelectedView(factor: Double) {
         
         let canvas = self.kollageCanvas
@@ -245,8 +246,6 @@ class VUKollageEasel: NSView {
             }
             
         }
-        
-            
         
     }
     

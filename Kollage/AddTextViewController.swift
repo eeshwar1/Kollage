@@ -11,6 +11,8 @@ import Cocoa
 class AddTextViewController: NSViewController {
     
     @IBOutlet weak var textField: NSTextField!
+    
+    var vc: ViewController?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,6 +24,11 @@ class AddTextViewController: NSViewController {
         let application = NSApplication.shared
         application.stopModal()
         print("Entered text is \(textField.stringValue)")
+        
+        if let vc = self.vc {
+            
+            vc.processAddText(text: textField.stringValue)
+        }
     }
     
     @IBAction func cancelAddText(_ sender: NSButton) {
@@ -31,8 +38,5 @@ class AddTextViewController: NSViewController {
         
     }
     
-    @IBAction func testMenu(_ sender: Any) {
-        
-        print("from add text controller...")
-    }
+    
 }

@@ -325,8 +325,9 @@ protocol DestinationViewDelegate {
     
     func addText(text: String) {
         
-        let center = NSPoint(x: self.frame.origin.x + self.frame.width/2, y: self.frame.origin.y + self.frame.height/2)
-        let textView = VUDraggableTextView(frame: NSRect(x: center.x, y: center.y, width: 200, height: 50))
+//        let center = NSPoint(x: self.frame.origin.x + self.frame.width/2, y: self.frame.origin.y + self.frame.height/2)
+        
+        let textView = VUDraggableTextView(text: text)
         
         self.addSubview(textView)
         textView.canvas = self
@@ -378,6 +379,7 @@ protocol DestinationViewDelegate {
         if (self.subviews.count == 0) {
             menu.item(withTitle: "Clear")?.isEnabled = false
             menu.item(withTitle: "Select All")?.isEnabled = false
+            menu.item(withTitle: "Select None")?.isEnabled = false
             
         }
        

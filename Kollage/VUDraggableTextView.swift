@@ -4,7 +4,7 @@ class VUDraggableTextView: DraggableResizableView {
     
     var canvas: VUKollageCanvas?
     
-    var textField: NSTextField?
+    var textField: NSTextField = NSTextField()
     
     var minimumWidth: CGFloat = 200
     var minimumHeight: CGFloat = 50
@@ -34,28 +34,29 @@ class VUDraggableTextView: DraggableResizableView {
         self.layer?.borderWidth = 2.0
         
        
-        
         let recognizer = NSMagnificationGestureRecognizer(target: self, action: #selector(rotateAction))
         
         self.addGestureRecognizer(recognizer)
+        
+        self.textField.stringValue = "Sample Text"
 
         setupTextField()
         
         self.frame.size = self.fittingSize
     }
     
+    init(text: String) {
+        
+        super.init(frame: NSRect(x: 0, y: 0, width: 200, height: 200))
+        
+        self.textField.stringValue = text
+        
+        setupTextField()
+    }
+    
     func setupTextField() {
-        
-        let textField = NSTextField(labelWithAttributedString:  NSAttributedString(string: "Hello World"))
-
-        
-        textField.frame.size = self.frame.size
-        textField.sizeToFit()
-        
-        self.textField = textField
-        
-        self.addSubview(self.textField!)
-        
+    
+        self.addSubview(self.textField)
         textField.translatesAutoresizingMaskIntoConstraints = false
         
         let centerYConstraint: NSLayoutConstraint = NSLayoutConstraint(item: textField, attribute: NSLayoutConstraint.Attribute.centerY, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self, attribute: NSLayoutConstraint.Attribute.centerY, multiplier: 1, constant: 0)
@@ -79,16 +80,8 @@ class VUDraggableTextView: DraggableResizableView {
         self.addConstraint(bottomConstraint)
         
         
-        
     }
     
-    func setText(text: String) {
-        
-        if let textField = self.textField {
-            
-            textField.stringValue = text
-        }
-    }
     
     @objc func rotateAction(gestureRecognizer: NSRotationGestureRecognizer) {
         
@@ -112,8 +105,8 @@ class VUDraggableTextView: DraggableResizableView {
  
     func changeFont(_ font: NSFont) {
         
-        self.textField?.font = font
-        self.textField?.sizeToFit()
+        self.textField.font = font
+        self.textField.sizeToFit()
         self.frame.size = self.fittingSize
         
     }
@@ -176,7 +169,7 @@ class VUDraggableTextView: DraggableResizableView {
             
         } else {
             
-            self.textField?.keyDown(with: event)
+            self.textField.keyDown(with: event)
             
         }
     }

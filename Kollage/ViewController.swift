@@ -59,8 +59,8 @@ class ViewController: NSViewController, NSFontChanging {
         
         backgroundColorWell.color = self.kollageEasel.getBackgroundColor()
         
-        stepperBorderWidth.integerValue = 10
-        labelBorderWidth.integerValue = 10
+        stepperBorderWidth.integerValue = 0
+        labelBorderWidth.integerValue = 0
         
         
     }
@@ -105,6 +105,11 @@ class ViewController: NSViewController, NSFontChanging {
         let storyboard = NSStoryboard(name: "Main", bundle: nil)
         let addTextWindowController = storyboard.instantiateController(withIdentifier: "Add Text Window Controller") as! NSWindowController
         
+        if let addTextVC = addTextWindowController.contentViewController as? AddTextViewController {
+            
+            addTextVC.vc = self
+        }
+        
         if let addTextWindow = addTextWindowController.window {
             let application = NSApplication.shared
             application.runModal(for: addTextWindow)
@@ -116,6 +121,10 @@ class ViewController: NSViewController, NSFontChanging {
         
     }
     
+    func processAddText(text: String) {
+        
+        self.kollageEasel.addText(text: text)
+    }
     
     @IBAction func selectFont(_ sender: NSButton) {
         
