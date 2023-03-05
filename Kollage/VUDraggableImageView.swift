@@ -37,7 +37,7 @@ class VUDraggableImageView: NSView {
     var canvas: VUKollageCanvas?
     
     var borderColor: NSColor = .white
-    var borderWidthRatio: CGFloat = 0.10
+    var borderWidthRatio: CGFloat = 0.0
     
     var shadowColor: NSColor = .black
     
@@ -55,7 +55,7 @@ class VUDraggableImageView: NSView {
     var leftConstraint: NSLayoutConstraint = NSLayoutConstraint()
     var rightConstraint: NSLayoutConstraint = NSLayoutConstraint()
     
-    
+    var selectionMarkLineWidth: CGFloat = 10.0
     
     var attributes: ImageViewAttributes {
         
@@ -88,13 +88,14 @@ class VUDraggableImageView: NSView {
             
             if let _image = image {
                 
-                let maxDimension: CGFloat =  CGFloat.maximum(self.frame.height, self.frame.width)
+                let maxDimension: CGFloat = CGFloat.maximum(self.frame.height, self.frame.width)
                 
-                let imageSize = _image.sizeForMaxDimension(maxDimension)
+                let imageSize = _image.aspectFitSizeForMaxDimension(maxDimension)
                 
-                let borderWidth = self.borderWidthRatio * imageSize.width
+                let borderWidth = self.borderWidthRatio * CGFloat.maximum(imageSize.width, imageSize.height)
                 
-                self.frame.size = NSSize(width: imageSize.width + 2 * borderWidth, height: imageSize.height + 2 * borderWidth)
+                self.frame.size = NSSize(width: imageSize.width + 2 * borderWidth + 2 * selectionMarkLineWidth,
+                                         height: imageSize.height + 2 * borderWidth + 2 * selectionMarkLineWidth)
                 
                 self.imageView.image = _image
                 
@@ -146,25 +147,30 @@ class VUDraggableImageView: NSView {
     
     func addConstraints() {
         
-        var borderWidth = self.frame.width * self.borderWidthRatio
         
-        if let image = self.image {
-            
-            borderWidth = image.size.width * self.borderWidthRatio
-        }
+        let dimension = CGFloat.maximum(self.frame.height, self.frame.height)
         
-    
+//        if let _ = self.image {
+//
+//            dimension =
+//            CGFloat.maximum(self.imageView.frame.height, self.imageView.frame.height)
+//
+//        }
+        
+        let borderWidth = dimension * self.borderWidthRatio
+        let marginWidth = borderWidth + selectionMarkLineWidth
+        
         self.imageView.translatesAutoresizingMaskIntoConstraints = false
         
         let centerYConstraint: NSLayoutConstraint = NSLayoutConstraint(item: self.imageView, attribute: NSLayoutConstraint.Attribute.centerY, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self, attribute: NSLayoutConstraint.Attribute.centerY, multiplier: 1, constant: 0)
         let centerXConstraint: NSLayoutConstraint = NSLayoutConstraint(item: self.imageView, attribute: NSLayoutConstraint.Attribute.centerX, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self, attribute: NSLayoutConstraint.Attribute.centerX, multiplier: 1, constant: 0)
         
-        let leftConstraint: NSLayoutConstraint = NSLayoutConstraint(item: self.imageView, attribute: NSLayoutConstraint.Attribute.left, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self, attribute: NSLayoutConstraint.Attribute.left, multiplier: 1, constant: borderWidth)
-        let rightConstraint: NSLayoutConstraint = NSLayoutConstraint(item: self.imageView, attribute: NSLayoutConstraint.Attribute.right, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self, attribute: NSLayoutConstraint.Attribute.right, multiplier: 1, constant: borderWidth)
+        let leftConstraint: NSLayoutConstraint = NSLayoutConstraint(item: self.imageView, attribute: NSLayoutConstraint.Attribute.left, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self, attribute: NSLayoutConstraint.Attribute.left, multiplier: 1, constant: marginWidth)
+        let rightConstraint: NSLayoutConstraint = NSLayoutConstraint(item: self.imageView, attribute: NSLayoutConstraint.Attribute.right, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self, attribute: NSLayoutConstraint.Attribute.right, multiplier: 1, constant: marginWidth)
         
-        let topConstraint: NSLayoutConstraint = NSLayoutConstraint(item: self.imageView, attribute: NSLayoutConstraint.Attribute.top, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self, attribute: NSLayoutConstraint.Attribute.top, multiplier: 1, constant: borderWidth)
+        let topConstraint: NSLayoutConstraint = NSLayoutConstraint(item: self.imageView, attribute: NSLayoutConstraint.Attribute.top, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self, attribute: NSLayoutConstraint.Attribute.top, multiplier: 1, constant: marginWidth)
         
-        let bottomConstraint: NSLayoutConstraint = NSLayoutConstraint(item: self.imageView, attribute: NSLayoutConstraint.Attribute.bottom, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self, attribute: NSLayoutConstraint.Attribute.bottom, multiplier: 1, constant: borderWidth)
+        let bottomConstraint: NSLayoutConstraint = NSLayoutConstraint(item: self.imageView, attribute: NSLayoutConstraint.Attribute.bottom, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self, attribute: NSLayoutConstraint.Attribute.bottom, multiplier: 1, constant: marginWidth)
         
         bottomConstraint.priority = .dragThatCanResizeWindow
         rightConstraint.priority = .dragThatCanResizeWindow
@@ -188,7 +194,7 @@ class VUDraggableImageView: NSView {
         if self.enableShadow {
             
             self.shadow = NSShadow()
-            self.layer?.shadowOpacity = 1.0
+            self.layer?.shadowOpacity = 0.7
             self.layer?.shadowColor = self.shadowColor.cgColor
             self.layer?.shadowOffset = NSMakeSize(10, 10)
             self.layer?.shadowRadius = 6.0
@@ -206,7 +212,8 @@ class VUDraggableImageView: NSView {
         super.draw(dirtyRect)
         
         self.borderColor.set()
-        self.bounds.fill()
+        
+        self.bounds.insetBy(dx: selectionMarkLineWidth, dy: selectionMarkLineWidth).fill()
         
         if selected {
             
@@ -256,7 +263,7 @@ class VUDraggableImageView: NSView {
         handlesPath.move(to: NSPoint(x: rect.minX, y: rect.midY - halfHandleLength))
         handlesPath.line(to: NSPoint(x: rect.minX, y: rect.midY + halfHandleLength))
         
-        handlesPath.lineWidth = 10.0
+        handlesPath.lineWidth = selectionMarkLineWidth
         handlesPath.stroke()
         
     }
@@ -318,7 +325,7 @@ class VUDraggableImageView: NSView {
         
         self.enableBorder = enabled
         
-        self.needsDisplay = true
+        configureBorder()
        
         
     }
@@ -334,33 +341,49 @@ class VUDraggableImageView: NSView {
         
         self.borderWidthRatio = percent/100
         
-        if let image = self.image {
-            
-            let borderWidth = image.size.width * self.borderWidthRatio
-            
-            self.topConstraint.constant =  borderWidth
-            self.bottomConstraint.constant = borderWidth
-            self.leftConstraint.constant = borderWidth
-            self.rightConstraint.constant = borderWidth
-            
-            self.needsDisplay = true
-        }
-        
-        
+        configureBorder()
+
         
     }
     
+    func configureBorder() {
+        
+        guard self.enableBorder else { return }
+        
+        if let _ = self.image {
+            
+            var borderWidth = 0.0
+            
+           if self.enableBorder {
+                
+                let dimension = CGFloat.maximum(self.frame.height, self.frame.width)
+                borderWidth = dimension * self.borderWidthRatio
+                
+            }
+            
+            let marginWidth = borderWidth + selectionMarkLineWidth
+            
+            self.topConstraint.constant =  marginWidth
+            self.bottomConstraint.constant = marginWidth
+            self.leftConstraint.constant = marginWidth
+            self.rightConstraint.constant = marginWidth
+            
+            self.needsDisplay = true
+            
+            
+        }
+        
+    }
 
     func getImage() -> NSImage? {
         
         guard let image = self.image else { return nil }
         
-            
-        var borderWidth = self.frame.width * self.borderWidthRatio
+        var borderWidth = CGFloat.maximum(self.frame.width, self.frame.height) * self.borderWidthRatio
         
-        if let image = self.image {
+        if let _ = self.image {
             
-            borderWidth = image.size.width * self.borderWidthRatio
+            borderWidth = CGFloat.maximum(imageView.frame.width, imageView.frame.height) * self.borderWidthRatio
         }
         
         return image.withBorder(color: borderColor, width: borderWidth)
@@ -368,18 +391,20 @@ class VUDraggableImageView: NSView {
         
     }
     
-    func getShadow() -> NSImage? {
+    func getShadow() -> (image: NSImage, position: NSPoint)? {
         
         guard self.enableShadow else { return nil }
             
-        let shadowSize = NSSize(width: imageView.frame.size.width + 20, height: imageView.frame.size.height + 20)
+        let shadowSize = NSSize(width: self.frame.size.width + 20, height: self.frame.size.height + 20)
         let baseShadow = NSImage.swatchWithColor(color: self.shadowColor, size: shadowSize)
         
         let rotShadow = baseShadow.rotated(by: imageView.frameCenterRotation).applyGaussianBlur()
         
-        let shadow = rotShadow.resize(withSize: imageView.frame.size)!
+        let shadow = rotShadow.resize(withSize: self.frame.size)!
         
-        return shadow
+        let shadowPosition = NSPoint(x: self.frame.origin.x + 20, y: self.frame.origin.y + 20)
+        
+        return (image: shadow, position: shadowPosition)
         
     }
         
