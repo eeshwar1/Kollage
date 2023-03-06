@@ -311,7 +311,7 @@ class VUKollageEasel: NSView {
         
         let canvas = self.kollageCanvas
         
-        let views = canvas.selectedViews.count > 0 ? canvas.selectedViews : canvas.subviews
+        let views = canvas.selectedViews
 
         for (_, view) in views.enumerated() {
             
@@ -328,7 +328,7 @@ class VUKollageEasel: NSView {
         
         let canvas = self.kollageCanvas
         
-        let views = canvas.selectedViews.count > 0 ? canvas.selectedViews : canvas.subviews
+        let views = canvas.selectedViews
         
    
         for (_, view) in views.enumerated() {
@@ -347,8 +347,7 @@ class VUKollageEasel: NSView {
         
         let canvas = self.kollageCanvas
         
-        let views = canvas.selectedViews.count > 0 ? canvas.selectedViews : canvas.subviews
-        
+        let views = canvas.selectedViews
         
         for (_, view) in views.enumerated() {
                 
@@ -368,7 +367,7 @@ class VUKollageEasel: NSView {
         
         let canvas = self.kollageCanvas
         
-        let views = canvas.selectedViews.count > 0 ? canvas.selectedViews : canvas.subviews
+        let views = canvas.selectedViews
     
             
         for (_, view) in views.enumerated() {

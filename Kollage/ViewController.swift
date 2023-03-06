@@ -101,11 +101,10 @@ class ViewController: NSViewController, NSFontChanging {
     
     @IBAction func addText(_ sender: NSButton) {
         
-        
         let storyboard = NSStoryboard(name: "Main", bundle: nil)
-        let addTextWindowController = storyboard.instantiateController(withIdentifier: "Add Text Window Controller") as! NSWindowController
+        let addTextWindowController = storyboard.instantiateController(withIdentifier: "Text Window Controller") as! NSWindowController
         
-        if let addTextVC = addTextWindowController.contentViewController as? AddTextViewController {
+        if let addTextVC = addTextWindowController.contentViewController as? TextViewController {
             
             addTextVC.vc = self
         }
@@ -142,8 +141,7 @@ class ViewController: NSViewController, NSFontChanging {
         
         var width: CGFloat = 0
         var height: CGFloat = 0
-        
-        // print("Canvas size changed to \(selectedItem)")
+       
         
         if selectedItem == "800x600" {
             width = 800

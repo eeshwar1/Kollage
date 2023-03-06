@@ -1,10 +1,20 @@
 import Cocoa
 
-class DraggableResizableView: NSView {
+class VUDraggableResizableView: NSView {
     
-    private let resizableArea: CGFloat = 5
+    let resizableArea: CGFloat = 5
     
-    private var cursorPosition: CornerBorderPosition = .none {
+    var selected: Bool = false {
+        
+        didSet {
+            
+            needsDisplay = true
+            
+        }
+    }
+    var selectionMarkLineWidth: CGFloat = 5.0
+    
+    var cursorPosition: CornerBorderPosition = .none {
         didSet {
             switch self.cursorPosition {
             case .bottomRight, .topLeft:
@@ -35,8 +45,21 @@ class DraggableResizableView: NSView {
         
     }
     
+   
     required init?(coder decoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func draw(_ dirtyRect: NSRect) {
+        
+        super.draw(dirtyRect)
+        
+        if selected {
+            
+            drawSelectionMarks()
+            
+        }
+        
     }
     
     override func updateTrackingAreas() {
@@ -67,6 +90,7 @@ class DraggableResizableView: NSView {
     override func mouseUp(with event: NSEvent) {
         
         self.cursorPosition = .none
+        self.selected = true
         
     }
     
@@ -220,5 +244,51 @@ class DraggableResizableView: NSView {
         if self.frame.maxY > superView.frame.maxY {
             self.frame.origin.y = superView.frame.maxY - self.frame.size.height
         }
+    }
+    
+    
+    func drawSelectionMarks() {
+        
+        NSColor.controlAccentColor.setStroke()
+        
+        let handlesPath = NSBezierPath()
+        
+        let rect = self.bounds
+        
+        let shorterDimension = CGFloat.minimum(rect.width, rect.height)
+        let handleLength = shorterDimension / 5
+        let halfHandleLength = handleLength / 2
+        
+        handlesPath.move(to: NSPoint(x: rect.minX, y: rect.minY + handleLength))
+        handlesPath.line(to: NSPoint(x: rect.minX, y: rect.minY))
+        handlesPath.line(to: NSPoint(x: rect.minX + handleLength, y: rect.minY))
+        
+        handlesPath.move(to: NSPoint(x: rect.midX - halfHandleLength, y: rect.minY))
+        handlesPath.line(to: NSPoint(x: rect.midX + halfHandleLength, y: rect.minY))
+        
+        handlesPath.move(to: NSPoint(x: rect.maxX - handleLength, y: rect.minY))
+        handlesPath.line(to: NSPoint(x: rect.maxX, y: rect.minY))
+        handlesPath.line(to: NSPoint(x: rect.maxX, y: rect.minY + handleLength))
+        
+        handlesPath.move(to: NSPoint(x: rect.maxX, y: rect.midY - halfHandleLength))
+        handlesPath.line(to: NSPoint(x: rect.maxX, y: rect.midY + halfHandleLength))
+        
+        handlesPath.move(to: NSPoint(x: rect.maxX, y: rect.maxY - handleLength))
+        handlesPath.line(to: NSPoint(x: rect.maxX, y: rect.maxY))
+        handlesPath.line(to: NSPoint(x: rect.maxX - handleLength, y: rect.maxY))
+        
+        handlesPath.move(to: NSPoint(x: rect.midX - halfHandleLength, y: rect.maxY))
+        handlesPath.line(to: NSPoint(x: rect.midX + halfHandleLength, y: rect.maxY))
+        
+        handlesPath.move(to: NSPoint(x: rect.minX + handleLength, y: rect.maxY))
+        handlesPath.line(to: NSPoint(x: rect.minX, y: rect.maxY))
+        handlesPath.line(to: NSPoint(x: rect.minX, y: rect.maxY - handleLength))
+        
+        handlesPath.move(to: NSPoint(x: rect.minX, y: rect.midY - halfHandleLength))
+        handlesPath.line(to: NSPoint(x: rect.minX, y: rect.midY + halfHandleLength))
+        
+        handlesPath.lineWidth = selectionMarkLineWidth
+        handlesPath.stroke()
+        
     }
 }

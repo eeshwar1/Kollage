@@ -175,7 +175,7 @@ protocol DestinationViewDelegate {
     }
     
     func processImage(_ image: NSImage, center: NSPoint) {
-        
+
         
         let constrainedSize = image.aspectFitSizeForMaxDimension(self.frame.height/2)
         
@@ -218,8 +218,7 @@ protocol DestinationViewDelegate {
     func unselectView(_ view: NSView) {
         
         if let index = self.selectedViews.firstIndex(of: view) {
-            
-            // print("Removing view from selection")
+    
             self.selectedViews.remove(at: index)
         }
         
@@ -325,9 +324,9 @@ protocol DestinationViewDelegate {
     
     func addText(text: String) {
         
-//        let center = NSPoint(x: self.frame.origin.x + self.frame.width/2, y: self.frame.origin.y + self.frame.height/2)
+        let center = NSPoint(x: self.frame.minX, y: self.frame.minY).addRandomNoise(Appearance.randomNoise)
         
-        let textView = VUDraggableTextView(text: text)
+        let textView = VUDraggableTextView(location: center, text: text)
         
         self.addSubview(textView)
         textView.canvas = self
