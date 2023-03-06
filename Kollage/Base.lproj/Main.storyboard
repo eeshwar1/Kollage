@@ -866,14 +866,14 @@
         <!--Window Controller-->
         <scene sceneID="jbA-MD-pcs">
             <objects>
-                <windowController storyboardIdentifier="Add Text Window Controller" id="8jy-lb-yDO" sceneMemberID="viewController">
+                <windowController storyboardIdentifier="Text Window Controller" id="8jy-lb-yDO" sceneMemberID="viewController">
                     <window key="window" title="Add Text" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="qM2-yI-yPu">
                         <windowStyleMask key="styleMask" titled="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-                        <rect key="contentRect" x="196" y="239" width="300" height="200"/>
+                        <rect key="contentRect" x="196" y="239" width="500" height="500"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1440" height="875"/>
                         <view key="contentView" id="j5L-AF-VH6">
-                            <rect key="frame" x="0.0" y="0.0" width="300" height="200"/>
+                            <rect key="frame" x="0.0" y="0.0" width="500" height="500"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </view>
                         <connections>
@@ -888,20 +888,16 @@
             </objects>
             <point key="canvasLocation" x="1097" y="775"/>
         </scene>
-        <!--Add Text View Controller-->
+        <!--Text View Controller-->
         <scene sceneID="jhd-tA-tki">
             <objects>
-                <viewController id="jO7-TO-7Lx" customClass="AddTextViewController" customModule="Kollage" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="jO7-TO-7Lx" customClass="TextViewController" customModule="Kollage" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="1Gu-Pf-coN">
-                        <rect key="frame" x="0.0" y="0.0" width="417" height="200"/>
+                        <rect key="frame" x="0.0" y="0.0" width="462" height="235"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <stackView distribution="fill" orientation="horizontal" alignment="top" spacing="16" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" fixedFrame="YES" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Um6-LK-XLD">
-                                <rect key="frame" x="218" y="20" width="0.0" height="20"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            </stackView>
-                            <stackView distribution="fill" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="l7b-Tw-MWA">
-                                <rect key="frame" x="20" y="135" width="377" height="45"/>
+                            <stackView distribution="fill" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="l7b-Tw-MWA" userLabel="Text Stack View">
+                                <rect key="frame" x="20" y="170" width="422" height="45"/>
                                 <subviews>
                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="pYw-BK-mVj">
                                         <rect key="frame" x="-2" y="29" width="63" height="16"/>
@@ -928,6 +924,9 @@
                                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                     <font key="font" metaFont="system"/>
                                                 </buttonCell>
+                                                <connections>
+                                                    <action selector="selectFont:" target="jO7-TO-7Lx" id="pul-zs-09G"/>
+                                                </connections>
                                             </button>
                                         </subviews>
                                         <visibilityPriorities>
@@ -949,8 +948,37 @@
                                     <real value="3.4028234663852886e+38"/>
                                 </customSpacing>
                             </stackView>
-                            <stackView distribution="fill" orientation="horizontal" alignment="top" spacing="22" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" fixedFrame="YES" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qBj-62-8Yo">
-                                <rect key="frame" x="87" y="20" width="123" height="20"/>
+                            <box title="Preview" translatesAutoresizingMaskIntoConstraints="NO" id="CaH-im-nuM">
+                                <rect key="frame" x="17" y="36" width="428" height="124"/>
+                                <view key="contentView" id="Lqa-u5-ycQ">
+                                    <rect key="frame" x="4" y="5" width="420" height="104"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="yz0-F5-kfT">
+                                            <rect key="frame" x="10" y="10" width="400" height="84"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="400" id="h4W-hm-M3p"/>
+                                            </constraints>
+                                            <textFieldCell key="cell" drawsBackground="YES" id="uSK-Ft-9aS">
+                                                <font key="font" usesAppearanceFont="YES"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="yz0-F5-kfT" firstAttribute="leading" secondItem="Lqa-u5-ycQ" secondAttribute="leading" constant="10" id="5fC-Dn-bF5"/>
+                                        <constraint firstAttribute="bottom" secondItem="yz0-F5-kfT" secondAttribute="bottom" constant="10" id="6Qb-cF-MYM"/>
+                                        <constraint firstItem="yz0-F5-kfT" firstAttribute="top" secondItem="Lqa-u5-ycQ" secondAttribute="top" constant="10" id="79X-iI-mCb"/>
+                                        <constraint firstAttribute="trailing" secondItem="yz0-F5-kfT" secondAttribute="trailing" constant="10" id="lWe-Mz-QBN"/>
+                                    </constraints>
+                                </view>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="120" id="asY-Eu-84M"/>
+                                </constraints>
+                            </box>
+                            <stackView distribution="fill" orientation="horizontal" alignment="top" spacing="22" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qBj-62-8Yo" userLabel="Button Stack View">
+                                <rect key="frame" x="170" y="10" width="123" height="20"/>
                                 <subviews>
                                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="wte-8U-Pvp">
                                         <rect key="frame" x="-7" y="-7" width="53" height="32"/>
@@ -974,6 +1002,9 @@ DQ
 Gw
 </string>
                                         </buttonCell>
+                                        <connections>
+                                            <action selector="cancelAddText:" target="jO7-TO-7Lx" id="JHx-RX-cqD"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <visibilityPriorities>
@@ -987,6 +1018,12 @@ Gw
                             </stackView>
                         </subviews>
                         <constraints>
+                            <constraint firstAttribute="bottom" secondItem="qBj-62-8Yo" secondAttribute="bottom" constant="10" id="6iP-3o-yYn"/>
+                            <constraint firstItem="CaH-im-nuM" firstAttribute="leading" secondItem="1Gu-Pf-coN" secondAttribute="leading" constant="20" id="915-2D-ERa"/>
+                            <constraint firstAttribute="trailing" secondItem="CaH-im-nuM" secondAttribute="trailing" constant="20" id="BsB-uh-TuW"/>
+                            <constraint firstItem="qBj-62-8Yo" firstAttribute="centerX" secondItem="1Gu-Pf-coN" secondAttribute="centerX" id="VDF-2C-lV4"/>
+                            <constraint firstItem="CaH-im-nuM" firstAttribute="top" secondItem="l7b-Tw-MWA" secondAttribute="bottom" constant="10" id="Wl9-08-yyZ"/>
+                            <constraint firstItem="qBj-62-8Yo" firstAttribute="top" secondItem="CaH-im-nuM" secondAttribute="bottom" constant="10" id="ax5-ZC-iMr"/>
                             <constraint firstItem="l7b-Tw-MWA" firstAttribute="leading" secondItem="1Gu-Pf-coN" secondAttribute="leading" constant="20" id="en3-36-k4j"/>
                             <constraint firstAttribute="trailing" secondItem="l7b-Tw-MWA" secondAttribute="trailing" constant="20" symbolic="YES" id="pTl-52-VfC"/>
                             <constraint firstItem="l7b-Tw-MWA" firstAttribute="top" secondItem="1Gu-Pf-coN" secondAttribute="top" constant="20" id="wXz-K1-6oP"/>
@@ -998,7 +1035,7 @@ Gw
                 </viewController>
                 <customObject id="i2Y-ca-6xk" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1804" y="744"/>
+            <point key="canvasLocation" x="1804" y="743.5"/>
         </scene>
     </scenes>
     <resources>
