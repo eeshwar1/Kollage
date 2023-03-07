@@ -132,6 +132,7 @@ class ViewController: NSViewController, NSFontChanging {
         NSFontManager.shared.setSelectedAttributes([NSAttributedString.Key.foregroundColor.rawValue: NSColor.red], isMultiple: false)
         
         NSFontManager.shared.orderFrontFontPanel(nil)
+        
     }
     
     

@@ -11,6 +11,7 @@ import Cocoa
 class TextViewController: NSViewController {
     
     @IBOutlet weak var textField: NSTextField!
+    @IBOutlet weak var textPreview: NSTextField!
     
     var editMode = false
     
@@ -22,12 +23,11 @@ class TextViewController: NSViewController {
         
         super.viewDidLoad()
         
-        textField.stringValue = "Hello"
-        
         print("Edit mode: \(self.editMode.description)")
         
-       
+        textField.delegate = self
         
+       
     }
     
     override func viewWillAppear() {
@@ -36,9 +36,12 @@ class TextViewController: NSViewController {
             
             print("Edit mode")
             
+            self.view.window?.title = "Edit Text"
             if let textView = self.textView {
                 
                 textField.stringValue = textView.getText().string
+                
+                textPreview.attributedStringValue = textView.getText()
             }
         }
     }
@@ -54,7 +57,7 @@ class TextViewController: NSViewController {
                 
                 let attributedString = NSAttributedString(string: textField.stringValue, attributes: [NSAttributedString.Key.font: NSFont(name: "menlo", size: 20) as Any])
                 
-                textView.setText(text: attributedString )
+                textView.setText(text: attributedString)
             }
                 
             
@@ -83,8 +86,34 @@ class TextViewController: NSViewController {
         
         NSFontManager.shared.setSelectedAttributes([NSAttributedString.Key.foregroundColor.rawValue: NSColor.red], isMultiple: false)
         
-        NSFontManager.shared.orderFrontFontPanel(nil)
+        NSFontManager.shared.orderFrontFontPanel(self)
+        
+        if let selectedFont = NSFontManager.shared.selectedFont {
+            
+            print("\(String(describing: selectedFont.familyName))")
+        }
+        
+       
+    }
+    
+    @IBAction func textFieldChanged(_ sender: NSTextField) {
+        
         
     }
     
+}
+
+extension TextViewController:  NSTextFieldDelegate {
+    
+    func controlTextDidEndEditing(_ obj: Notification) {
+        
+        textPreview.attributedStringValue = NSAttributedString(string: textField.stringValue, attributes: [NSAttributedString.Key.font: NSFont(name: "menlo", size: 20) as Any])
+        
+    }
+    
+    func controlTextDidChange(_ obj: Notification) {
+        
+        textPreview.attributedStringValue = NSAttributedString(string: textField.stringValue, attributes: [NSAttributedString.Key.font: NSFont(name: "menlo", size: 20) as Any])
+        
+    }
 }
