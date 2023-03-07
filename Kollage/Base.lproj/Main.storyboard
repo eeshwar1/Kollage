@@ -1031,6 +1031,7 @@ Gw
                     </view>
                     <connections>
                         <outlet property="textField" destination="89W-IB-k2X" id="ffe-nn-a8q"/>
+                        <outlet property="textPreview" destination="yz0-F5-kfT" id="YDm-xI-nxh"/>
                     </connections>
                 </viewController>
                 <customObject id="i2Y-ca-6xk" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
