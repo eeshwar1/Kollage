@@ -322,11 +322,11 @@ protocol DestinationViewDelegate {
         
     }
     
-    func addText(text: String) {
+    func addText(attributedText: NSAttributedString) {
         
         let center = NSPoint(x: self.frame.minX, y: self.frame.minY).addRandomNoise(Appearance.randomNoise)
         
-        let textView = VUDraggableTextView(location: center, text: text)
+        let textView = VUDraggableTextView(location: center, attributedText: attributedText)
         
         self.addSubview(textView)
         textView.canvas = self
@@ -335,16 +335,16 @@ protocol DestinationViewDelegate {
     }
     
     
-    func changeFont (_ font: NSFont) {
-        
+    func changeFont(_ font: NSFont) {
+
         for (_, view) in selectedViews.enumerated() {
-            
+
             if let textView = view as? VUDraggableTextView {
                 textView.changeFont(font)
             }
         }
-       
-        
+
+
     }
     
     func setAsBackground(_ imageView: NSImageView) {

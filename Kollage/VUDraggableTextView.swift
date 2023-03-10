@@ -13,6 +13,11 @@ class VUDraggableTextView: VUDraggableResizableView {
     
     override var canBecomeKeyView: Bool { return true }
     
+    required init?(coder decoder: NSCoder) {
+        
+        super.init(coder: decoder)
+    }
+    
     override init(frame frameRect: NSRect) {
         
         super.init(frame: frameRect)
@@ -20,13 +25,11 @@ class VUDraggableTextView: VUDraggableResizableView {
         setupView()
     }
 
-    init(location: NSPoint, text: String) {
+    init(location: NSPoint, attributedText: NSAttributedString) {
         
         super.init(frame: NSRect(x: location.x, y: location.y, width: 100, height: 100))
         
-        let attributedString = NSAttributedString(string: text, attributes: [NSAttributedString.Key.font: NSFont(name: "menlo", size: 15) as Any])
-    
-        self.textField.attributedStringValue = attributedString
+        self.textField.attributedStringValue = attributedText
         
         setupView()
         
@@ -37,7 +40,7 @@ class VUDraggableTextView: VUDraggableResizableView {
     func setupView() {
         
         self.layer?.borderWidth = 1.0
-        
+
         self.layer?.borderColor = .black
         
         let recognizer = NSMagnificationGestureRecognizer(target: self, action: #selector(rotateAction))
@@ -87,23 +90,15 @@ class VUDraggableTextView: VUDraggableResizableView {
         print("Rotated")
     }
     
-    required init?(coder decoder: NSCoder) {
-        
-        super.init(coder: decoder)
-    }
-    
+   
     func getText() -> NSAttributedString {
         
         return self.textField.attributedStringValue
     }
     
-    func setText(text: NSAttributedString)  {
+    func setText(attributedText: NSAttributedString)  {
         
-        let attributedString = NSMutableAttributedString(string: self.textField.attributedStringValue.string)
-        
-        attributedString.setAttributedString(text)
-        
-        self.textField.attributedStringValue = attributedString
+        self.textField.attributedStringValue = attributedText
         
         self.textField.sizeToFit()
         self.frame.size = self.fittingSize
@@ -126,7 +121,7 @@ class VUDraggableTextView: VUDraggableResizableView {
         self.textField.font = font
         self.textField.sizeToFit()
         self.frame.size = self.fittingSize
-        
+
     }
     
     override func mouseUp(with event: NSEvent) {
@@ -144,13 +139,13 @@ class VUDraggableTextView: VUDraggableResizableView {
         
         if (event.clickCount == 2) {
             
-            print("Double Click")
+           // print("Double Click")
             
             let storyboard = NSStoryboard(name: "Main", bundle: nil)
             let textWindowController = storyboard.instantiateController(withIdentifier: "Text Window Controller") as! NSWindowController
             
             if let textVC = textWindowController.contentViewController as? TextViewController {
-                print("Setting text field values in VC")
+               // print("Setting text field values in VC")
                 textVC.editMode = true
                 textVC.textView = self
             }

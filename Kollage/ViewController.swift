@@ -120,19 +120,9 @@ class ViewController: NSViewController, NSFontChanging {
         
     }
     
-    func processAddText(text: String) {
+    func processAddText(attributedText: NSAttributedString) {
         
-        self.kollageEasel.addText(text: text)
-    }
-    
-    @IBAction func selectFont(_ sender: NSButton) {
-        
-        print("select font")
-        
-        NSFontManager.shared.setSelectedAttributes([NSAttributedString.Key.foregroundColor.rawValue: NSColor.red], isMultiple: false)
-        
-        NSFontManager.shared.orderFrontFontPanel(nil)
-        
+        self.kollageEasel.addText(attributedText: attributedText)
     }
     
     
@@ -438,5 +428,10 @@ class ViewController: NSViewController, NSFontChanging {
     @IBAction func borderColorChanged(_ sender: NSColorWell) {
         
         self.kollageEasel.setBorderColor(color: sender.color)
+    }
+    
+    func changeFont(_ sender: NSFontManager?) {
+        
+        print("Change Font called")
     }
 }

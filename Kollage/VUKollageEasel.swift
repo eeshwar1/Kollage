@@ -210,11 +210,11 @@ class VUKollageEasel: NSView {
         guard let fontManager = sender else {
             return
         }
-        
+
         let newFont = fontManager.convert(NSFont.systemFont(ofSize: 14))
-        
+
         kollageCanvas.changeFont(newFont)
-            
+
     }
     
     func addImages(_ urls: [URL]) {
@@ -223,10 +223,9 @@ class VUKollageEasel: NSView {
         
     }
     
-    func addText(text: String) {
+    func addText(attributedText: NSAttributedString) {
         
-        
-        self.kollageCanvas.addText(text: text)
+        self.kollageCanvas.addText(attributedText: attributedText)
         
     }
     func scaleSelectedView(factor: Double) {

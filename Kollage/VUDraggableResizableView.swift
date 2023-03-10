@@ -13,6 +13,7 @@ class VUDraggableResizableView: NSView {
         }
     }
     var selectionMarkLineWidth: CGFloat = 5.0
+    var selectionLineWidth: CGFloat = 2.0
     
     var cursorPosition: CornerBorderPosition = .none {
         didSet {
@@ -250,6 +251,10 @@ class VUDraggableResizableView: NSView {
     func drawSelectionMarks() {
         
         NSColor.controlAccentColor.setStroke()
+        
+        let boundaryPath = NSBezierPath.init(rect: self.bounds)
+        boundaryPath.lineWidth = selectionLineWidth
+        boundaryPath.stroke()
         
         let handlesPath = NSBezierPath()
         

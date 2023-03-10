@@ -19,7 +19,6 @@ class KollageGridController: NSViewController {
         print("View Loaded")
         
         labelTitle.stringValue = "Hello World"
-        
     
     }
 }
