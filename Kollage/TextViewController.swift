@@ -13,6 +13,9 @@ class TextViewController: NSViewController, NSFontChanging {
     @IBOutlet weak var textField: NSTextField!
     @IBOutlet weak var textPreview: NSTextField!
     
+    @IBOutlet weak var buttonFontFamily: NSPopUpButton!
+    @IBOutlet weak var buttonTypeFace: NSPopUpButton!
+    
     var editMode = false
     
     var textView: VUDraggableTextView?
@@ -43,9 +46,11 @@ class TextViewController: NSViewController, NSFontChanging {
             self.view.window?.title = "Edit Text"
             if let textView = self.textView {
                 
-                textField.attributedStringValue = textView.getText()
+                textField.stringValue = textView.getText().string
                 
                 textPreview.attributedStringValue = textView.getText()
+                
+                
             }
             
             
@@ -53,12 +58,42 @@ class TextViewController: NSViewController, NSFontChanging {
         
         let fontManager = NSFontManager.shared
         
+        self.buttonFontFamily.removeAllItems()
+        
         for (_, family) in fontManager.availableFontFamilies.enumerated() {
             
-            print("\(family.description)")
+            self.buttonFontFamily.addItem(withTitle: family.description)
         }
+        
+        self.buttonFontFamily.selectItem(at: 4)
+        
+        if let selectedFamily = self.buttonFontFamily.selectedItem {
+            
+            print("Selected Font Family: \(selectedFamily.title)")
+            populateTypeFaces(fontFamily: selectedFamily.title)
+        }
+        
+        self.font =  NSFont(name: self.buttonFontFamily.title, size: 20) ?? NSFont.systemFont(ofSize: 20)
+        
     }
     
+    func populateTypeFaces(fontFamily: String) {
+        
+        let fontManager = NSFontManager.shared
+        
+        self.buttonTypeFace.removeAllItems()
+        
+        if let fonts = fontManager.availableMembers(ofFontFamily: fontFamily) {
+             
+            for (_, font) in fonts.enumerated() {
+                
+                self.buttonTypeFace.addItem(withTitle: "\(font[1])")
+            }
+        }
+            
+        
+        
+    }
     override func viewWillDisappear() {
         
         // Hide the font panel if it is shown
@@ -76,7 +111,8 @@ class TextViewController: NSViewController, NSFontChanging {
             
             if let textView = self.textView {
                 
-                let attributedText = textField.attributedStringValue
+                let attributedText = NSAttributedString(string: textField.stringValue, attributes: [NSAttributedString.Key.font: self.font])
+                
                 
                 textView.setText(attributedText: attributedText)
             }
@@ -86,7 +122,9 @@ class TextViewController: NSViewController, NSFontChanging {
             
             if let vc = self.vc {
                 
-                vc.processAddText(attributedText: textField.attributedStringValue)
+                let attributedText = NSAttributedString(string: textField.stringValue, attributes: [NSAttributedString.Key.font: self.font])
+                
+                vc.processAddText(attributedText: attributedText)
             
             }
         }
@@ -99,29 +137,21 @@ class TextViewController: NSViewController, NSFontChanging {
         
     }
     
-    @IBAction func selectFont(_ sender: NSButton) {
+    
+    @IBAction func fontFamilyChanged(_ sender: NSPopUpButton) {
         
-        if NSFontPanel.shared.isVisible {
-            NSFontPanel.shared.orderOut(nil)
-            return
+        
+        if let selectedFamily = self.buttonFontFamily.selectedItem {
+            
+            print("Selected Font Family: \(selectedFamily.title)")
+            populateTypeFaces(fontFamily: selectedFamily.title)
+            
+            self.font =  NSFont(name: self.buttonFontFamily.title, size: 20) ?? NSFont.systemFont(ofSize: 20)
+            
+            
         }
         
-        NSFontPanel.shared.setPanelFont(self.font, isMultiple: false)
-        NSFontPanel.shared.makeKeyAndOrderFront(nil)
-        NSFontManager.shared.target = self
-        
     }
-    
-    func changeFont(_ sender: NSFontManager?) {
-        
-        print("Change Font")
-        guard let fontManager = sender else { return }
-        
-        let newFont = fontManager.convert(self.font)
-        
-        print("Font selected: \(String(describing: newFont.description))")
-    }
-    
     
 }
 
