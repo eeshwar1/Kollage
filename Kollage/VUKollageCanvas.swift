@@ -266,7 +266,23 @@ protocol DestinationViewDelegate {
             
         }
         else if let view = view as? VUDraggableTextView {
+            
             view.select()
+            
+            if let vc = self.vc {
+                
+                if self.selectedViews.count >= 1 {
+                    
+                    vc.enableTextControls(attributes: view.attributes)
+                    
+                } else {
+                    
+                    vc.disableTextControls()
+                }
+                
+            }
+            
+            
         }
         
         if unselectOther {

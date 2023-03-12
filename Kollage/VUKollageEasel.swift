@@ -197,6 +197,11 @@ class VUKollageEasel: NSView {
                     
                 }
 
+            } else if let textView = view as? VUDraggableTextView {
+                
+                
+                kollage = kollage.addTextToImage(attributedText: textView.getText(), position: NSPoint(x: 500,y: 500))
+                
             }
 
         }
@@ -257,6 +262,7 @@ class VUKollageEasel: NSView {
             if let imageView = view as? VUDraggableImageView {
                 
                 imageView.rotate(angle: angle)
+                
             } else if let textView = view as? VUDraggableTextView {
                 
                 textView.rotate(byDegrees: angle)

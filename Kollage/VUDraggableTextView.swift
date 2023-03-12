@@ -1,5 +1,13 @@
 import Cocoa
 
+
+struct TextViewAttributes {
+    
+    var sizefactor: CGFloat
+    var angle: CGFloat
+    
+}
+
 class VUDraggableTextView: VUDraggableResizableView {
     
     var canvas: VUKollageCanvas?
@@ -9,9 +17,34 @@ class VUDraggableTextView: VUDraggableResizableView {
     var minimumWidth: CGFloat = 200
     var minimumHeight: CGFloat = 50
     
+    var borderColor: NSColor = .white
+    var borderWidthRatio: CGFloat = 0.0
+    
+    var shadowColor: NSColor = .black
+    
+    var sizeFactor: Double = 1.0
+    var rotationAngle: Double = 0.0
+    
+    var enableShadow: Bool = true
+    
+    var enableBorder: Bool = true
+    
     override var acceptsFirstResponder: Bool { return true }
     
     override var canBecomeKeyView: Bool { return true }
+    
+    var attributes: TextViewAttributes {
+        
+        get {
+            
+            return TextViewAttributes(
+                
+                sizefactor: self.sizeFactor,
+                angle: self.frameCenterRotation
+                
+            )
+        }
+    }
     
     required init?(coder decoder: NSCoder) {
         
@@ -37,12 +70,20 @@ class VUDraggableTextView: VUDraggableResizableView {
 
     }
     
+    override func draw(_ dirtyRect: NSRect) {
+        
+        super.draw(dirtyRect)
+        
+        self.borderColor.set()
+        
+        self.bounds.insetBy(dx: selectionMarkLineWidth, dy: selectionMarkLineWidth).fill()
+
+        
+    }
+    
     func setupView() {
         
-        self.layer?.borderWidth = 1.0
 
-        self.layer?.borderColor = .black
-        
         let recognizer = NSMagnificationGestureRecognizer(target: self, action: #selector(rotateAction))
         
         self.addGestureRecognizer(recognizer)
@@ -57,6 +98,7 @@ class VUDraggableTextView: VUDraggableResizableView {
         self.textField.sizeToFit()
         self.textField.isEditable = false
         self.textField.isBordered = false
+        self.textField.drawsBackground = false
         self.addSubview(self.textField)
         
         textField.translatesAutoresizingMaskIntoConstraints = false

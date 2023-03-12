@@ -30,7 +30,7 @@ class ViewController: NSViewController, NSFontChanging {
     
     @IBOutlet weak var resizeSlider: NSSlider!
     @IBOutlet weak var labelSizeFactor: NSTextField!
-  
+    
     @IBOutlet weak var spinner: NSProgressIndicator!
     
     @IBOutlet weak var labelStatus: NSTextField!
@@ -51,7 +51,7 @@ class ViewController: NSViewController, NSFontChanging {
         setupView()
         
         disableImageControls()
-      
+        
         self.kollageEasel.vc = self
         
         spinner.isHidden = true
@@ -132,17 +132,16 @@ class ViewController: NSViewController, NSFontChanging {
         
         var width: CGFloat = 0
         var height: CGFloat = 0
-       
         
-        if selectedItem == "800x600" {
+        switch selectedItem {
+            
+        case "800x600":
             width = 800
             height = 600
-        } else if selectedItem == "1024x768" {
-            
+        case "1024x768":
             width =  1024
             height = 768
-        } else {
-            
+        default:
             width = 500
             height = 500
             
@@ -150,7 +149,7 @@ class ViewController: NSViewController, NSFontChanging {
         
         self.kollageEasel.setCanvasSize(size: .init(width: width, height: height))
         
-    
+        
     }
     
     @IBAction func imageEffectChanged(_ sender: NSPopUpButton) {
@@ -158,14 +157,14 @@ class ViewController: NSViewController, NSFontChanging {
         guard self.kollageEasel.hasItemsSelected() else { return }
         
         let selectedItem  = sender.itemArray[sender.indexOfSelectedItem].title
-            
+        
         DispatchQueue.main.async {
             
             self.kollageEasel.applyEffect(effect: selectedItem)
             
             self.labelStatus.stringValue = "Ready"
             self.labelStatus.textColor = NSColor.textColor
-                
+            
             
             self.spinner.stopAnimation(nil)
             self.spinner.isHidden = true
@@ -175,9 +174,7 @@ class ViewController: NSViewController, NSFontChanging {
         self.spinner.isHidden = false
         self.spinner.startAnimation(nil)
         self.labelStatus.stringValue = "Applying effects..."
-        
-        
-        
+    
     }
     
     
@@ -189,7 +186,7 @@ class ViewController: NSViewController, NSFontChanging {
         
         self.kollageEasel.scaleSelectedView(factor: sender.doubleValue)
         self.labelSizeFactor.stringValue = numberFormatter.string(from: NSNumber(value:sender.doubleValue))!
-    
+        
     }
     
     @IBAction func rotationSliderChanged(_ sender: NSSlider) {
@@ -203,11 +200,11 @@ class ViewController: NSViewController, NSFontChanging {
         self.labelRotationAngle.stringValue = numberFormatter.string(from: NSNumber(value:sender.doubleValue))!
         
     }
-
-        
+    
+    
     @IBAction func exportKollage(_ sender: NSButton)  {
-            
-            
+        
+        
         if self.kollageEasel.kollageCanvas.subviews.count > 0 {
             
             let savePanel = NSSavePanel()
@@ -254,7 +251,7 @@ class ViewController: NSViewController, NSFontChanging {
             
             self.labelStatus.stringValue = "Nothing to export"
         }
-            
+        
         
     }
     
@@ -273,7 +270,7 @@ class ViewController: NSViewController, NSFontChanging {
     
     
     @IBAction func pickBackgroundImage(_ sender: NSButton) {
-   
+        
         let openPanel = NSOpenPanel()
         openPanel.allowsMultipleSelection = false
         openPanel.canChooseDirectories = false
@@ -293,11 +290,11 @@ class ViewController: NSViewController, NSFontChanging {
     
     @IBAction func addImages(_ sender: Any) {
         
-       addPhotos()
+        addPhotos()
         
     }
     
-   
+    
     
     func addPhotos() {
         
@@ -309,7 +306,7 @@ class ViewController: NSViewController, NSFontChanging {
         let response = openPanel.runModal()
         
         if response == .OK {
-                            
+            
             self.kollageEasel.addImages(openPanel.urls)
             
         }
@@ -372,6 +369,42 @@ class ViewController: NSViewController, NSFontChanging {
         
     }
     
+    
+    func enableTextControls(attributes: TextViewAttributes) {
+        
+        self.resizeSlider.isEnabled = true
+        self.resizeSlider.doubleValue = attributes.sizefactor
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .decimal
+        numberFormatter.maximumFractionDigits = 2
+        
+        self.labelSizeFactor.stringValue = numberFormatter.string(from: NSNumber(value: attributes.sizefactor))!
+        
+        self.rotateSlider.isEnabled = true
+        self.rotateSlider.doubleValue = attributes.angle
+        
+        self.labelRotationAngle.stringValue = numberFormatter.string(from: NSNumber(value: attributes.angle))!
+        
+
+        
+    }
+    
+    func disableTextControls() {
+        
+        self.resizeSlider.isEnabled = false
+        self.resizeSlider.doubleValue = 0
+        self.labelSizeFactor.doubleValue = 0
+        
+        self.labelSizeFactor.stringValue = ""
+        
+        self.rotateSlider.isEnabled = false
+        self.rotateSlider.doubleValue = 0
+        self.labelRotationAngle.doubleValue = 0
+        
+        self.labelRotationAngle.stringValue = ""
+        
+    }
+    
     func setStatus(message: String) {
         
         self.labelStatus.stringValue = message
@@ -391,7 +424,7 @@ class ViewController: NSViewController, NSFontChanging {
     @IBAction func canvasZoomToFit(_ sender: Any) {
         
         self.kollageEasel.zoomToFit()
-    
+        
         
     }
     
@@ -424,7 +457,7 @@ class ViewController: NSViewController, NSFontChanging {
         
         self.kollageEasel.setBorderWidth(width: CGFloat(sender.integerValue))
     }
-
+    
     @IBAction func borderColorChanged(_ sender: NSColorWell) {
         
         self.kollageEasel.setBorderColor(color: sender.color)

@@ -206,7 +206,6 @@ class VUDraggableImageView: VUDraggableResizableView {
     }
     
     
-    
     func setImage(image: NSImage) {
         
         self.imageData = image.tiffRepresentation
@@ -260,7 +259,6 @@ class VUDraggableImageView: VUDraggableResizableView {
     
     func configureBorder() {
     
-        
         if let _ = self.image {
             
            var borderWidth = 0.0

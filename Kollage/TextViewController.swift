@@ -16,6 +16,8 @@ class TextViewController: NSViewController, NSFontChanging {
     @IBOutlet weak var buttonFontFamily: NSPopUpButton!
     @IBOutlet weak var buttonTypeFace: NSPopUpButton!
     
+    @IBOutlet weak var textFontSize: NSTextField!
+    
     var editMode = false
     
     var textView: VUDraggableTextView?
@@ -36,6 +38,7 @@ class TextViewController: NSViewController, NSFontChanging {
         super.viewDidLoad()
         
         textField.delegate = self
+        textFontSize.delegate = self
         
     }
     
@@ -46,11 +49,24 @@ class TextViewController: NSViewController, NSFontChanging {
             self.view.window?.title = "Edit Text"
             if let textView = self.textView {
                 
-                textField.stringValue = textView.getText().string
+                let attributedText = textView.getText()
                 
-                textPreview.attributedStringValue = textView.getText()
+                textField.stringValue = attributedText.string
                 
+                textPreview.attributedStringValue = attributedText
                 
+                attributedText.enumerateAttribute(.font, in: NSRange(0..<attributedText.length)) {
+                    
+                    value, range, stop in
+                    
+                    if let font = value as? NSFont {
+                        
+                        self.font = font
+                        
+                        print("From attributed text: \(String(describing: self.font.fontName))")
+                    }
+                  
+                }
             }
             
             
@@ -65,15 +81,60 @@ class TextViewController: NSViewController, NSFontChanging {
             self.buttonFontFamily.addItem(withTitle: family.description)
         }
         
-        self.buttonFontFamily.selectItem(at: 4)
-        
-        if let selectedFamily = self.buttonFontFamily.selectedItem {
+    
+        if editMode {
             
-            print("Selected Font Family: \(selectedFamily.title)")
-            populateTypeFaces(fontFamily: selectedFamily.title)
+            if let fontFamily = self.font.familyName {
+
+                self.buttonFontFamily.selectItem(withTitle: fontFamily)
+                populateTypeFaces(fontFamily: fontFamily)
+            }
+            
+            // Determine Font Type Face - this is almost a hack as there is no direct way to determine the type face from the font
+            
+            let nameParts = self.font.fontName.split(separator: "-")
+            
+            if nameParts.count > 1 {
+                
+                let typeFace = String(nameParts[nameParts.count - 1])
+                print("determined type face is \(typeFace)")
+                
+                
+                self.buttonTypeFace.selectItem(withTitle: typeFace)
+                
+                if let _  = self.buttonTypeFace.selectedItem {
+                    // we were able to select an item
+                }
+                else {
+                    self.buttonTypeFace.selectItem(at: 0)
+                }
+                
+            } else {
+                
+                self.buttonTypeFace.selectItem(at: 0)
+            }
+            
+            self.textFontSize.floatValue = Float(self.font.pointSize)
+                    
+            
+        } else {
+            
+            self.buttonFontFamily.selectItem(at: 0)
+            
+            self.font =  NSFont(name: self.buttonFontFamily.title, size: 20) ?? NSFont.systemFont(ofSize: 20)
+            
+            if let selectedFamily = self.buttonFontFamily.selectedItem {
+
+                // print("Selected Font Family: \(selectedFamily.title)")
+                populateTypeFaces(fontFamily: selectedFamily.title)
+            }
+           
+            self.textFontSize.floatValue = 20.0
+            
         }
         
-        self.font =  NSFont(name: self.buttonFontFamily.title, size: 20) ?? NSFont.systemFont(ofSize: 20)
+        
+       
         
     }
     
@@ -89,9 +150,9 @@ class TextViewController: NSViewController, NSFontChanging {
                 
                 self.buttonTypeFace.addItem(withTitle: "\(font[1])")
             }
-        }
             
-        
+            self.buttonTypeFace.selectItem(at: 0)
+        }
         
     }
     override func viewWillDisappear() {
@@ -112,7 +173,6 @@ class TextViewController: NSViewController, NSFontChanging {
             if let textView = self.textView {
                 
                 let attributedText = NSAttributedString(string: textField.stringValue, attributes: [NSAttributedString.Key.font: self.font])
-                
                 
                 textView.setText(attributedText: attributedText)
             }
@@ -143,28 +203,93 @@ class TextViewController: NSViewController, NSFontChanging {
         
         if let selectedFamily = self.buttonFontFamily.selectedItem {
             
-            print("Selected Font Family: \(selectedFamily.title)")
+            
+            self.font =  NSFont(name: selectedFamily.title, size: 20) ?? NSFont.systemFont(ofSize: 20)
+            
             populateTypeFaces(fontFamily: selectedFamily.title)
             
-            self.font =  NSFont(name: self.buttonFontFamily.title, size: 20) ?? NSFont.systemFont(ofSize: 20)
+            let attributedString = NSMutableAttributedString(string: self.textField.stringValue)
+            
+            attributedString.setAttributes([.font: self.font], range: NSRange(0..<attributedString.length))
+            
+            self.textPreview.attributedStringValue = attributedString
             
             
         }
         
     }
     
+    @IBAction func typeFaceChanged(_ sender: NSPopUpButton) {
+        
+        if let selectedTypeFace = self.buttonTypeFace.selectedItem, let selectedFamily = self.buttonFontFamily.selectedItem {
+            
+            print("Before Type Face change: \(self.font.fontDescriptor)")
+            
+            let fontDescriptor = self.font.fontDescriptor.withFamily(selectedFamily.title).withFace(selectedTypeFace.title)
+    
+            print("fontDescriptor description: \(fontDescriptor.description)")
+            print("fontDescriptor fontAttributes: \(fontDescriptor.fontAttributes)")
+            
+            self.font = NSFont(descriptor: fontDescriptor, size: 20) ?? NSFont.systemFont(ofSize: 20)
+            
+            let attributedString = NSMutableAttributedString(string: self.textField.stringValue)
+            
+            attributedString.setAttributes([.font: self.font], range: NSRange(0..<attributedString.length))
+            
+            self.textPreview.attributedStringValue = attributedString
+            
+            print("After Type Face change: \(self.font.fontDescriptor)")
+            
+            
+        }
+        
+    }
+    
+    func fontSizeChanged() {
+        
+        
+    }
+    
+    func setTextPreview() {
+        
+        let attributedString = NSMutableAttributedString(string: self.textField.stringValue)
+        
+        attributedString.setAttributes([.font: self.font], range: NSRange(0..<attributedString.length))
+        
+        textPreview.attributedStringValue = attributedString
+        
+    }
 }
 
 extension TextViewController:  NSTextFieldDelegate {
     
     func controlTextDidEndEditing(_ obj: Notification) {
+    
+        if let textField =  obj.object as? NSTextField,
+           textField == self.textFontSize {
+            
+            let fontDescriptor = self.font.fontDescriptor
+            let fontSize = CGFloat(self.textFontSize.floatValue)
+            
+            self.font = NSFont(descriptor: fontDescriptor, size: fontSize) ?? NSFont.systemFont(ofSize: fontSize)
+        }
         
-        textPreview.attributedStringValue = textField.attributedStringValue
+        setTextPreview()
+        
     }
     
     func controlTextDidChange(_ obj: Notification) {
         
-        textPreview.attributedStringValue = textField.attributedStringValue
+        if let textField =  obj.object as? NSTextField,
+           textField == self.textFontSize {
+            
+            let fontDescriptor = self.font.fontDescriptor
+            let fontSize = CGFloat(self.textFontSize.floatValue)
+            
+            self.font = NSFont(descriptor: fontDescriptor, size: fontSize) ?? NSFont.systemFont(ofSize: fontSize)
+        }
+        
+        setTextPreview()
         
     }
 }

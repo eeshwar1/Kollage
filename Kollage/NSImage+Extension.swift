@@ -127,6 +127,21 @@ extension NSImage {
         return targetImage
     }
     
+    func addTextToImage(attributedText: NSAttributedString, position: NSPoint) -> NSImage {
+        
+        let targetImage = NSImage(size: self.size, flipped: false) { (dstRect: CGRect) -> Bool in
+            
+            self.draw(in: dstRect)
+      
+            let textOrigin = CGPoint(x: position.x, y: position.y)
+            let rect = CGRect(origin: textOrigin, size: self.size)
+            
+            attributedText.draw(in: rect)
+            return true
+        }
+        return targetImage
+    }
+    
     
     func addImage(image: NSImage) -> NSImage {
         
