@@ -18,6 +18,8 @@ class TextViewController: NSViewController, NSFontChanging {
     
     @IBOutlet weak var textFontSize: NSTextField!
     
+    @IBOutlet weak var fontColorWell: NSColorWell!
+    
     var editMode = false
     
     var textView: VUDraggableTextView?
@@ -64,6 +66,18 @@ class TextViewController: NSViewController, NSFontChanging {
                         self.font = font
                         
                         print("From attributed text: \(String(describing: self.font.fontName))")
+                    }
+                  
+                }
+                
+                attributedText.enumerateAttribute(.foregroundColor, in: NSRange(0..<attributedText.length)) {
+                    
+                    value, range, stop in
+                    
+                    if let color = value as? NSColor {
+                        
+                        self.fontColorWell.color = color
+                        
                     }
                   
                 }
@@ -162,6 +176,12 @@ class TextViewController: NSViewController, NSFontChanging {
             NSFontPanel.shared.orderOut(nil)
             return
         }
+        
+        // Hide the Color panel if it is shown
+        if NSColorPanel.shared.isVisible {
+            
+            NSColorPanel.shared.orderOut(nil)
+        }
     }
     @IBAction func dismissAddTextWindow(_ sender: NSButton) {
         
@@ -172,9 +192,7 @@ class TextViewController: NSViewController, NSFontChanging {
             
             if let textView = self.textView {
                 
-                let attributedText = NSAttributedString(string: textField.stringValue, attributes: [NSAttributedString.Key.font: self.font])
-                
-                textView.setText(attributedText: attributedText)
+                textView.setText(attributedText: self.getAttributedString())
             }
                 
             
@@ -182,12 +200,17 @@ class TextViewController: NSViewController, NSFontChanging {
             
             if let vc = self.vc {
                 
-                let attributedText = NSAttributedString(string: textField.stringValue, attributes: [NSAttributedString.Key.font: self.font])
-                
-                vc.processAddText(attributedText: attributedText)
+                vc.processAddText(attributedText: self.getAttributedString())
             
             }
         }
+    }
+    
+    func getAttributedString() -> NSAttributedString {
+        
+        let attributedText = NSAttributedString(string: textField.stringValue, attributes: [NSAttributedString.Key.font: self.font, NSAttributedString.Key.foregroundColor: self.fontColorWell.color])
+        
+        return attributedText
     }
     
     @IBAction func cancelAddText(_ sender: NSButton) {
@@ -204,15 +227,13 @@ class TextViewController: NSViewController, NSFontChanging {
         if let selectedFamily = self.buttonFontFamily.selectedItem {
             
             
-            self.font =  NSFont(name: selectedFamily.title, size: 20) ?? NSFont.systemFont(ofSize: 20)
+            let fontSize = CGFloat(self.textFontSize.floatValue)
+
+            self.font =  NSFont(name: selectedFamily.title, size: fontSize) ?? NSFont.systemFont(ofSize: fontSize)
             
             populateTypeFaces(fontFamily: selectedFamily.title)
             
-            let attributedString = NSMutableAttributedString(string: self.textField.stringValue)
-            
-            attributedString.setAttributes([.font: self.font], range: NSRange(0..<attributedString.length))
-            
-            self.textPreview.attributedStringValue = attributedString
+            setTextPreview()
             
             
         }
@@ -223,30 +244,30 @@ class TextViewController: NSViewController, NSFontChanging {
         
         if let selectedTypeFace = self.buttonTypeFace.selectedItem, let selectedFamily = self.buttonFontFamily.selectedItem {
             
-            print("Before Type Face change: \(self.font.fontDescriptor)")
+//            print("Before Type Face change: \(self.font.fontDescriptor)")
             
             let fontDescriptor = self.font.fontDescriptor.withFamily(selectedFamily.title).withFace(selectedTypeFace.title)
     
-            print("fontDescriptor description: \(fontDescriptor.description)")
-            print("fontDescriptor fontAttributes: \(fontDescriptor.fontAttributes)")
+//            print("fontDescriptor description: \(fontDescriptor.description)")
+//            print("fontDescriptor fontAttributes: \(fontDescriptor.fontAttributes)")
             
-            self.font = NSFont(descriptor: fontDescriptor, size: 20) ?? NSFont.systemFont(ofSize: 20)
+            let fontSize = CGFloat(self.textFontSize.floatValue)
+
+            self.font = NSFont(descriptor: fontDescriptor, size: fontSize) ?? NSFont.systemFont(ofSize: fontSize)
             
-            let attributedString = NSMutableAttributedString(string: self.textField.stringValue)
+            setTextPreview()
             
-            attributedString.setAttributes([.font: self.font], range: NSRange(0..<attributedString.length))
-            
-            self.textPreview.attributedStringValue = attributedString
-            
-            print("After Type Face change: \(self.font.fontDescriptor)")
+//            print("After Type Face change: \(self.font.fontDescriptor)")
             
             
         }
         
     }
     
-    func fontSizeChanged() {
+    @IBAction func fontColorChanged(_ sender: NSColorWell) {
         
+        
+       setTextPreview()
         
     }
     
@@ -254,7 +275,7 @@ class TextViewController: NSViewController, NSFontChanging {
         
         let attributedString = NSMutableAttributedString(string: self.textField.stringValue)
         
-        attributedString.setAttributes([.font: self.font], range: NSRange(0..<attributedString.length))
+        attributedString.setAttributes([.font: self.font, NSAttributedString.Key.foregroundColor: self.fontColorWell.color ], range: NSRange(0..<attributedString.length))
         
         textPreview.attributedStringValue = attributedString
         

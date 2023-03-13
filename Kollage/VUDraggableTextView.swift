@@ -74,9 +74,9 @@ class VUDraggableTextView: VUDraggableResizableView {
         
         super.draw(dirtyRect)
         
-        self.borderColor.set()
-        
-        self.bounds.insetBy(dx: selectionMarkLineWidth, dy: selectionMarkLineWidth).fill()
+//        self.borderColor.set()
+//
+//        self.bounds.insetBy(dx: selectionMarkLineWidth, dy: selectionMarkLineWidth).fill()
 
         
     }
@@ -265,12 +265,13 @@ class VUDraggableTextView: VUDraggableResizableView {
         newWidth = newWidth < minimumWidth ? minimumWidth: newWidth
         newHeight = newHeight < minimumHeight ? minimumHeight: newHeight
         
-        self.setFrameSize(.init(width:  newWidth, height: newHeight))
+        self.setFrameSize(.init(width: newWidth, height: newHeight))
         
-        print("Scale: \(factor) (\(width), \(height)) -> (\(newWidth), \(newHeight))")
+//        print("Scale: \(factor) (\(width), \(height)) -> (\(newWidth), \(newHeight))")
         
         
     }
+    
     
     override func rotate(byDegrees angle: CGFloat) {
         
@@ -278,8 +279,7 @@ class VUDraggableTextView: VUDraggableResizableView {
         
         
     }
-
-    
+ 
 }
 
 

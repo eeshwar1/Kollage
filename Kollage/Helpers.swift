@@ -46,3 +46,18 @@ enum CornerBorderPosition {
     case none
 }
 
+extension CGFloat {
+    
+    
+    func toRadians() -> CGFloat {
+        
+        return (self * CGFloat.pi) / 180.0
+        
+    }
+    
+    func toDegrees() -> CGFloat {
+        
+        return (self * 180) / CGFloat.pi
+        
+    }
+}

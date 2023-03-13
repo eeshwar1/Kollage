@@ -127,24 +127,28 @@ extension NSImage {
         return targetImage
     }
     
-    func addTextToImage(attributedText: NSAttributedString, position: NSPoint) -> NSImage {
+    func addTextToImage(attributedText: NSAttributedString, position: NSPoint, size: NSSize, angle: CGFloat) -> NSImage {
         
         let targetImage = NSImage(size: self.size, flipped: false) { (dstRect: CGRect) -> Bool in
             
             self.draw(in: dstRect)
-      
-            let textOrigin = CGPoint(x: position.x, y: position.y)
-            let rect = CGRect(origin: textOrigin, size: self.size)
+         
+            let textOrigin = CGPoint(x: dstRect.origin.x + position.x, y: dstRect.origin.y + position.y)
+            let rect = CGRect(origin: textOrigin, size: size)
             
+            let context = NSGraphicsContext.current!.cgContext
+            
+            context.saveGState()
+            context.rotate(by: angle.toRadians())
             attributedText.draw(in: rect)
+            context.restoreGState()
+          
             return true
         }
         return targetImage
     }
     
-    
     func addImage(image: NSImage) -> NSImage {
-        
         
         let newImage = NSImage(size: self.size)
         
@@ -155,7 +159,6 @@ extension NSImage {
         
         var imageRect: CGRect = .zero
         imageRect.size = newImage.size
-        
         
         var newImageRect: CGRect = .zero
         newImageRect.size = newImage.size
@@ -195,7 +198,6 @@ extension NSImage {
         
         var imageRect: CGRect = .zero
         imageRect.size = newImage.size
-        
         
         var newImageRect: CGRect = .zero
         newImageRect.size = newImage.size

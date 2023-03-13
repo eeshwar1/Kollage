@@ -200,7 +200,7 @@ class VUKollageEasel: NSView {
             } else if let textView = view as? VUDraggableTextView {
                 
                 
-                kollage = kollage.addTextToImage(attributedText: textView.getText(), position: NSPoint(x: 500,y: 500))
+                kollage = kollage.addTextToImage(attributedText: textView.getText(), position: textView.frame.origin, size: textView.frame.size, angle: textView.frameCenterRotation)
                 
             }
 

@@ -104,10 +104,15 @@ class VUDraggableResizableView: NSView {
     
     override func mouseDragged(with event: NSEvent) {
         
-        guard let superView = superview else { return }
+        guard let superView = superview else { print("returning")
+            return }
         
         let deltaX = event.deltaX
         let deltaY = event.deltaY
+        
+        var frameWidth = self.frame.width
+        var frameHeight = self.frame.height
+        let aspectRatio = frameHeight/frameWidth
         
         switch cursorPosition {
         case .topLeft:
@@ -115,10 +120,10 @@ class VUDraggableResizableView: NSView {
                superView.frame.height / 3 ..< superView.frame.height ~= self.frame.size.height - deltaY,
                self.frame.origin.x + deltaX >= superView.frame.minX,
                self.frame.origin.y + self.frame.height - deltaY <= superView.frame.maxY {
-                                
-                self.frame.size.width -= deltaX
                 
-                self.frame.size.height -= deltaY
+                frameWidth -= deltaX
+                
+                frameHeight = aspectRatio * frameWidth
                 
                 self.frame.origin.x += deltaX
                 
@@ -133,9 +138,9 @@ class VUDraggableResizableView: NSView {
                 
                 self.frame.origin.y -= deltaY
                 
-                self.frame.size.width -= deltaX
+                frameWidth -= deltaX
                 
-                self.frame.size.height += deltaY
+                frameHeight = aspectRatio * frameWidth
                 
             }
         case .topRight:
@@ -144,9 +149,9 @@ class VUDraggableResizableView: NSView {
                self.frame.origin.x + self.frame.width + deltaX <= superView.frame.maxX,
                self.frame.origin.y + self.frame.height - deltaY <= superView.frame.maxY {
                 
-                self.frame.size.width += deltaX
+                frameWidth += deltaX
                 
-                self.frame.size.height -= deltaY
+                frameHeight = aspectRatio * frameWidth
                 
             }
         case  .bottomRight:
@@ -157,39 +162,47 @@ class VUDraggableResizableView: NSView {
                 
                 self.frame.origin.y -= deltaY
                 
-                self.frame.size.width += deltaX
+                frameWidth += deltaX
                 
-                self.frame.size.height += deltaY
+                frameHeight = aspectRatio * frameWidth
                 
             }
         case .top:
             if superView.frame.height / 3 ..< superView.frame.height ~= self.frame.size.height - deltaY,
                self.frame.origin.y + self.frame.height - deltaY <= superView.frame.maxY {
-                self.frame.size.height -= deltaY
+                frameHeight -= deltaY
+                frameWidth = frameWidth / aspectRatio
             }
         case .bottom:
             if superView.frame.height / 3 ..< superView.frame.height ~= self.frame.size.height + deltaY,
                self.frame.origin.y - deltaY >= superView.frame.minY {
-                self.frame.size.height += deltaY
+                frameHeight += deltaY
+                frameWidth = frameWidth / aspectRatio
                 self.frame.origin.y -= deltaY
             }
         case .left:
             if superView.frame.width / 3 ..< superView.frame.width ~= self.frame.size.width - deltaX,
                self.frame.origin.x + deltaX >= superView.frame.minX {
-                self.frame.size.width -= deltaX
+                frameWidth -= deltaX
+                frameHeight = aspectRatio * frameWidth
                 self.frame.origin.x += deltaX
             }
         case .right:
             if superView.frame.width / 3 ..< superView.frame.width ~= self.frame.size.width + deltaX,
                self.frame.origin.x + self.frame.size.width + deltaX <= superView.frame.maxX {
-                self.frame.size.width += deltaX
+                frameWidth += deltaX
+                frameHeight = aspectRatio * frameWidth
             }
         case .none:
             self.frame.origin.x += deltaX
             self.frame.origin.y -= deltaY
         }
         
-        self.repositionView()
+        
+        
+        self.setFrameSize(.init(width: frameWidth, height: frameHeight))
+    
+        // TODO: Update Size slider here to reflect the new size of the frame
         
     }
     
