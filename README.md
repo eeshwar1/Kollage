@@ -18,3 +18,5 @@ A simple macOS Utility for creating collages from Photos.
 <img width="800" alt="Kollage With Shadow" src="https://user-images.githubusercontent.com/1115336/221338357-7baff77f-5473-4586-af51-b35d6977fe02.png">
 
 <img width="800" alt="Kollage New 3" src="https://user-images.githubusercontent.com/1115336/222181847-56b040b4-2b60-4116-b6bb-2d617ee70c69.png">
+
+<img width="800" alt="Kollage CTR6" src="https://user-images.githubusercontent.com/1115336/224600934-2559a44b-8b61-41bf-8629-28596c5d19c6.png">
