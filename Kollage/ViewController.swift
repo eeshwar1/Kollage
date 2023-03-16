@@ -18,6 +18,7 @@ class ViewController: NSViewController, NSFontChanging {
     @IBOutlet weak var enableShadow: NSButton!
     @IBOutlet weak var shadowColorWell: NSColorWell!
     
+    @IBOutlet weak var enableBorder: NSButton!
     @IBOutlet weak var borderColorWell: NSColorWell!
     
     @IBOutlet weak var stepperBorderWidth: NSStepper!
@@ -337,12 +338,13 @@ class ViewController: NSViewController, NSFontChanging {
         
         if attributes.border {
             
-            self.enableShadow.state = .on
+            self.enableBorder.state = .on
             
         } else {
             
-            self.enableShadow.state = .off
+            self.enableBorder.state = .off
         }
+        
         
         self.borderColorWell.color = attributes.borderColor
         self.stepperBorderWidth.integerValue = attributes.borderWidthRatio
@@ -385,7 +387,6 @@ class ViewController: NSViewController, NSFontChanging {
         
         self.labelRotationAngle.stringValue = numberFormatter.string(from: NSNumber(value: attributes.angle))!
         
-
         
     }
     

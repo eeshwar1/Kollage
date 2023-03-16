@@ -186,9 +186,11 @@ class VUDraggableImageView: VUDraggableResizableView {
         
         super.draw(dirtyRect)
         
-        self.borderColor.set()
-        
-        self.bounds.insetBy(dx: selectionMarkLineWidth, dy: selectionMarkLineWidth).fill()
+        if self.enableBorder {
+            self.borderColor.set()
+            
+            self.bounds.insetBy(dx: selectionMarkLineWidth, dy: selectionMarkLineWidth).fill()
+        }
 
         
     }
