@@ -314,11 +314,11 @@
                                                                 <stackView distribution="equalSpacing" orientation="vertical" alignment="centerX" spacing="10" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YLE-bN-okm" userLabel="Image Setting Stack">
                                                                     <rect key="frame" x="0.0" y="0.0" width="258" height="290"/>
                                                                     <subviews>
-                                                                        <stackView distribution="fill" orientation="horizontal" alignment="centerY" spacing="20" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8lY-Ok-ZSv" userLabel="Shadow Setting Stack">
-                                                                            <rect key="frame" x="10" y="260" width="238" height="20"/>
+                                                                        <stackView distribution="fill" orientation="horizontal" alignment="centerY" spacing="16" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8lY-Ok-ZSv" userLabel="Shadow Setting Stack">
+                                                                            <rect key="frame" x="10" y="260" width="241" height="20"/>
                                                                             <subviews>
                                                                                 <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="59a-kH-MvA">
-                                                                                    <rect key="frame" x="-2" y="-1" width="170" height="22"/>
+                                                                                    <rect key="frame" x="-2" y="-1" width="75" height="22"/>
                                                                                     <constraints>
                                                                                         <constraint firstAttribute="height" constant="20" id="OsY-G3-OLa"/>
                                                                                     </constraints>
@@ -330,10 +330,29 @@
                                                                                         <action selector="toggleShadow:" target="XfG-lQ-9wD" id="lcf-Q3-G07"/>
                                                                                     </connections>
                                                                                 </button>
-                                                                                <colorWell translatesAutoresizingMaskIntoConstraints="NO" id="hAs-U4-0lK">
-                                                                                    <rect key="frame" x="185" y="-2" width="56" height="24"/>
+                                                                                <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="o85-D8-vg4">
+                                                                                    <rect key="frame" x="86" y="-4" width="119" height="25"/>
                                                                                     <constraints>
-                                                                                        <constraint firstAttribute="width" constant="50" id="DGF-Pi-AZ9"/>
+                                                                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="110" id="OvE-Rh-TS5"/>
+                                                                                    </constraints>
+                                                                                    <popUpButtonCell key="cell" type="push" title="Right Top" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="dGG-TE-bec" id="it1-pi-zvu">
+                                                                                        <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                                                                                        <font key="font" metaFont="menu"/>
+                                                                                        <menu key="menu" id="L7L-Jf-h4P">
+                                                                                            <items>
+                                                                                                <menuItem title="Right Top" state="on" id="dGG-TE-bec" userLabel="Right Top"/>
+                                                                                                <menuItem title="Left Top" id="Qwh-85-8TW" userLabel="Left Top"/>
+                                                                                                <menuItem title="Right Bottom" id="3xC-bF-KnI" userLabel="Right Bottom"/>
+                                                                                                <menuItem title="Left Bottom" id="jqO-We-Aqv" userLabel="Left Bottom"/>
+                                                                                            </items>
+                                                                                        </menu>
+                                                                                    </popUpButtonCell>
+                                                                                </popUpButton>
+                                                                                <colorWell translatesAutoresizingMaskIntoConstraints="NO" id="hAs-U4-0lK">
+                                                                                    <rect key="frame" x="214" y="-6" width="30" height="28"/>
+                                                                                    <constraints>
+                                                                                        <constraint firstAttribute="height" constant="24" id="nKc-yK-hMg"/>
+                                                                                        <constraint firstAttribute="width" constant="24" id="nUE-d1-6Yf"/>
                                                                                     </constraints>
                                                                                     <color key="color" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                                     <connections>
@@ -347,8 +366,10 @@
                                                                             <visibilityPriorities>
                                                                                 <integer value="1000"/>
                                                                                 <integer value="1000"/>
+                                                                                <integer value="1000"/>
                                                                             </visibilityPriorities>
                                                                             <customSpacing>
+                                                                                <real value="3.4028234663852886e+38"/>
                                                                                 <real value="3.4028234663852886e+38"/>
                                                                                 <real value="3.4028234663852886e+38"/>
                                                                             </customSpacing>
@@ -451,11 +472,11 @@
                                                                                         <font key="font" metaFont="menu"/>
                                                                                         <menu key="menu" title="Normal" id="RDx-jR-KVq">
                                                                                             <items>
-                                                                                                <menuItem title="Normal" state="on" id="JD7-pF-d99"/>
-                                                                                                <menuItem title="Monochrome" id="za9-nc-2YM"/>
-                                                                                                <menuItem title="Sepia" id="BBR-GY-Y7q"/>
-                                                                                                <menuItem title="Comic" id="Tad-hf-duF"/>
-                                                                                                <menuItem title="Blur" id="OiA-lw-2bY"/>
+                                                                                                <menuItem title="Normal" state="on" image="Icon Normal" id="JD7-pF-d99"/>
+                                                                                                <menuItem title="Monochrome" image="Icon Mono" id="za9-nc-2YM"/>
+                                                                                                <menuItem title="Sepia" image="Icon Sepia" id="BBR-GY-Y7q"/>
+                                                                                                <menuItem title="Comic" image="Icon Comic" id="Tad-hf-duF"/>
+                                                                                                <menuItem title="Blur" image="Icon Blur" id="OiA-lw-2bY"/>
                                                                                             </items>
                                                                                         </menu>
                                                                                     </popUpButtonCell>
@@ -650,9 +671,10 @@
                                                                     <rect key="frame" x="10" y="10" width="248" height="50"/>
                                                                     <subviews>
                                                                         <colorWell translatesAutoresizingMaskIntoConstraints="NO" id="Qz8-Mw-QIZ">
-                                                                            <rect key="frame" x="-3" y="24" width="56" height="28"/>
+                                                                            <rect key="frame" x="-3" y="24" width="30" height="28"/>
                                                                             <constraints>
-                                                                                <constraint firstAttribute="width" constant="50" id="WPs-1K-ip5"/>
+                                                                                <constraint firstAttribute="height" constant="24" id="64e-Br-S8Y"/>
+                                                                                <constraint firstAttribute="width" constant="24" id="nKz-ml-Wje"/>
                                                                             </constraints>
                                                                             <color key="color" name="systemGrayColor" catalog="System" colorSpace="catalog"/>
                                                                             <connections>
@@ -868,6 +890,7 @@
                         <outlet property="borderColorWell" destination="kup-0p-AXg" id="1ZI-1y-QVt"/>
                         <outlet property="canvasSizeButton" destination="yGV-IF-qCF" id="y2x-gP-keF"/>
                         <outlet property="effectsButton" destination="1DU-u8-x6S" id="mvY-i6-UoG"/>
+                        <outlet property="enableBorder" destination="9Jh-8K-by8" id="abG-l8-1Z3"/>
                         <outlet property="enableShadow" destination="59a-kH-MvA" id="ajO-kh-uWe"/>
                         <outlet property="kollageEasel" destination="0OG-Fb-zy3" id="ts0-O9-JoV"/>
                         <outlet property="labelBorderWidth" destination="fia-fj-bAE" id="t8u-vL-my9"/>
@@ -1257,4 +1280,11 @@ Gw
             <point key="canvasLocation" x="1804" y="742"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="Icon Blur" width="16" height="16"/>
+        <image name="Icon Comic" width="16" height="16"/>
+        <image name="Icon Mono" width="16" height="16"/>
+        <image name="Icon Normal" width="16" height="16"/>
+        <image name="Icon Sepia" width="16" height="16"/>
+    </resources>
 </document>
