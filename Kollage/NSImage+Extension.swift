@@ -147,36 +147,7 @@ extension NSImage {
         }
         return targetImage
     }
-    
-    func addImage(image: NSImage) -> NSImage {
-        
-        let newImage = NSImage(size: self.size)
-        
-        let background = self
-        let overlay = image
-        
-        newImage.lockFocus()
-        
-        var imageRect: CGRect = .zero
-        imageRect.size = newImage.size
-        
-        var newImageRect: CGRect = .zero
-        newImageRect.size = newImage.size
-        
-        background.draw(in: imageRect)
-        
-        var newSmallRect: CGRect = .zero
-        newSmallRect.size = image.size
-        newSmallRect.origin = NSPoint(x: newImageRect.midX - newSmallRect.width/2, y: newImageRect.midY - newSmallRect.height/2)
-        
-        overlay.draw(in: newSmallRect)
-        
-        newImage.unlockFocus()
-        
-        return newImage
-        
-        
-    }
+
     
     func withBorder(color: NSColor, width: CGFloat) -> NSImage{
         
@@ -186,6 +157,7 @@ extension NSImage {
         
         
     }
+    
     func addImage(image: NSImage, position: NSPoint) -> NSImage {
         
         

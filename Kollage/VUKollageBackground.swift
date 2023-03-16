@@ -31,7 +31,6 @@ class VUKollageBackground: NSView {
     
     override func resizeSubviews(withOldSize oldSize: NSSize) {
         
-        // print("resize sub views...")
         resizeImageView()
         
     }

@@ -74,29 +74,17 @@ class VUDraggableImageView: VUDraggableResizableView {
     }
     
    
-    
-    var image: NSImage? {
-        
+    var image: NSImage?
+     {
+
         didSet {
-            
+
             if let _image = image {
                 
-                let maxDimension: CGFloat = CGFloat.maximum(self.frame.height, self.frame.width)
-                
-                let imageSize = _image.aspectFitSizeForMaxDimension(maxDimension)
-                
-                let borderWidth = self.borderWidthRatio * CGFloat.maximum(imageSize.width, imageSize.height)
-                
-                self.frame.size = NSSize(width: imageSize.width + 2 * borderWidth + 2 * selectionMarkLineWidth,
-                                         height: imageSize.height + 2 * borderWidth + 2 * selectionMarkLineWidth)
-                
                 self.imageView.image = _image
-                
-                needsDisplay = true
+                self.needsDisplay = true
                 
             }
-            
-            
         }
     }
     
@@ -212,7 +200,29 @@ class VUDraggableImageView: VUDraggableResizableView {
       
         self.image = image
 
-        self.needsDisplay = true
+        self.setImageFrame()
+        
+    }
+    
+    func setImageFrame() {
+        
+    
+        if let image = self.image {
+            
+            let maxDimension: CGFloat = CGFloat.maximum(self.frame.height, self.frame.width)
+            
+            let imageSize = image.aspectFitSizeForMaxDimension(maxDimension)
+            
+            let borderWidth = self.borderWidthRatio * CGFloat.maximum(imageSize.width, imageSize.height)
+            
+            self.frame.size = NSSize(width: imageSize.width + 2 * borderWidth + 2 * selectionMarkLineWidth,
+                                     height: imageSize.height + 2 * borderWidth + 2 * selectionMarkLineWidth)
+            
+            self.imageView.image = image
+            
+            needsDisplay = true
+        }
+       
         
     }
     
@@ -515,20 +525,18 @@ class VUDraggableImageView: VUDraggableResizableView {
     func applyEffect(effect: String) {
         
         if let imageData = self.imageData, let image = NSImage(data: imageData) {
-            
+    
             self.image = image.withEffect(effect: effect)
             
         }
-        
         
     }
     
     func removeFilter() {
         
-        if let imageData = self.imageData {
+        if let imageData = self.imageData, let image = NSImage(data: imageData) {
             
-            
-            self.image = NSImage(data: imageData)
+            self.image = image
             
         }
         
