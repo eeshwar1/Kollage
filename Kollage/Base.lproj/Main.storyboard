@@ -246,10 +246,10 @@
                                                 </customSpacing>
                                             </stackView>
                                             <stackView distribution="fillProportionally" orientation="vertical" alignment="leading" spacing="10" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Qrv-y0-R6s" userLabel="Control Stack">
-                                                <rect key="frame" x="1013" y="160" width="300" height="720"/>
+                                                <rect key="frame" x="1013" y="156" width="300" height="724"/>
                                                 <subviews>
                                                     <box translatesAutoresizingMaskIntoConstraints="NO" id="Iam-EB-3mu">
-                                                        <rect key="frame" x="7" y="630" width="286" height="90"/>
+                                                        <rect key="frame" x="7" y="634" width="286" height="90"/>
                                                         <view key="contentView" id="REh-tc-Kgq">
                                                             <rect key="frame" x="4" y="5" width="278" height="70"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -306,19 +306,19 @@
                                                         </view>
                                                     </box>
                                                     <box translatesAutoresizingMaskIntoConstraints="NO" id="xUX-nD-eA3">
-                                                        <rect key="frame" x="7" y="314" width="286" height="310"/>
+                                                        <rect key="frame" x="7" y="314" width="286" height="314"/>
                                                         <view key="contentView" id="I5M-I0-SeD">
-                                                            <rect key="frame" x="4" y="5" width="278" height="290"/>
+                                                            <rect key="frame" x="4" y="5" width="278" height="294"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <stackView distribution="equalSpacing" orientation="vertical" alignment="centerX" spacing="10" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YLE-bN-okm" userLabel="Image Setting Stack">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="258" height="290"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="258" height="294"/>
                                                                     <subviews>
                                                                         <stackView distribution="fill" orientation="horizontal" alignment="centerY" spacing="16" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8lY-Ok-ZSv" userLabel="Shadow Setting Stack">
-                                                                            <rect key="frame" x="10" y="260" width="241" height="20"/>
+                                                                            <rect key="frame" x="10" y="260" width="248" height="24"/>
                                                                             <subviews>
                                                                                 <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="59a-kH-MvA">
-                                                                                    <rect key="frame" x="-2" y="-1" width="75" height="22"/>
+                                                                                    <rect key="frame" x="-2" y="1" width="75" height="22"/>
                                                                                     <constraints>
                                                                                         <constraint firstAttribute="height" constant="20" id="OsY-G3-OLa"/>
                                                                                     </constraints>
@@ -330,26 +330,29 @@
                                                                                         <action selector="toggleShadow:" target="XfG-lQ-9wD" id="lcf-Q3-G07"/>
                                                                                     </connections>
                                                                                 </button>
-                                                                                <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="o85-D8-vg4">
-                                                                                    <rect key="frame" x="86" y="-4" width="119" height="25"/>
+                                                                                <popUpButton horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="o85-D8-vg4">
+                                                                                    <rect key="frame" x="86" y="-2" width="126" height="25"/>
                                                                                     <constraints>
-                                                                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="110" id="OvE-Rh-TS5"/>
+                                                                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="30" id="OvE-Rh-TS5"/>
                                                                                     </constraints>
                                                                                     <popUpButtonCell key="cell" type="push" title="Right Top" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="dGG-TE-bec" id="it1-pi-zvu">
                                                                                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                                                                         <font key="font" metaFont="menu"/>
                                                                                         <menu key="menu" id="L7L-Jf-h4P">
                                                                                             <items>
-                                                                                                <menuItem title="Right Top" state="on" id="dGG-TE-bec" userLabel="Right Top"/>
-                                                                                                <menuItem title="Left Top" id="Qwh-85-8TW" userLabel="Left Top"/>
-                                                                                                <menuItem title="Right Bottom" id="3xC-bF-KnI" userLabel="Right Bottom"/>
-                                                                                                <menuItem title="Left Bottom" id="jqO-We-Aqv" userLabel="Left Bottom"/>
+                                                                                                <menuItem title="Right Top" state="on" image="Shadow RT" id="dGG-TE-bec" userLabel="Right Top"/>
+                                                                                                <menuItem title="Left Top" image="Shadow LT" id="Qwh-85-8TW" userLabel="Left Top"/>
+                                                                                                <menuItem title="Right Bottom" image="Shadow RB" id="3xC-bF-KnI" userLabel="Right Bottom"/>
+                                                                                                <menuItem title="Left Bottom" image="Shadow LB" id="jqO-We-Aqv" userLabel="Left Bottom"/>
                                                                                             </items>
                                                                                         </menu>
                                                                                     </popUpButtonCell>
+                                                                                    <connections>
+                                                                                        <action selector="shadowTypeChanged:" target="XfG-lQ-9wD" id="r2i-bh-Lm6"/>
+                                                                                    </connections>
                                                                                 </popUpButton>
                                                                                 <colorWell translatesAutoresizingMaskIntoConstraints="NO" id="hAs-U4-0lK">
-                                                                                    <rect key="frame" x="214" y="-6" width="30" height="28"/>
+                                                                                    <rect key="frame" x="221" y="-2" width="30" height="28"/>
                                                                                     <constraints>
                                                                                         <constraint firstAttribute="height" constant="24" id="nKc-yK-hMg"/>
                                                                                         <constraint firstAttribute="width" constant="24" id="nUE-d1-6Yf"/>
@@ -361,7 +364,7 @@
                                                                                 </colorWell>
                                                                             </subviews>
                                                                             <constraints>
-                                                                                <constraint firstAttribute="height" constant="20" id="5fg-mY-mfK"/>
+                                                                                <constraint firstAttribute="height" constant="24" id="5fg-mY-mfK"/>
                                                                             </constraints>
                                                                             <visibilityPriorities>
                                                                                 <integer value="1000"/>
@@ -758,6 +761,7 @@
                                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                             <font key="font" metaFont="cellTitle"/>
                                                         </buttonCell>
+                                                        <color key="bezelColor" name="systemBlueColor" catalog="System" colorSpace="catalog"/>
                                                         <connections>
                                                             <action selector="exportKollage:" target="XfG-lQ-9wD" id="PL4-KZ-0a8"/>
                                                         </connections>
@@ -900,6 +904,7 @@
                         <outlet property="resizeSlider" destination="UKX-4v-0pL" id="5x6-sV-o3w"/>
                         <outlet property="rotateSlider" destination="h2b-Ms-2Ir" id="aHJ-I8-mSM"/>
                         <outlet property="shadowColorWell" destination="hAs-U4-0lK" id="ki9-uv-Iyp"/>
+                        <outlet property="shadowTypeButton" destination="o85-D8-vg4" id="fS4-Qr-Onk"/>
                         <outlet property="spinner" destination="gCD-Su-Hw8" id="99V-pu-qnQ"/>
                         <outlet property="stepperBorderWidth" destination="jiD-Ou-RBI" id="Org-YO-uXS"/>
                     </connections>
@@ -1286,5 +1291,9 @@ Gw
         <image name="Icon Mono" width="16" height="16"/>
         <image name="Icon Normal" width="16" height="16"/>
         <image name="Icon Sepia" width="16" height="16"/>
+        <image name="Shadow LB" width="32" height="32"/>
+        <image name="Shadow LT" width="32" height="32"/>
+        <image name="Shadow RB" width="32" height="32"/>
+        <image name="Shadow RT" width="32" height="32"/>
     </resources>
 </document>
