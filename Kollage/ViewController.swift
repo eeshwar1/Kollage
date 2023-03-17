@@ -17,6 +17,7 @@ class ViewController: NSViewController, NSFontChanging {
     
     @IBOutlet weak var enableShadow: NSButton!
     @IBOutlet weak var shadowColorWell: NSColorWell!
+    @IBOutlet weak var shadowTypeButton: NSPopUpButton!
     
     @IBOutlet weak var enableBorder: NSButton!
     @IBOutlet weak var borderColorWell: NSColorWell!
@@ -269,6 +270,14 @@ class ViewController: NSViewController, NSFontChanging {
         
     }
     
+    @IBAction func shadowTypeChanged(_ sender: NSPopUpButton) {
+        
+        self.kollageEasel.setShadowType(type: .init(name: sender.title))
+        
+        
+        
+    }
+    
     
     @IBAction func pickBackgroundImage(_ sender: NSButton) {
         
@@ -330,15 +339,23 @@ class ViewController: NSViewController, NSFontChanging {
         
         self.effectsButton.isEnabled = true
         
+        self.enableShadow.isEnabled = true
+        
         if attributes.shadow {
             self.enableShadow.state = .on
         } else {
             self.enableShadow.state = .off
         }
         
+        self.enableBorder.isEnabled = true
+        
         if attributes.border {
             
             self.enableBorder.state = .on
+            self.borderColorWell.isEnabled =  true
+            self.borderColorWell.color = attributes.borderColor
+            self.stepperBorderWidth.isEnabled = true
+            self.stepperBorderWidth.integerValue = attributes.borderWidthRatio
             
         } else {
             
@@ -346,10 +363,14 @@ class ViewController: NSViewController, NSFontChanging {
         }
         
         
-        self.borderColorWell.color = attributes.borderColor
-        self.stepperBorderWidth.integerValue = attributes.borderWidthRatio
         
         
+        
+        
+        self.shadowColorWell.isEnabled = true
+        self.shadowColorWell.color = attributes.shadowColor
+        self.shadowTypeButton.isEnabled = true
+      //  self.shadowTypeButton.selectItem(withTitle: self.)
     }
     
     func disableImageControls() {
@@ -368,6 +389,14 @@ class ViewController: NSViewController, NSFontChanging {
         
         self.effectsButton.isEnabled = false
         
+        self.enableBorder.isEnabled = false
+        self.stepperBorderWidth.isEnabled = false
+        self.labelBorderWidth.isEnabled = false
+        self.borderColorWell.isEnabled =  false
+        
+        self.enableShadow.isEnabled = false
+        self.shadowColorWell.isEnabled = false
+        self.shadowTypeButton.isEnabled = false
         
     }
     
@@ -450,6 +479,17 @@ class ViewController: NSViewController, NSFontChanging {
     @IBAction func toggleBorder(_ sender: NSButton) {
         
         self.kollageEasel.setBorder(enabled: sender.state == .on)
+        
+        if sender.state == .on {
+            self.labelBorderWidth.isEnabled = true
+            self.stepperBorderWidth.isEnabled = true
+            self.borderColorWell.isEnabled = true
+        } else {
+            
+            self.labelBorderWidth.isEnabled = false
+            self.stepperBorderWidth.isEnabled = false
+            self.borderColorWell.isEnabled = false
+        }
     }
     
     @IBAction func borderWidthChanged(_ sender: NSStepper) {

@@ -19,10 +19,14 @@ struct ImageViewAttributes {
     
     var sizefactor: CGFloat
     var angle: CGFloat
-    var shadow: Bool
+    
     var border: Bool
     var borderColor: NSColor
     var borderWidthRatio: Int
+    
+    var shadow: Bool
+    var shadowColor: NSColor
+    var shadowType: ShadowType
     
 }
 
@@ -36,17 +40,17 @@ class VUDraggableImageView: VUDraggableResizableView {
     
     var canvas: VUKollageCanvas?
     
-    var borderColor: NSColor = .white
-    var borderWidthRatio: CGFloat = 0.0
-    
-    var shadowColor: NSColor = .black
-    
+   
     var sizeFactor: Double = 1.0
     var rotationAngle: Double = 0.0
     
     var enableShadow: Bool = true
+    var shadowColor: NSColor = .black
+    var shadowType: ShadowType = .RightTop
     
-    var enableBorder: Bool = true
+    var enableBorder: Bool = false
+    var borderColor: NSColor = .white
+    var borderWidthRatio: CGFloat = 0.0
     
     var imageData: Data?
     
@@ -54,8 +58,6 @@ class VUDraggableImageView: VUDraggableResizableView {
     var bottomConstraint: NSLayoutConstraint = NSLayoutConstraint()
     var leftConstraint: NSLayoutConstraint = NSLayoutConstraint()
     var rightConstraint: NSLayoutConstraint = NSLayoutConstraint()
-    
-    
     
     var attributes: ImageViewAttributes {
         
@@ -65,10 +67,14 @@ class VUDraggableImageView: VUDraggableResizableView {
                 
                 sizefactor: self.sizeFactor,
                 angle: self.frameCenterRotation,
-                shadow: self.enableShadow,
+               
                 border: self.enableBorder,
                 borderColor: self.borderColor,
-                borderWidthRatio: Int(self.borderWidthRatio * 100)
+                borderWidthRatio: Int(self.borderWidthRatio * 100),
+                
+                shadow: self.enableShadow,
+                shadowColor: self.shadowColor,
+                shadowType: self.shadowType
             )
         }
     }
@@ -168,10 +174,9 @@ class VUDraggableImageView: VUDraggableResizableView {
         if self.enableShadow {
             
             self.shadow = NSShadow()
-            
             self.layer?.shadowOpacity = 0.7
             self.layer?.shadowColor = self.shadowColor.cgColor
-            self.layer?.shadowOffset = NSMakeSize(10, 10)
+            self.layer?.shadowOffset = self.getShadowOffset()
             self.layer?.shadowRadius = 6.0
             
         } else {
@@ -180,6 +185,33 @@ class VUDraggableImageView: VUDraggableResizableView {
         }
         
         
+    }
+    
+    func getShadowOffset() -> NSSize {
+        
+        var xOffset: CGFloat = 0.0
+        var yOffset: CGFloat = 0.0
+        
+        switch self.shadowType {
+            
+        case .RightTop:
+            xOffset = 10
+            yOffset = 10
+        case .RightBottom:
+            xOffset = 10
+            yOffset = -10
+        case .LeftTop:
+            xOffset = -10
+            yOffset = 10
+        case .LeftBottom:
+            xOffset = -10
+            yOffset = -10
+        case .None:
+            break
+            
+        }
+        
+        return NSMakeSize(xOffset, yOffset)
     }
     
     override func draw(_ dirtyRect: NSRect) {
@@ -242,7 +274,12 @@ class VUDraggableImageView: VUDraggableResizableView {
         self.needsDisplay = true
     }
     
+    func setShadowType(type: ShadowType) {
     
+        self.shadowType = type
+        self.configureShadow()
+        self.needsDisplay = true
+    }
     
     func setBorder(enabled: Bool) {
         
@@ -250,7 +287,6 @@ class VUDraggableImageView: VUDraggableResizableView {
         
         configureBorder()
        
-        
     }
     
     func setBorderColor(color: NSColor) {
@@ -260,6 +296,7 @@ class VUDraggableImageView: VUDraggableResizableView {
         self.needsDisplay = true
     }
 
+    
     func setBorderWidth(percent: CGFloat) {
         
         self.borderWidthRatio = percent/100

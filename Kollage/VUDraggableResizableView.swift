@@ -1,5 +1,33 @@
 import Cocoa
 
+enum ShadowType {
+    
+    case LeftTop
+    case LeftBottom
+    case RightTop
+    case RightBottom
+    case None
+    
+    init(name: String) {
+        
+        switch name.lowercased() {
+            
+        case "left top":
+            self = .LeftTop
+        case "left bottom":
+            self = .LeftBottom
+        case "right top":
+            self = .RightTop
+        case "right bottom":
+            self = .RightBottom
+        case "none":
+            self = .None
+        default:
+            self = .None
+        }
+    }
+}
+
 class VUDraggableResizableView: NSView {
     
     let resizableArea: CGFloat = 5

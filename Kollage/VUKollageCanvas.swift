@@ -16,6 +16,7 @@ protocol DestinationViewDelegate {
 }
 
 
+
 @IBDesignable class VUKollageCanvas: NSView {
     
     @IBInspectable var radius : CGFloat = 0.0
@@ -465,6 +466,17 @@ protocol DestinationViewDelegate {
             
             if let imageView = view as? VUDraggableImageView {
                 imageView.setShadowColor(color: color)
+            }
+        }
+        
+    }
+    
+    func setShadowType(type: ShadowType) {
+        
+        for (_, view) in selectedViews.enumerated() {
+            
+            if let imageView = view as? VUDraggableImageView {
+                imageView.setShadowType(type: type)
             }
         }
         

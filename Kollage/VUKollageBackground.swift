@@ -41,13 +41,16 @@ class VUKollageBackground: NSView {
         
         self.clearBackgroundImage()
         let maxDimension = self.frame.width > self.frame.height ? self.frame.width : self.frame.height
+        
         self.backgroundImage = image
         self.resizedBackgroundImage = image.resize(withSize: image.sizeForMaxDimension(maxDimension))
+        
+        self.resizedBackgroundImage?.resizingMode = .tile
+    
         
         self.imageView = NSImageView(image: self.resizedBackgroundImage ?? NSImage())
         
         if let imageView = self.imageView {
-            
             
             imageView.frame.size = self.frame.size
             self.addSubview(imageView)

@@ -155,6 +155,10 @@ class VUKollageEasel: NSView {
         
     }
     
+    func setShadowType(type: ShadowType) {
+        
+        self.kollageCanvas.setShadowType(type: type)
+    }
     
     func getBackgroundColor () -> NSColor {
         
