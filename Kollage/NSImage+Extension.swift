@@ -149,11 +149,18 @@ extension NSImage {
     }
 
     
-    func withBorder(color: NSColor, width: CGFloat) -> NSImage{
+    func withBorder(color: NSColor, size: NSSize, borderWidth: CGFloat) -> NSImage{
         
-        let borderImage = NSImage.swatchWithColor(color: color, size: NSSize(width: self.size.width + 2 * width, height: self.size.height + 2 * width))
+        let borderImage = NSImage.swatchWithColor(color: color, size: NSSize(width: size.width + 2 * borderWidth, height: size.height + 2 * borderWidth))
         
-        return borderImage.addImage(image: self, position: NSPoint(x: width, y: width))
+        if let resizedImage = self.resize(withSize: size) {
+            
+            return borderImage.addImage(image: resizedImage, position: NSPoint(x: borderWidth, y: borderWidth))
+        } else {
+            
+            return self
+        }
+        
         
         
     }
@@ -181,7 +188,7 @@ extension NSImage {
  
         newSmallRect.origin = position
         
-        overlay.draw(in: newSmallRect)
+        overlay.draw(in: newSmallRect, from: .zero, operation: .sourceAtop, fraction: 1.0)
         
         newImage.unlockFocus()
         

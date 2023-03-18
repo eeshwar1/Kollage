@@ -51,6 +51,7 @@ class VUDraggableImageView: VUDraggableResizableView {
     var enableBorder: Bool = false
     var borderColor: NSColor = .white
     var borderWidthRatio: CGFloat = 0.0
+    var borderWidth: CGFloat = 0.0
     
     var imageData: Data?
     
@@ -135,10 +136,10 @@ class VUDraggableImageView: VUDraggableResizableView {
     func addConstraints() {
         
         
-        let dimension = CGFloat.maximum(self.frame.height, self.frame.height)
+        // let dimension = CGFloat.maximum(self.frame.height, self.frame.height)
 
-        let borderWidth = dimension * self.borderWidthRatio
-        let marginWidth = borderWidth + selectionMarkLineWidth
+        // let borderWidth = dimension * self.borderWidthRatio
+        let marginWidth = self.borderWidth + selectionMarkLineWidth
         
         self.imageView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -303,23 +304,19 @@ class VUDraggableImageView: VUDraggableResizableView {
         
         configureBorder()
 
-        
     }
     
     func configureBorder() {
     
         if let _ = self.image {
             
-           var borderWidth = 0.0
-            
            if self.enableBorder {
                 
-                let dimension = CGFloat.maximum(self.frame.height, self.frame.width)
-                borderWidth = dimension * self.borderWidthRatio
+               self.borderWidth = getImageDimension() * self.borderWidthRatio
                 
             }
             
-            let marginWidth = borderWidth + selectionMarkLineWidth
+            let marginWidth = self.borderWidth + selectionMarkLineWidth
             
             self.topConstraint.constant =  marginWidth
             self.bottomConstraint.constant = marginWidth
@@ -333,18 +330,22 @@ class VUDraggableImageView: VUDraggableResizableView {
         
     }
 
+    func getImageDimension() -> CGFloat {
+        
+        var dimension = 0.0
+           
+        let imageSize = self.imageView.frame.size
+        dimension = CGFloat.maximum(imageSize.width, imageSize.height)
+        
+        return dimension
+    }
+    
     func getImage() -> NSImage? {
         
         guard let image = self.image else { return nil }
+    
         
-        var borderWidth = CGFloat.maximum(self.frame.width, self.frame.height) * self.borderWidthRatio
-        
-        if let _ = self.image {
-            
-            borderWidth = CGFloat.maximum(imageView.frame.width, imageView.frame.height) * self.borderWidthRatio
-        }
-        
-        return image.withBorder(color: borderColor, width: borderWidth)
+        return image.withBorder(color: borderColor, size: self.frame.size, borderWidth: self.borderWidth)
             
         
     }
@@ -352,15 +353,18 @@ class VUDraggableImageView: VUDraggableResizableView {
     func getShadow() -> (image: NSImage, position: NSPoint)? {
         
         guard self.enableShadow else { return nil }
-            
-        let shadowSize = NSSize(width: self.frame.size.width + 20, height: self.frame.size.height + 20)
+        
+        let shadowOffset = self.getShadowOffset()
+        
+        let shadowSize = NSSize(width: self.frame.size.width + 2 * shadowOffset.width, height: self.frame.size.height + 2 * shadowOffset.height)
+        
         let baseShadow = NSImage.swatchWithColor(color: self.shadowColor, size: shadowSize)
         
         let rotShadow = baseShadow.rotated(by: imageView.frameCenterRotation).applyGaussianBlur()
         
         let shadow = rotShadow.resize(withSize: self.frame.size)!
         
-        let shadowPosition = NSPoint(x: self.frame.origin.x + 20, y: self.frame.origin.y + 20)
+        let shadowPosition = NSPoint(x: self.frame.origin.x +  2 * shadowOffset.width, y: self.frame.origin.y + 2 * shadowOffset.height)
         
         return (image: shadow, position: shadowPosition)
         

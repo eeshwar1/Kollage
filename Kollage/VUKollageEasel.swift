@@ -196,7 +196,12 @@ class VUKollageEasel: NSView {
                         kollage = kollage.addImageAlpha(image: shadow.image, position: shadow.position, alpha: 0.7)
                     }
                     
-                    kollage = kollage.addImage(image: resizedImage ?? NSImage(), position: imageView.frame.origin)
+                    if let resizedImage = resizedImage {
+                        
+                        kollage = kollage.addImage(image: resizedImage, position: imageView.frame.origin)
+                        
+                    }
+                    
                     
                     
                 }
