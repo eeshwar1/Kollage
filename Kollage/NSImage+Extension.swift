@@ -188,7 +188,7 @@ extension NSImage {
  
         newSmallRect.origin = position
         
-        overlay.draw(in: newSmallRect, from: .zero, operation: .sourceAtop, fraction: 1.0)
+        overlay.draw(in: newSmallRect, from: .zero, operation: .sourceOver, fraction: 1.0)
         
         newImage.unlockFocus()
         
@@ -221,7 +221,7 @@ extension NSImage {
  
         newSmallRect.origin = position
         
-        overlay.draw(in: newSmallRect, from: .zero, operation: .sourceAtop, fraction: alpha)
+        overlay.draw(in: newSmallRect, from: .zero, operation: .sourceOver, fraction: alpha)
         
         newImage.unlockFocus()
         
@@ -229,6 +229,80 @@ extension NSImage {
         
         
     }
+    
+    func tiledImage(size: NSSize) -> NSImage {
+        
+        let image = self
+        let tiledImage = NSImage(size: size)
+        tiledImage.lockFocus()
+        
+        let rows = Int(size.height / image.size.height) + 1
+        let columns = Int(size.width / image.size.width) + 1
+        
+        for y in 0..<rows {
+            for x in 0..<columns {
+                let origin = NSPoint(x: CGFloat(x) * image.size.width, y: CGFloat(y) * image.size.height)
+                image.draw(at: origin, from: NSRect.zero, operation: .copy, fraction: 1.0)
+            }
+        }
+        
+        tiledImage.unlockFocus()
+        
+        return tiledImage
+    }
+    
+    func stretchedImage(size: NSSize) -> NSImage {
+        
+        let image = self
+        let stretchedImage = NSImage(size: size)
+        stretchedImage.lockFocus()
+        
+        let imageRect = NSRect(origin: NSPoint.zero, size: image.size)
+        let stretchedRect = NSRect(origin: NSPoint.zero, size: size)
+        
+        self.draw(in: stretchedRect, from: imageRect, operation: .copy, fraction: 1.0)
+        
+        stretchedImage.unlockFocus()
+        
+        return stretchedImage
+    }
+    
+    func clipImage(shapeImage: NSImage) -> NSImage? {
+        
+        // Create a new bitmap image with the same dimensions as the shape image
+        guard let bitmap = NSBitmapImageRep(bitmapDataPlanes: nil, pixelsWide: Int(shapeImage.size.width), pixelsHigh: Int(shapeImage.size.height), bitsPerSample: 8, samplesPerPixel: 4, hasAlpha: true, isPlanar: false, colorSpaceName: NSColorSpaceName.deviceRGB, bytesPerRow: 0, bitsPerPixel: 0) else {
+            
+            print("clipImage: returning from guard")
+            return self
+        }
+        
+        // Draw the shape image onto the bitmap using the alpha channel as a mask
+        NSGraphicsContext.saveGraphicsState()
+        NSGraphicsContext.current = NSGraphicsContext(bitmapImageRep: bitmap)
+        shapeImage.draw(at: NSPoint.zero, from: NSRect(origin: .zero, size: shapeImage.size), operation: .sourceOver, fraction: 1.0)
+        NSGraphicsContext.restoreGraphicsState()
+        
+        // Create a new bitmap image with the same dimensions as the image to clip
+        guard let clippedBitmap = NSBitmapImageRep(bitmapDataPlanes: nil, pixelsWide: Int(self.size.width), pixelsHigh: Int(self.size.height), bitsPerSample: 8, samplesPerPixel: 4, hasAlpha: true, isPlanar: false, colorSpaceName: NSColorSpaceName.deviceRGB, bytesPerRow: 0, bitsPerPixel: 0) else {
+            
+            print("clipImage: failed to create bitmap")
+            return nil
+        }
+        
+        // Draw the image to clip onto the clipped bitmap using the shape bitmap as a mask
+        NSGraphicsContext.saveGraphicsState()
+        NSGraphicsContext.current = NSGraphicsContext(bitmapImageRep: clippedBitmap)
+        self.draw(at: NSPoint.zero, from: NSRect(origin: .zero, size: self.size), operation: .sourceIn, fraction: 1.0)
+        NSGraphicsContext.restoreGraphicsState()
+        
+        // Create a new NSImage from the clipped bitmap
+        let clippedImage = NSImage(size: self.size)
+        clippedImage.addRepresentation(clippedBitmap)
+        
+        print("clipImage: returning clipped image")
+        return clippedImage
+    }
+
     
     func rotated(by degrees: CGFloat) -> NSImage {
         

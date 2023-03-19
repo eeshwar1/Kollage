@@ -46,7 +46,7 @@ class VUDraggableImageView: VUDraggableResizableView {
     
     var enableShadow: Bool = true
     var shadowColor: NSColor = .black
-    var shadowType: ShadowType = .RightTop
+    var shadowType: ShadowType = .rightTop
     
     var enableBorder: Bool = false
     var borderColor: NSColor = .white
@@ -136,9 +136,6 @@ class VUDraggableImageView: VUDraggableResizableView {
     func addConstraints() {
         
         
-        // let dimension = CGFloat.maximum(self.frame.height, self.frame.height)
-
-        // let borderWidth = dimension * self.borderWidthRatio
         let marginWidth = self.borderWidth + selectionMarkLineWidth
         
         self.imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -195,19 +192,19 @@ class VUDraggableImageView: VUDraggableResizableView {
         
         switch self.shadowType {
             
-        case .RightTop:
+        case .rightTop:
             xOffset = 10
             yOffset = 10
-        case .RightBottom:
+        case .rightBottom:
             xOffset = 10
             yOffset = -10
-        case .LeftTop:
+        case .leftTop:
             xOffset = -10
             yOffset = 10
-        case .LeftBottom:
+        case .leftBottom:
             xOffset = -10
             yOffset = -10
-        case .None:
+        case .none:
             break
             
         }
@@ -342,17 +339,25 @@ class VUDraggableImageView: VUDraggableResizableView {
     
     func getImage() -> NSImage? {
         
-        guard let image = self.image else { return nil }
-    
+        guard let image = self.image else { print("getImage: returning from guard")
+            return nil }
         
-        return image.withBorder(color: borderColor, size: self.frame.size, borderWidth: self.borderWidth)
+        if self.enableBorder {
+            
+            return image.withBorder(color: borderColor, size: self.frame.size, borderWidth: self.borderWidth)
+        } else {
+            
+            return image
+        }
             
         
     }
     
     func getShadow() -> (image: NSImage, position: NSPoint)? {
         
-        guard self.enableShadow else { return nil }
+        guard self.enableShadow else {
+            print("getShadow: returning from guard")
+            return nil }
         
         let shadowOffset = self.getShadowOffset()
         
@@ -364,9 +369,22 @@ class VUDraggableImageView: VUDraggableResizableView {
         
         let shadow = rotShadow.resize(withSize: self.frame.size)!
         
-        let shadowPosition = NSPoint(x: self.frame.origin.x +  2 * shadowOffset.width, y: self.frame.origin.y + 2 * shadowOffset.height)
+        var clippedShadow = shadow
+
+        if let image = getImage(), let cs = shadow.clipImage(shapeImage: image) {
+
+            clippedShadow = cs
+        }
         
-        return (image: shadow, position: shadowPosition)
+        if let image = getImage() {
+
+            print("getShadow: Image found")
+            clippedShadow = shadow.clipImage(shapeImage: image)!
+        }
+        
+        let shadowPosition = NSPoint(x: self.frame.origin.x +  3 * shadowOffset.width, y: self.frame.origin.y + 3 * shadowOffset.height)
+        
+        return (image: clippedShadow, position: shadowPosition)
         
     }
         

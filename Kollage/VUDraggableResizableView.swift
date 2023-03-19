@@ -2,28 +2,28 @@ import Cocoa
 
 enum ShadowType {
     
-    case LeftTop
-    case LeftBottom
-    case RightTop
-    case RightBottom
-    case None
+    case leftTop
+    case leftBottom
+    case rightTop
+    case rightBottom
+    case none
     
     init(name: String) {
         
         switch name.lowercased() {
             
         case "left top":
-            self = .LeftTop
+            self = .leftTop
         case "left bottom":
-            self = .LeftBottom
+            self = .leftBottom
         case "right top":
-            self = .RightTop
+            self = .rightTop
         case "right bottom":
-            self = .RightBottom
+            self = .rightBottom
         case "none":
-            self = .None
+            self = .none
         default:
-            self = .None
+            self = .none
         }
     }
 }

@@ -14,6 +14,7 @@ class ViewController: NSViewController, NSFontChanging {
     
     @IBOutlet weak var canvasSizeButton: NSPopUpButton!
     @IBOutlet weak var backgroundColorWell: NSColorWell!
+    @IBOutlet weak var backgroundImageOptionButton: NSPopUpButton!
     
     @IBOutlet weak var enableShadow: NSButton!
     @IBOutlet weak var shadowColorWell: NSColorWell!
@@ -292,10 +293,17 @@ class ViewController: NSViewController, NSFontChanging {
             
             if let url =  openPanel.url {
                 
-                self.kollageEasel.kollageBackground.setBackground(image: NSImage(contentsOf: url) ?? NSImage())
+                self.kollageEasel.kollageBackground.setBackground(image: NSImage(contentsOf: url) ?? NSImage(), option: .init(name: self.backgroundImageOptionButton.title))
             }
         }
         
+    }
+    
+    @IBAction func pickBackgroundImageOption(_ sender: NSPopUpButton) {
+        
+        self.kollageEasel.setBackgroundImageOption(option: .init(name: sender.title))
+        
+      
     }
     
     @IBAction func addImages(_ sender: Any) {
@@ -362,11 +370,7 @@ class ViewController: NSViewController, NSFontChanging {
             self.enableBorder.state = .off
         }
         
-        
-        
-        
-        
-        
+       
         self.shadowColorWell.isEnabled = true
         self.shadowColorWell.color = attributes.shadowColor
         self.shadowTypeButton.isEnabled = true

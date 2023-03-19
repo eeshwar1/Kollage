@@ -149,6 +149,12 @@ class VUKollageEasel: NSView {
         
     }
     
+    func setBackgroundImageOption(option: ImageFit) {
+        
+        self.kollageBackground.setBackgroundImageOption(option: option)
+        
+    }
+    
     func setShadowColor(color: NSColor) {
         
         self.kollageCanvas.setShadowColor(color: color)
@@ -172,15 +178,9 @@ class VUKollageEasel: NSView {
         var kollage = NSImage(size: self.canvasSize)
 
         let backgroundView = self.kollageBackground
-
-        if let backgroundImage = backgroundView.backgroundImage {
-
-            kollage = backgroundImage.resize(withSize: self.canvasSize) ?? NSImage()
-        } else {
-
-            kollage = backgroundView.getImage()
-        }
-       
+        
+        kollage = backgroundView.getImage()
+        
         for view in canvas.subviews
         {
 
@@ -193,13 +193,14 @@ class VUKollageEasel: NSView {
                
                     if let shadow =  imageView.getShadow() {
                         
+                        print("adding shadow to kollage")
                         kollage = kollage.addImageAlpha(image: shadow.image, position: shadow.position, alpha: 0.7)
                     }
                     
                     if let resizedImage = resizedImage {
-                        
+
                         kollage = kollage.addImage(image: resizedImage, position: imageView.frame.origin)
-                        
+
                     }
                     
                     

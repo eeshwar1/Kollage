@@ -8,11 +8,37 @@
 
 import Cocoa
 
+enum ImageFit {
+    case center
+    case fit
+    case stretch
+    case tile
+    
+    init(name: String) {
+        
+        switch name.lowercased() {
+            
+        case "center":
+            self = .center
+        case "fit":
+            self = .fit
+        case "stretch":
+            self = .stretch
+        case "tile":
+            self = .tile
+        default:
+            self = .fit
+        }
+    }
+}
 class VUKollageBackground: NSView {
     
     var backgroundImage: NSImage?
     var resizedBackgroundImage: NSImage?
+    var backgroundImageOption: ImageFit = .fit
+    
     var backgroundColor: NSColor = NSColor.white
+
     
     var imageView: NSImageView?
     
@@ -35,20 +61,41 @@ class VUKollageBackground: NSView {
         
     }
     
-    func setBackground(image: NSImage) {
+    func setBackground(image: NSImage, option: ImageFit ) {
         
         self.backgroundColor = .white
         
         self.clearBackgroundImage()
-        let maxDimension = self.frame.width > self.frame.height ? self.frame.width : self.frame.height
         
         self.backgroundImage = image
-        self.resizedBackgroundImage = image.resize(withSize: image.sizeForMaxDimension(maxDimension))
         
-        self.resizedBackgroundImage?.resizingMode = .tile
+        self.setupBackgroundImage()
+        
+    }
     
+    func setupBackgroundImage() {
         
-        self.imageView = NSImageView(image: self.resizedBackgroundImage ?? NSImage())
+        clearBackgroundImageView()
+        
+        guard let image = self.backgroundImage else { return }
+      
+        self.resizedBackgroundImage = image
+        
+        switch self.backgroundImageOption {
+            
+        case .tile:
+            self.resizedBackgroundImage = image.tiledImage(size: self.frame.size)
+        case .stretch:
+            self.resizedBackgroundImage = image.stretchedImage(size: self.frame.size)
+        case .center:
+            self.resizedBackgroundImage = image
+        case .fit:
+            let maxDimension = self.frame.width > self.frame.height ? self.frame.width : self.frame.height
+            self.resizedBackgroundImage = image.resize(withSize: image.sizeForMaxDimension(maxDimension)) ?? image
+        }
+        
+        
+        self.imageView = NSImageView(image: self.resizedBackgroundImage!)
         
         if let imageView = self.imageView {
             
@@ -59,29 +106,35 @@ class VUKollageBackground: NSView {
         }
         
     }
-    
     func resizeImageView() {
         
-        let maxDimension = self.frame.width > self.frame.height ? self.frame.width : self.frame.height
-        
-        if let image = self.backgroundImage, let _ = self.imageView
+ 
+        if let _ = self.backgroundImage, let _ = self.imageView
         {
-            self.resizedBackgroundImage = image.resize(withSize: image.sizeForMaxDimension(maxDimension))
-            
-            self.imageView?.image = self.resizedBackgroundImage
-            self.imageView?.frame.size = self.frame.size
-            self.needsDisplay = true
+            self.setupBackgroundImage()
             
         }
     }
     
     func clearBackgroundImage() {
         
-        if let _ = self.backgroundImage, let imageView = self.imageView {
+        if let _ = self.backgroundImage {
+            
             self.backgroundImage = nil
+            self.clearBackgroundImageView()
+            
+        }
+    }
+    
+    func clearBackgroundImageView() {
+        
+        if let imageView = self.imageView {
+            
             imageView.removeFromSuperview()
             self.needsDisplay = true
+            
         }
+        
     }
     
     func setBackground(color: NSColor) {
@@ -91,6 +144,12 @@ class VUKollageBackground: NSView {
         self.needsDisplay = true
     }
     
+    func setBackgroundImageOption(option: ImageFit) {
+        
+        self.backgroundImageOption = option
+        self.setupBackgroundImage()
+        
+    }
     override func viewWillDraw() {
         
         self.wantsLayer = true
@@ -101,8 +160,18 @@ class VUKollageBackground: NSView {
     
     func getImage() -> NSImage {
         
-        return NSImage.swatchWithColor(color: self.backgroundColor, size: self.frame.size)
+        var background = NSImage()
+        
+        if let image = self.resizedBackgroundImage {
+
+            background = image.resize(withSize: self.frame.size) ?? NSImage()
+            
+        } else {
+
+            background  = NSImage.swatchWithColor(color: self.backgroundColor, size: self.frame.size)
+        }
        
+        return background
     }
 }
 
