@@ -33,6 +33,12 @@ class VUDraggableBorderedImageView: NSView {
     
     var imageData: Data?
     
+    var topConstraint: NSLayoutConstraint = NSLayoutConstraint()
+    var bottomConstraint: NSLayoutConstraint = NSLayoutConstraint()
+    var leftConstraint: NSLayoutConstraint = NSLayoutConstraint()
+    var rightConstraint: NSLayoutConstraint = NSLayoutConstraint()
+    
+    
     
     var attributes: ImageViewAttributes {
         
@@ -154,6 +160,12 @@ class VUDraggableBorderedImageView: NSView {
         self.addConstraint(rightConstraint)
         self.addConstraint(topConstraint)
         self.addConstraint(bottomConstraint)
+        
+        self.topConstraint = topConstraint
+        self.bottomConstraint = bottomConstraint
+        self.leftConstraint = leftConstraint
+        self.rightConstraint = rightConstraint
+        
     }
 
     func configureShadow() {
@@ -307,7 +319,19 @@ class VUDraggableBorderedImageView: NSView {
         
         self.borderWidthRatio = percent/100
         
-        self.needsDisplay = true
+        if let image = self.image {
+            
+            let borderWidth = image.size.width * self.borderWidthRatio
+            
+            self.topConstraint.constant =  borderWidth
+            self.bottomConstraint.constant = borderWidth
+            self.leftConstraint.constant = borderWidth
+            self.rightConstraint.constant = borderWidth
+            
+            self.needsDisplay = true
+        }
+        
+        
         
     }
     
@@ -666,11 +690,13 @@ class VUDraggableBorderedImageView: NSView {
         
         if let image = self.image {
             
+            let borderWidth = image.size.width * self.borderWidthRatio
+            
             let maxDimension = image.size.width > image.size.height ? image.size.width : image.size.height
             
             let constrainedSize = image.aspectFitSizeForMaxDimension(maxDimension * factor)
             
-            self.setFrameSize(.init(width:  constrainedSize.width, height: constrainedSize.height))
+            self.setFrameSize(.init(width: constrainedSize.width + 2 * borderWidth, height: constrainedSize.height + 2 * borderWidth))
         }
       
     }
