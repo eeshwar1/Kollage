@@ -12,7 +12,6 @@ import Quartz
 import Accelerate
 import CoreImage
 
-
 enum ImageFilter {
     
     case normal
@@ -134,10 +133,12 @@ extension NSImage {
             self.draw(in: dstRect)
          
             let textOrigin = CGPoint(x: dstRect.origin.x + position.x, y: dstRect.origin.y + position.y)
-            let rect = CGRect(origin: textOrigin, size: size)
+            
+            let textSize = attributedText.size()
+            let rect = CGRect(origin: textOrigin, size: textSize)
             
             let context = NSGraphicsContext.current!.cgContext
-            
+
             context.saveGState()
             context.rotate(by: angle.toRadians())
             attributedText.draw(in: rect)
@@ -161,6 +162,39 @@ extension NSImage {
             return self
         }
         
+    }
+    
+    func addImage(image: NSImage, position: NSPoint, shadow: Bool) -> NSImage {
+        
+        
+        let newImage = NSImage(size: self.size)
+        
+        let background = self
+        let overlay = image
+        
+        newImage.lockFocus()
+        
+        var imageRect: CGRect = .zero
+        imageRect.size = newImage.size
+        
+        var newImageRect: CGRect = .zero
+        newImageRect.size = newImage.size
+        
+        background.draw(in: imageRect)
+        
+        var newSmallRect: CGRect = .zero
+        newSmallRect.size = image.size
+ 
+        newSmallRect.origin = position
+        
+        if shadow {
+            NSGraphicsContext.current!.cgContext.setShadow(offset: CGSize(width: 10, height: 10), blur: 5, color: CGColor(red: 1, green: 0, blue: 0, alpha: 0.5))
+        }
+        overlay.draw(in: newSmallRect, from: .zero, operation: .sourceOver, fraction: 1.0)
+        
+        newImage.unlockFocus()
+        
+        return newImage
         
         
     }

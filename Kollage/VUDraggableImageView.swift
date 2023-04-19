@@ -39,7 +39,6 @@ class VUDraggableImageView: VUDraggableResizableView {
     var draggingType: DraggingType = .frame
     
     var canvas: VUKollageCanvas?
-    
    
     var sizeFactor: Double = 1.0
     var rotationAngle: Double = 0.0
@@ -353,39 +352,9 @@ class VUDraggableImageView: VUDraggableResizableView {
         
     }
     
-    func getShadow() -> (image: NSImage, position: NSPoint)? {
+    func hasShadow() -> Bool {
         
-        guard self.enableShadow else {
-            print("getShadow: returning from guard")
-            return nil }
-        
-        let shadowOffset = self.getShadowOffset()
-        
-        let shadowSize = NSSize(width: self.frame.size.width + 2 * shadowOffset.width, height: self.frame.size.height + 2 * shadowOffset.height)
-        
-        let baseShadow = NSImage.swatchWithColor(color: self.shadowColor, size: shadowSize)
-        
-        let rotShadow = baseShadow.rotated(by: imageView.frameCenterRotation).applyGaussianBlur()
-        
-        let shadow = rotShadow.resize(withSize: self.frame.size)!
-        
-        var clippedShadow = shadow
-
-        if let image = getImage(), let cs = shadow.clipImage(shapeImage: image) {
-
-            clippedShadow = cs
-        }
-        
-        if let image = getImage() {
-
-            print("getShadow: Image found")
-            clippedShadow = shadow.clipImage(shapeImage: image)!
-        }
-        
-        let shadowPosition = NSPoint(x: self.frame.origin.x +  3 * shadowOffset.width, y: self.frame.origin.y + 3 * shadowOffset.height)
-        
-        return (image: clippedShadow, position: shadowPosition)
-        
+        return self.enableShadow
     }
         
     func select() {

@@ -93,6 +93,16 @@ class TextViewController: NSViewController, NSFontChanging {
         for (_, family) in fontManager.availableFontFamilies.enumerated() {
             
             self.buttonFontFamily.addItem(withTitle: family.description)
+            
+            if let item = self.buttonFontFamily.item(withTitle: family.description) {
+                
+                let attributedString = NSMutableAttributedString(string: item.title)
+                
+                attributedString.setAttributes([.font: NSFont(name: family.description, size: 14) ?? NSFont.menuFont(ofSize: 14)], range: NSRange(0..<attributedString.length))
+                
+                item.attributedTitle = attributedString
+                
+            }
         }
         
     

@@ -191,15 +191,10 @@ class VUKollageEasel: NSView {
                     let rotImage = image.rotated(by: imageView.frameCenterRotation)
                     let resizedImage = rotImage.resize(withSize: imageView.frame.size)
                
-                    if let shadow =  imageView.getShadow() {
-                        
-                        print("adding shadow to kollage")
-                        kollage = kollage.addImageAlpha(image: shadow.image, position: shadow.position, alpha: 0.7)
-                    }
                     
                     if let resizedImage = resizedImage {
 
-                        kollage = kollage.addImage(image: resizedImage, position: imageView.frame.origin)
+                        kollage = kollage.addImage(image: resizedImage, position: imageView.frame.origin, shadow: imageView.hasShadow())
 
                     }
                     
