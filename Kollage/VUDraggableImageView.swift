@@ -15,6 +15,45 @@ enum DraggingType {
     
 }
 
+struct Shadow {
+    
+    
+    var color = CGColor(red: 0, green: 0, blue: 0, alpha: 0.5)
+    var blur: CGFloat = 15
+    
+    var type: ShadowType = .none
+      
+    var offset: CGSize {
+         
+        var _offset = CGSize(width: 10, height: 10)
+        switch type {
+                
+            case .rightTop:
+                _offset = CGSize(width: 10, height: 10)
+            case .rightBottom:
+                _offset = CGSize(width: 10, height: -10)
+            case .leftTop:
+                _offset = CGSize(width: -10, height: 10)
+            case .leftBottom:
+                _offset = CGSize(width: -10, height: -10)
+            case .none:
+                _offset = CGSize(width: 0, height: 0)
+                
+            }
+        
+        return _offset
+            
+    }
+    
+    
+    init(type: ShadowType = .rightTop, color: CGColor = CGColor(red: 0, green: 0, blue: 0, alpha: 0.5), blur: CGFloat = 15) {
+        self.type = type
+        self.color = color
+        self.blur = blur
+    }
+    
+}
+
 struct ImageViewAttributes {
     
     var sizefactor: CGFloat
@@ -24,9 +63,7 @@ struct ImageViewAttributes {
     var borderColor: NSColor
     var borderWidthRatio: Int
     
-    var shadow: Bool
-    var shadowColor: NSColor
-    var shadowType: ShadowType
+    var shadow: Shadow
     
 }
 
@@ -51,7 +88,7 @@ class VUDraggableImageView: VUDraggableResizableView {
     var borderColor: NSColor = .white
     var borderWidthRatio: CGFloat = 0.0
     var borderWidth: CGFloat = 0.0
-    
+   
     var imageData: Data?
     
     var topConstraint: NSLayoutConstraint = NSLayoutConstraint()
@@ -72,9 +109,7 @@ class VUDraggableImageView: VUDraggableResizableView {
                 borderColor: self.borderColor,
                 borderWidthRatio: Int(self.borderWidthRatio * 100),
                 
-                shadow: self.enableShadow,
-                shadowColor: self.shadowColor,
-                shadowType: self.shadowType
+                shadow: getShadow()
             )
         }
     }
@@ -120,6 +155,15 @@ class VUDraggableImageView: VUDraggableResizableView {
         }
         
         
+    }
+    
+    func getShadow() -> Shadow {
+        
+        if self.enableShadow {
+            return Shadow(type: self.shadowType, color: self.shadowColor.cgColor)
+        } else {
+            return Shadow(type: .none)
+        }
     }
     
     func configureImageView()
@@ -338,8 +382,7 @@ class VUDraggableImageView: VUDraggableResizableView {
     
     func getImage() -> NSImage? {
         
-        guard let image = self.image else { print("getImage: returning from guard")
-            return nil }
+        guard let image = self.image else { return nil }
         
         if self.enableBorder {
             

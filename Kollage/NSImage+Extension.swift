@@ -21,6 +21,8 @@ enum ImageFilter {
     case sepia
     
 }
+
+
 extension NSImage {
     
     
@@ -164,8 +166,7 @@ extension NSImage {
         
     }
     
-    func addImage(image: NSImage, position: NSPoint, shadow: Bool) -> NSImage {
-        
+    func addImage(image: NSImage, position: NSPoint, shadow: Shadow) -> NSImage {
         
         let newImage = NSImage(size: self.size)
         
@@ -187,8 +188,10 @@ extension NSImage {
  
         newSmallRect.origin = position
         
-        if shadow {
-            NSGraphicsContext.current!.cgContext.setShadow(offset: CGSize(width: 10, height: 10), blur: 5, color: CGColor(red: 1, green: 0, blue: 0, alpha: 0.5))
+        if shadow.type != .none {
+            
+            // print("Shadow: Type \(shadow.type) => Offset \(shadow.offset)")
+            NSGraphicsContext.current!.cgContext.setShadow(offset: shadow.offset, blur: shadow.blur, color: shadow.color)
         }
         overlay.draw(in: newSmallRect, from: .zero, operation: .sourceOver, fraction: 1.0)
         

@@ -349,7 +349,7 @@ class ViewController: NSViewController, NSFontChanging {
         
         self.enableShadow.isEnabled = true
         
-        if attributes.shadow {
+        if attributes.shadow.type != .none {
             self.enableShadow.state = .on
         } else {
             self.enableShadow.state = .off
@@ -372,9 +372,9 @@ class ViewController: NSViewController, NSFontChanging {
         
        
         self.shadowColorWell.isEnabled = true
-        self.shadowColorWell.color = attributes.shadowColor
+        self.shadowColorWell.color = NSColor(cgColor: attributes.shadow.color) ?? NSColor(red: 0, green: 0, blue: 0, alpha: 0.5)
         self.shadowTypeButton.isEnabled = true
-      //  self.shadowTypeButton.selectItem(withTitle: self.)
+        self.shadowTypeButton.selectItem(withTitle: attributes.shadow.type.description)
     }
     
     func disableImageControls() {

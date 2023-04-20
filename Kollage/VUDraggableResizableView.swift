@@ -1,12 +1,12 @@
 import Cocoa
 
-enum ShadowType {
+enum ShadowType: String {
     
-    case leftTop
-    case leftBottom
-    case rightTop
-    case rightBottom
-    case none
+    case leftTop = "Left Top"
+    case leftBottom = "Left Bottom"
+    case rightTop = "Right Top"
+    case rightBottom = "Right Bottom"
+    case none = "None"
     
     init(name: String) {
         
@@ -25,6 +25,11 @@ enum ShadowType {
         default:
             self = .none
         }
+    }
+    
+    var description: String {
+        
+        return self.rawValue
     }
 }
 
