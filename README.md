@@ -4,6 +4,7 @@ A simple macOS Utility for creating collages from Photos.
 
 <img width="1515" alt="Kollage v0 2" src="https://user-images.githubusercontent.com/1115336/226148991-f46c758c-6b30-4b61-ae8e-f325f0703078.png">
 
+
 ## Sample Collages
 
 <img width="827" alt="Sample Kollage" src="https://user-images.githubusercontent.com/1115336/215387152-87ffeb22-4f12-4f52-acd8-59da9263a471.png">
