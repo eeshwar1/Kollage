@@ -480,6 +480,10 @@
                                                                                                 <menuItem title="Sepia" image="Icon Sepia" id="BBR-GY-Y7q"/>
                                                                                                 <menuItem title="Comic" image="Icon Comic" id="Tad-hf-duF"/>
                                                                                                 <menuItem title="Blur" image="Icon Blur" id="OiA-lw-2bY"/>
+                                                                                                <menuItem title="Noir" image="Icon Normal" id="S8Z-3l-puu"/>
+                                                                                                <menuItem title="Fade" image="Icon Normal" id="bWa-Rv-Fwn"/>
+                                                                                                <menuItem title="Vignette" image="Icon Normal" id="Hxg-iL-w95"/>
+                                                                                                <menuItem title="Instant" image="Icon Normal" id="sHv-zE-Jee" userLabel="Instant"/>
                                                                                             </items>
                                                                                         </menu>
                                                                                     </popUpButtonCell>
