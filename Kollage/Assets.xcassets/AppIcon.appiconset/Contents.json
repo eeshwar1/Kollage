@@ -1,67 +1,67 @@
 {
   "images" : [
     {
-      "filename" : "Kollage Icon.png",
+      "filename" : "Kollage Icon-1024.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"
     },
     {
-      "filename" : "Kollage Icon16.png",
+      "filename" : "Kollage Icon-16.png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "16x16"
     },
     {
-      "filename" : "Kollage Icon32 1.png",
+      "filename" : "Kollage Icon-32.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "16x16"
     },
     {
-      "filename" : "Kollage Icon32.png",
+      "filename" : "Kollage Icon-32 1.png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "32x32"
     },
     {
-      "filename" : "Kollage Icon64.png",
+      "filename" : "Kollage Icon-64.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "32x32"
     },
     {
-      "filename" : "Kollage Icon128.png",
+      "filename" : "Kollage Icon-128.png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "128x128"
     },
     {
-      "filename" : "Kollage Icon256 1.png",
+      "filename" : "Kollage Icon-256.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "128x128"
     },
     {
-      "filename" : "Kollage Icon256.png",
+      "filename" : "Kollage Icon-256 1.png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "256x256"
     },
     {
-      "filename" : "Kollage Icon512 1.png",
+      "filename" : "Kollage Icon-512.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "256x256"
     },
     {
-      "filename" : "Kollage Icon512.png",
+      "filename" : "Kollage Icon-512 1.png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "512x512"
     },
     {
-      "filename" : "Kollage Icon1024.png",
+      "filename" : "Kollage Icon-1024 1.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "512x512"

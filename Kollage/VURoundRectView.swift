@@ -6,7 +6,6 @@
 //  Copyright © 2019 Venky UL. All rights reserved.
 //
 
-
 import Cocoa
 
 @IBDesignable class VURoundedRectView: NSView {

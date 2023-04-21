@@ -10,21 +10,35 @@ import Cocoa
 
 class ViewController: NSViewController, NSFontChanging {
     
+    @IBOutlet weak var kollageEasel: VUKollageEasel!
     
-    @IBOutlet weak var kollageBackground: VUKollageBackground!
-    @IBOutlet weak var kollageCanvas: NSView!
+    @IBOutlet weak var canvasSizeButton: NSPopUpButton!
+    @IBOutlet weak var backgroundColorWell: NSColorWell!
+    @IBOutlet weak var backgroundImageOptionButton: NSPopUpButton!
     
+    @IBOutlet weak var enableShadow: NSButton!
+    @IBOutlet weak var shadowColorWell: NSColorWell!
+    @IBOutlet weak var shadowTypeButton: NSPopUpButton!
+    
+    @IBOutlet weak var enableBorder: NSButton!
+    @IBOutlet weak var borderColorWell: NSColorWell!
+    
+    @IBOutlet weak var stepperBorderWidth: NSStepper!
+    @IBOutlet weak var labelBorderWidth: NSTextField!
+    
+    // Image Controls
+    @IBOutlet weak var effectsButton: NSPopUpButton!
     @IBOutlet weak var rotateSlider: NSSlider!
-    @IBOutlet weak var resizeSlider: NSSlider!
+    @IBOutlet weak var labelRotationAngle: NSTextField!
     
-    @IBOutlet weak var completeImage: NSImageView!
+    @IBOutlet weak var resizeSlider: NSSlider!
+    @IBOutlet weak var labelSizeFactor: NSTextField!
+    
     @IBOutlet weak var spinner: NSProgressIndicator!
     
     @IBOutlet weak var labelStatus: NSTextField!
     
     @IBOutlet weak var gridView: NSView!
-    
-    var imageViews: [VUDraggableImageView] = []
     
     var dragMode: DraggingType = .contents
     
@@ -34,26 +48,27 @@ class ViewController: NSViewController, NSFontChanging {
     var center = NSPoint.zero
     
     override func viewDidLoad() {
+        
         super.viewDidLoad()
         
         setupView()
         
-        self.resizeSlider.isEnabled = false
-        self.rotateSlider.isEnabled = false
+        disableImageControls()
         
-        if let canvas = self.kollageCanvas as? VUKollageCanvas {
-            
-            canvas.vc = self
-        }
+        self.kollageEasel.vc = self
         
         spinner.isHidden = true
-        completeImage.isHidden = true
         labelStatus.stringValue = "Ready"
+        
+        backgroundColorWell.color = self.kollageEasel.getBackgroundColor()
+        
+        stepperBorderWidth.integerValue = 0
+        labelBorderWidth.integerValue = 0
+        
+        
     }
     
-    
     func setupView() {
-        
         
         let bounds = self.view.bounds
         let origin = bounds.origin
@@ -63,15 +78,6 @@ class ViewController: NSViewController, NSFontChanging {
         
     }
     
-    override func keyDown(with event: NSEvent) {
-        
-        kollageCanvas.keyDown(with: event)
-        
-    }
-    
-    override func performKeyEquivalent(with event: NSEvent) -> Bool {
-        return true
-    }
     
     override var acceptsFirstResponder: Bool {
         get {
@@ -79,20 +85,6 @@ class ViewController: NSViewController, NSFontChanging {
         }
     }
     
-    //    func addImages() {
-    //
-    //
-    //        for _ in 1...10 {
-    //
-    //                   let newCenter = center.addRandomNoise(100)
-    //                   let newImageView =  VUDraggableImageView(frame: NSRect(x: newCenter.x, y: newCenter.y, width: itemWidth, height: itemHeight))
-    //                   newImageView.image = NSImage(named: "Pookkalam") ?? NSImage()
-    //                    newImageView.draggingType = .frame
-    //
-    //                   kollageCanvas.addSubview(newImageView)
-    //
-    //               }
-    //    }
     
     //    func setupGridView()
     //    {
@@ -108,143 +100,187 @@ class ViewController: NSViewController, NSFontChanging {
     //
     //    }
     
-    
-    
     // MARK: - Actions
     
     @IBAction func addText(_ sender: NSButton) {
         
-        if let canvas = kollageCanvas as? VUKollageCanvas {
-            canvas.addText()
-        }
-    }
-    
-    @IBAction func selectFont(_ sender: NSButton) {
+        let storyboard = NSStoryboard(name: "Main", bundle: nil)
+        let addTextWindowController = storyboard.instantiateController(withIdentifier: "Text Window Controller") as! NSWindowController
         
-        print("select font")
-        
-        NSFontManager.shared.setSelectedAttributes([NSAttributedString.Key.foregroundColor.rawValue: NSColor.red], isMultiple: false)
-        
-        NSFontManager.shared.orderFrontFontPanel(nil)
-    }
-    
-    func changeFont(_ sender: NSFontManager?) {
-        
-        guard let fontManager = sender else {
-            return
-        }
-        
-        
-        let newFont = fontManager.convert(NSFont.systemFont(ofSize: 14))
-        
-        if let canvas = self.kollageCanvas as? VUKollageCanvas {
+        if let addTextVC = addTextWindowController.contentViewController as? TextViewController {
             
-            canvas.changeFont(newFont)
+            addTextVC.vc = self
         }
+        
+        if let addTextWindow = addTextWindowController.window {
+            let application = NSApplication.shared
+            application.runModal(for: addTextWindow)
+            
+            addTextWindow.close()
+        }
+        
+        
+        
     }
     
-    @IBAction func setAsBackground(_ sender: NSButton) {
+    func processAddText(attributedText: NSAttributedString) {
         
-        if let canvas = self.kollageCanvas as? VUKollageCanvas {
+        self.kollageEasel.addText(attributedText: attributedText)
+    }
+    
+    
+    @IBAction func canvasSizeChanged(_ sender: NSPopUpButton) {
+        
+        let selectedItem  = sender.itemArray[sender.indexOfSelectedItem].title
+        
+        var width: CGFloat = 0
+        var height: CGFloat = 0
+        
+        switch selectedItem {
             
-            if let imageView = canvas.selectedView as? VUDraggableImageView, let image = imageView.image {
-                
-                self.kollageBackground.setBackground(image: image)
-                imageView.removeFromSuperview()
-                
-            }
+        case "800x600":
+            width = 800
+            height = 600
+        case "1024x768":
+            width =  1024
+            height = 768
+        default:
+            width = 500
+            height = 500
+            
         }
         
+        self.kollageEasel.setCanvasSize(size: .init(width: width, height: height))
         
+        
+    }
+    
+    @IBAction func imageEffectChanged(_ sender: NSPopUpButton) {
+        
+        guard self.kollageEasel.hasItemsSelected() else { return }
+        
+        let selectedItem  = sender.itemArray[sender.indexOfSelectedItem].title
+        
+        DispatchQueue.main.async {
+            
+            self.kollageEasel.applyEffect(effect: selectedItem)
+            
+            self.labelStatus.stringValue = "Ready"
+            self.labelStatus.textColor = NSColor.textColor
+            
+            
+            self.spinner.stopAnimation(nil)
+            self.spinner.isHidden = true
+            
+        }
+        
+        self.spinner.isHidden = false
+        self.spinner.startAnimation(nil)
+        self.labelStatus.stringValue = "Applying effects..."
+    
     }
     
     
     @IBAction func sizeSliderChanged(_ sender: NSSlider) {
         
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .decimal
+        numberFormatter.maximumFractionDigits = 2
         
-        if let canvas = self.kollageCanvas as? VUKollageCanvas {
-            
-            if let imageView = canvas.selectedView as? VUDraggableImageView {
-                
-                imageView.scale(factor: sender.doubleValue)
-                
-            } else if let textView = canvas.selectedView as? VUDraggableTextView {
-                
-                textView.scale(factor: sender.doubleValue)
-            }
-            
-        }
-        
+        self.kollageEasel.scaleSelectedView(factor: sender.doubleValue)
+        self.labelSizeFactor.stringValue = numberFormatter.string(from: NSNumber(value:sender.doubleValue))!
         
     }
     
     @IBAction func rotationSliderChanged(_ sender: NSSlider) {
         
         
-        if let canvas = self.kollageCanvas as? VUKollageCanvas {
-            
-            if let imageView = canvas.selectedView as? VUDraggableImageView {
-                
-                imageView.rotate(angle: sender.doubleValue)
-            } else if let textView = canvas.selectedView as? VUDraggableTextView {
-                
-                
-                textView.rotate(byDegrees: sender.doubleValue)
-            }
-            
-            
-        }
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .decimal
+        numberFormatter.maximumFractionDigits = 2
+        
+        self.kollageEasel.rotateSelectedView(angle: sender.doubleValue)
+        self.labelRotationAngle.stringValue = numberFormatter.string(from: NSNumber(value:sender.doubleValue))!
         
     }
-
-        
-    @IBAction func exportImage(_ sender: NSButton) {
     
-                
-        let kollage = self.createKollage()
+    
+    @IBAction func exportKollage(_ sender: NSButton)  {
         
-        let savePanel = NSSavePanel()
-        savePanel.canCreateDirectories = true
-        savePanel.showsTagField = false
-        savePanel.nameFieldStringValue = "Kollage.png"
-        savePanel.level = NSWindow.Level(rawValue: Int(CGWindowLevelForKey(.modalPanelWindow)))
         
+        if self.kollageEasel.kollageCanvas.subviews.count > 0 {
             
-        let result = savePanel.runModal()
-        if result.rawValue == NSApplication.ModalResponse.OK.rawValue  {
+            let savePanel = NSSavePanel()
+            savePanel.canCreateDirectories = true
+            savePanel.showsTagField = false
+            savePanel.nameFieldStringValue = "Kollage.png"
+            savePanel.level = NSWindow.Level(rawValue: Int(CGWindowLevelForKey(.modalPanelWindow)))
+            
+            
+            let result = savePanel.runModal()
+            if result.rawValue == NSApplication.ModalResponse.OK.rawValue  {
                 
-            if let fileUrl = savePanel.url {
-            
-                self.spinner.isHidden = false
-                self.spinner.startAnimation(nil)
-                self.labelStatus.stringValue = "Exporting..."
-                if kollage.pngWrite(to: fileUrl, options: .withoutOverwriting) {
+                if let fileUrl = savePanel.url {
                     
-                    print("File saved")
                     
-                } else {
+                    DispatchQueue.main.async {
+                        let kollage = self.kollageEasel.createKollage()
+                        
+                        if kollage.pngWrite(to: fileUrl, options: .atomic) {
+                            
+                            self.labelStatus.stringValue = "Kollage exported successfully"
+                            self.labelStatus.textColor = NSColor.textColor
+                            
+                        } else {
+                            
+                            self.labelStatus.stringValue = "Error saving kollage"
+                            self.labelStatus.textColor = .red
+                        }
+                        self.spinner.stopAnimation(nil)
+                        self.spinner.isHidden = true
+                        
+                    }
                     
-                    print("Error saving kollage")
-                }
-                    self.spinner.stopAnimation(nil)
-                    self.spinner.isHidden = true
-                    self.completeImage.isHidden = false
-                    self.labelStatus.stringValue = "Ready"
+                    
+                    self.spinner.isHidden = false
+                    self.spinner.startAnimation(nil)
+                    self.labelStatus.stringValue = "Exporting..."
+                    
+                    
                 }
             }
+            
+        } else {
+            
+            self.labelStatus.stringValue = "Nothing to export"
+        }
         
         
     }
     
     @IBAction func backgroundColorChanged(_ sender: NSColorWell) {
         
-        self.kollageBackground.setBackground(color: sender.color)
+        self.kollageEasel.setBackground(color: sender.color)
         
     }
     
-    @IBAction func pickBackgroundImage(_ sender: NSButton) {
+    
+    @IBAction func shadowColorChanged(_ sender: NSColorWell) {
         
-        print("Pick background image")
+        self.kollageEasel.setShadowColor(color: sender.color)
+        
+    }
+    
+    @IBAction func shadowTypeChanged(_ sender: NSPopUpButton) {
+        
+        self.kollageEasel.setShadowType(type: .init(name: sender.title))
+        
+        
+        
+    }
+    
+    
+    @IBAction func pickBackgroundImage(_ sender: NSButton) {
         
         let openPanel = NSOpenPanel()
         openPanel.allowsMultipleSelection = false
@@ -257,15 +293,28 @@ class ViewController: NSViewController, NSFontChanging {
             
             if let url =  openPanel.url {
                 
-                self.kollageBackground.setBackground(image: NSImage(contentsOf: url) ?? NSImage())
+                self.kollageEasel.kollageBackground.setBackground(image: NSImage(contentsOf: url) ?? NSImage(), option: .init(name: self.backgroundImageOptionButton.title))
             }
         }
         
     }
     
-    @IBAction func addImages(_ sender: NSButton) {
+    @IBAction func pickBackgroundImageOption(_ sender: NSPopUpButton) {
         
-        print("Pick background image")
+        self.kollageEasel.setBackgroundImageOption(option: .init(name: sender.title))
+        
+      
+    }
+    
+    @IBAction func addImages(_ sender: Any) {
+        
+        addPhotos()
+        
+    }
+    
+    
+    
+    func addPhotos() {
         
         let openPanel = NSOpenPanel()
         openPanel.allowsMultipleSelection = true
@@ -275,65 +324,192 @@ class ViewController: NSViewController, NSFontChanging {
         let response = openPanel.runModal()
         
         if response == .OK {
-                            
-            if let canvas = kollageCanvas as? VUKollageCanvas {
-                
-                canvas.addImages(openPanel.urls)
-            }
+            
+            self.kollageEasel.addImages(openPanel.urls)
             
         }
-        
     }
     
-    func createKollage() -> NSImage {
-        
-        var kollage = NSImage()
-        
-        if let canvas = self.kollageCanvas as? VUKollageCanvas {
-            
-            kollage = NSImage(size: canvas.frame.size)
-            
-            if let backgroundView = self.kollageBackground {
-                
-                if let backgroundImage = backgroundView.backgroundImage {
-                    
-                    kollage = backgroundImage.resize(withSize: canvas.frame.size) ?? NSImage()
-                } else {
-                    
-                    kollage = backgroundView.getImage()
-                }
-                
-            } else {
-                
-                kollage = NSImage()
-            }
-            
-            for view in canvas.subviews
-            {
-                if let imageView = view as? VUDraggableImageView {
-                    
-                    if let image = imageView.image {
-                        
-                        let rotImage = image.rotated(by: imageView.frameCenterRotation)
-                        let resizedImage = rotImage.resize(withSize: imageView.frame.size)
-                        kollage = kollage.addImage(image: resizedImage ?? NSImage(), position: imageView.frame.origin)
-                    }
-                    
-                }
-                
-            }
-            
-        }
-        
-        return kollage
-        
-    }
-    
-    func enableImageControls() {
+    func enableImageControls(attributes: ImageViewAttributes) {
         
         self.resizeSlider.isEnabled = true
+        self.resizeSlider.doubleValue = attributes.sizefactor
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .decimal
+        numberFormatter.maximumFractionDigits = 2
+        
+        self.labelSizeFactor.stringValue = numberFormatter.string(from: NSNumber(value: attributes.sizefactor))!
+        
         self.rotateSlider.isEnabled = true
+        self.rotateSlider.doubleValue = attributes.angle
+        
+        self.labelRotationAngle.stringValue = numberFormatter.string(from: NSNumber(value: attributes.angle))!
+        
+        self.effectsButton.isEnabled = true
+        
+        self.enableShadow.isEnabled = true
+        
+        if attributes.shadow.type != .none {
+            self.enableShadow.state = .on
+        } else {
+            self.enableShadow.state = .off
+        }
+        
+        self.enableBorder.isEnabled = true
+        
+        if attributes.border {
+            
+            self.enableBorder.state = .on
+            self.borderColorWell.isEnabled =  true
+            self.borderColorWell.color = attributes.borderColor
+            self.stepperBorderWidth.isEnabled = true
+            self.stepperBorderWidth.integerValue = attributes.borderWidthRatio
+            
+        } else {
+            
+            self.enableBorder.state = .off
+        }
+        
+       
+        self.shadowColorWell.isEnabled = true
+        self.shadowColorWell.color = NSColor(cgColor: attributes.shadow.color) ?? NSColor(red: 0, green: 0, blue: 0, alpha: 0.5)
+        self.shadowTypeButton.isEnabled = true
+        self.shadowTypeButton.selectItem(withTitle: attributes.shadow.type.description)
+    }
+    
+    func disableImageControls() {
+        
+        self.resizeSlider.isEnabled = false
+        self.resizeSlider.doubleValue = 0
+        self.labelSizeFactor.doubleValue = 0
+        
+        self.labelSizeFactor.stringValue = ""
+        
+        self.rotateSlider.isEnabled = false
+        self.rotateSlider.doubleValue = 0
+        self.labelRotationAngle.doubleValue = 0
+        
+        self.labelRotationAngle.stringValue = ""
+        
+        self.effectsButton.isEnabled = false
+        
+        self.enableBorder.isEnabled = false
+        self.stepperBorderWidth.isEnabled = false
+        self.labelBorderWidth.isEnabled = false
+        self.borderColorWell.isEnabled =  false
+        
+        self.enableShadow.isEnabled = false
+        self.shadowColorWell.isEnabled = false
+        self.shadowTypeButton.isEnabled = false
+        
     }
     
     
+    func enableTextControls(attributes: TextViewAttributes) {
+        
+        self.resizeSlider.isEnabled = true
+        self.resizeSlider.doubleValue = attributes.sizefactor
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .decimal
+        numberFormatter.maximumFractionDigits = 2
+        
+        self.labelSizeFactor.stringValue = numberFormatter.string(from: NSNumber(value: attributes.sizefactor))!
+        
+        self.rotateSlider.isEnabled = true
+        self.rotateSlider.doubleValue = attributes.angle
+        
+        self.labelRotationAngle.stringValue = numberFormatter.string(from: NSNumber(value: attributes.angle))!
+        
+        
+    }
+    
+    func disableTextControls() {
+        
+        self.resizeSlider.isEnabled = false
+        self.resizeSlider.doubleValue = 0
+        self.labelSizeFactor.doubleValue = 0
+        
+        self.labelSizeFactor.stringValue = ""
+        
+        self.rotateSlider.isEnabled = false
+        self.rotateSlider.doubleValue = 0
+        self.labelRotationAngle.doubleValue = 0
+        
+        self.labelRotationAngle.stringValue = ""
+        
+    }
+    
+    func setStatus(message: String) {
+        
+        self.labelStatus.stringValue = message
+    }
+    @IBAction func canvasZoomIn(_ sender: Any) {
+        
+        self.kollageEasel.zoomIn()
+        
+    }
+    
+    @IBAction func canvasZoomOut(_ sender: Any) {
+        
+        self.kollageEasel.zoomOut()
+        
+    }
+    
+    @IBAction func canvasZoomToFit(_ sender: Any) {
+        
+        self.kollageEasel.zoomToFit()
+        
+        
+    }
+    
+    @IBAction override func selectAll(_ sender: (Any)?) {
+        
+        
+        self.kollageEasel.selectAllViews()
+        
+    }
+    
+    @IBAction func selectNone(_ sender: Any) {
+        
+        self.kollageEasel.unselectAllViews()
+        
+    }
+    
+    @IBAction func toggleShadow(_ sender: NSButton) {
+        
+        self.kollageEasel.setShadow(enabled: sender.state == .on)
+    }
+    
+    @IBAction func toggleBorder(_ sender: NSButton) {
+        
+        self.kollageEasel.setBorder(enabled: sender.state == .on)
+        
+        if sender.state == .on {
+            self.labelBorderWidth.isEnabled = true
+            self.stepperBorderWidth.isEnabled = true
+            self.borderColorWell.isEnabled = true
+        } else {
+            
+            self.labelBorderWidth.isEnabled = false
+            self.stepperBorderWidth.isEnabled = false
+            self.borderColorWell.isEnabled = false
+        }
+    }
+    
+    @IBAction func borderWidthChanged(_ sender: NSStepper) {
+        
+        self.labelBorderWidth.integerValue = sender.integerValue
+        
+        self.kollageEasel.setBorderWidth(width: CGFloat(sender.integerValue))
+    }
+    
+    @IBAction func borderColorChanged(_ sender: NSColorWell) {
+        
+        self.kollageEasel.setBorderColor(color: sender.color)
+    }
+    
+    func changeFont(_ sender: NSFontManager?) {
+        
+        print("Change Font called")
+    }
 }

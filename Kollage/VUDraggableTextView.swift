@@ -1,70 +1,128 @@
 import Cocoa
 
-class VUDraggableTextView: DraggableResizableView {
+
+struct TextViewAttributes {
+    
+    var sizefactor: CGFloat
+    var angle: CGFloat
+    
+}
+
+class VUDraggableTextView: VUDraggableResizableView {
     
     var canvas: VUKollageCanvas?
     
-    var textField: NSTextField?
+    var textField: NSTextField = NSTextField()
+    
+    var minimumWidth: CGFloat = 200
+    var minimumHeight: CGFloat = 50
+    
+    var borderColor: NSColor = .white
+    var borderWidthRatio: CGFloat = 0.0
+    
+    var shadowColor: NSColor = .black
+    
+    var sizeFactor: Double = 1.0
+    var rotationAngle: Double = 0.0
+    
+    var enableShadow: Bool = true
+    
+    var enableBorder: Bool = true
     
     override var acceptsFirstResponder: Bool { return true }
     
     override var canBecomeKeyView: Bool { return true }
     
-    var selected: Bool = false {
-         didSet {
-             
-             if selected {
-                 self.layer?.borderColor = .init(red: 0, green: 255, blue: 0, alpha: 1.0)
-                 self.layer?.borderWidth = 2.0
-             } else {
-                 
-                 self.layer?.borderWidth = 0.0
-             }
-             needsDisplay = true
-         }
-     }
+    var attributes: TextViewAttributes {
+        
+        get {
+            
+            return TextViewAttributes(
+                
+                sizefactor: self.sizeFactor,
+                angle: self.frameCenterRotation
+                
+            )
+        }
+    }
+    
+    required init?(coder decoder: NSCoder) {
+        
+        super.init(coder: decoder)
+    }
     
     override init(frame frameRect: NSRect) {
         
         super.init(frame: frameRect)
         
-        self.layer?.borderWidth = 2.0
-        
-        let textField = NSTextField(labelWithAttributedString:  NSAttributedString(string: "Hello World"))
+        setupView()
+    }
 
-        textField.sizeToFit()
+    init(location: NSPoint, attributedText: NSAttributedString) {
         
+        super.init(frame: NSRect(x: location.x, y: location.y, width: 100, height: 100))
+        
+        self.textField.attributedStringValue = attributedText
+        
+        setupView()
+        
+        self.frame.size = self.fittingSize
+
+    }
+    
+    override func draw(_ dirtyRect: NSRect) {
+        
+        super.draw(dirtyRect)
+        
+//        self.borderColor.set()
+//
+//        self.bounds.insetBy(dx: selectionMarkLineWidth, dy: selectionMarkLineWidth).fill()
+
+        
+    }
+    
+    func setupView() {
+        
+
         let recognizer = NSMagnificationGestureRecognizer(target: self, action: #selector(rotateAction))
         
         self.addGestureRecognizer(recognizer)
 
-        self.textField = textField
+        setupTextField()
         
-        self.addSubview(self.textField!)
+    
+    }
+    
+    func setupTextField() {
+    
+        self.textField.sizeToFit()
+        self.textField.isEditable = false
+        self.textField.isBordered = false
+        self.textField.drawsBackground = false
+        self.addSubview(self.textField)
         
         textField.translatesAutoresizingMaskIntoConstraints = false
         
         let centerYConstraint: NSLayoutConstraint = NSLayoutConstraint(item: textField, attribute: NSLayoutConstraint.Attribute.centerY, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self, attribute: NSLayoutConstraint.Attribute.centerY, multiplier: 1, constant: 0)
         let centerXConstraint: NSLayoutConstraint = NSLayoutConstraint(item: textField, attribute: NSLayoutConstraint.Attribute.centerX, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self, attribute: NSLayoutConstraint.Attribute.centerX, multiplier: 1, constant: 0)
         
-        let leftConstraint: NSLayoutConstraint = NSLayoutConstraint(item: textField, attribute: NSLayoutConstraint.Attribute.left, relatedBy: NSLayoutConstraint.Relation.greaterThanOrEqual, toItem: self, attribute: NSLayoutConstraint.Attribute.left, multiplier: 1, constant: 20)
-//        let rightConstraint: NSLayoutConstraint = NSLayoutConstraint(item: textField, attribute: NSLayoutConstraint.Attribute.right, relatedBy: NSLayoutConstraint.Relation.greaterThanOrEqual, toItem: self, attribute: NSLayoutConstraint.Attribute.right, multiplier: 1, constant: 20)
+        let leftConstraint: NSLayoutConstraint = NSLayoutConstraint(item: textField, attribute: NSLayoutConstraint.Attribute.left, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self, attribute: NSLayoutConstraint.Attribute.left, multiplier: 1, constant: 20)
         
-        let topConstraint: NSLayoutConstraint = NSLayoutConstraint(item: textField, attribute: NSLayoutConstraint.Attribute.top, relatedBy: NSLayoutConstraint.Relation.greaterThanOrEqual, toItem: self, attribute: NSLayoutConstraint.Attribute.top, multiplier: 1, constant: 10)
+        let rightConstraint: NSLayoutConstraint = NSLayoutConstraint(item: textField, attribute: NSLayoutConstraint.Attribute.right, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self, attribute: NSLayoutConstraint.Attribute.right, multiplier: 1, constant: 20)
         
-//        let bottomConstraint: NSLayoutConstraint = NSLayoutConstraint(item: textField, attribute: NSLayoutConstraint.Attribute.bottom, relatedBy: NSLayoutConstraint.Relation.greaterThanOrEqual, toItem: self, attribute: NSLayoutConstraint.Attribute.bottom, multiplier: 1, constant: 10)
+        let topConstraint: NSLayoutConstraint = NSLayoutConstraint(item: textField, attribute: NSLayoutConstraint.Attribute.top, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self, attribute: NSLayoutConstraint.Attribute.top, multiplier: 1, constant: 20)
         
-       // bottomConstraint.priority = .dragThatCanResizeWindow
-       // rightConstraint.priority = .dragThatCanResizeWindow
+        let bottomConstraint: NSLayoutConstraint = NSLayoutConstraint(item: textField, attribute: NSLayoutConstraint.Attribute.bottom, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self, attribute: NSLayoutConstraint.Attribute.bottom, multiplier: 1, constant: 20)
+        
+        bottomConstraint.priority = .dragThatCanResizeWindow
+        rightConstraint.priority = .dragThatCanResizeWindow
         
         self.addConstraint(centerXConstraint)
         self.addConstraint(centerYConstraint)
         self.addConstraint(leftConstraint)
-       // self.addConstraint(rightConstraint)
+        self.addConstraint(rightConstraint)
         self.addConstraint(topConstraint)
-      //  self.addConstraint(bottomConstraint)
-        
-        self.frame.size = self.fittingSize
+        self.addConstraint(bottomConstraint)
         
         
     }
@@ -74,8 +132,20 @@ class VUDraggableTextView: DraggableResizableView {
         print("Rotated")
     }
     
-    required init?(coder decoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+   
+    func getText() -> NSAttributedString {
+        
+        return self.textField.attributedStringValue
+    }
+    
+    func setText(attributedText: NSAttributedString)  {
+        
+        self.textField.attributedStringValue = attributedText
+        
+        self.textField.sizeToFit()
+        self.frame.size = self.fittingSize
+        
+        self.needsDisplay =  true
     }
     
     func select() {
@@ -90,17 +160,87 @@ class VUDraggableTextView: DraggableResizableView {
  
     func changeFont(_ font: NSFont) {
         
-        self.textField?.font = font
-        self.textField?.sizeToFit()
+        self.textField.font = font
+        self.textField.sizeToFit()
         self.frame.size = self.fittingSize
-        
+
     }
     
     override func mouseUp(with event: NSEvent) {
                 
         selected = true
-        self.canvas?.selectView(self)
+        
+        let unselectOther = event.modifierFlags.contains(.shift)
+        
+        self.canvas?.selectView(self, unselectOther: !unselectOther)
+
+        
+    }
+    
+    override func mouseDown(with event: NSEvent) {
+        
+        if (event.clickCount == 2) {
+            
+           // print("Double Click")
+            
+            let storyboard = NSStoryboard(name: "Main", bundle: nil)
+            let textWindowController = storyboard.instantiateController(withIdentifier: "Text Window Controller") as! NSWindowController
+            
+            if let textVC = textWindowController.contentViewController as? TextViewController {
+               // print("Setting text field values in VC")
+                textVC.editMode = true
+                textVC.textView = self
+            }
+            
+            if let textWindow = textWindowController.window {
+                
+                let application = NSApplication.shared
+                application.runModal(for: textWindow)
+                
+                textWindow.close()
+            }
+            
+        }
+    }
+    @objc func sendToBack(_ sender: NSMenuItem) {
+        
+   
+        self.superview?.sendSubviewToBack(self)
+        
+    }
+    
+    @objc func bringToFront(_ sender: NSMenuItem) {
+        
         self.superview?.bringSubviewToFront(self)
+        
+    }
+    
+    @objc func sendBackward(_ sender: NSMenuItem) {
+        
+        self.superview?.sendSubviewBackward(self)
+        
+    }
+    
+    @objc func bringForward(_ sender: NSMenuItem) {
+        
+        
+        self.superview?.bringSubviewForward(self)
+        
+    }
+    
+    override func rightMouseDown(with event: NSEvent) {
+        
+        let menu = NSMenu()
+        menu.autoenablesItems = false
+        menu.addItem(withTitle: "Bring to Front", action: #selector(bringToFront(_:)), keyEquivalent: "").target = self
+        menu.addItem(withTitle: "Bring Forward", action: #selector(bringForward(_:)), keyEquivalent: "").target = self
+        menu.addItem(withTitle: "Send Backward", action: #selector(sendBackward(_:)), keyEquivalent: "").target = self
+        menu.addItem(withTitle: "Send to Back", action: #selector(sendToBack(_:)), keyEquivalent: "").target = self
+      
+        self.menu = menu
+        
+        let eventLocation = event.locationInWindow
+        menu.popUp(positioning: nil, at: self.convert(eventLocation, from: nil), in: self)
         
     }
     
@@ -109,8 +249,8 @@ class VUDraggableTextView: DraggableResizableView {
         if event.keyCode == 51 {
         
             self.removeFromSuperview()
+            
         }
-        
     }
     
     func scale(factor: Double) {
@@ -119,10 +259,19 @@ class VUDraggableTextView: DraggableResizableView {
         let width = self.frame.width
         let height = self.frame.height
         
-        self.setFrameSize(.init(width:  width * factor, height: height * factor))
+        var newWidth = width * factor
+        var newHeight = height * factor
+        
+        newWidth = newWidth < minimumWidth ? minimumWidth: newWidth
+        newHeight = newHeight < minimumHeight ? minimumHeight: newHeight
+        
+        self.setFrameSize(.init(width: newWidth, height: newHeight))
+        
+//        print("Scale: \(factor) (\(width), \(height)) -> (\(newWidth), \(newHeight))")
         
         
     }
+    
     
     override func rotate(byDegrees angle: CGFloat) {
         
@@ -130,8 +279,7 @@ class VUDraggableTextView: DraggableResizableView {
         
         
     }
-
-    
+ 
 }
 
 

@@ -15,65 +15,116 @@ enum DraggingType {
     
 }
 
-class VUDraggableImageView: NSImageView {
+struct Shadow {
+    
+    
+    var color = CGColor(red: 0, green: 0, blue: 0, alpha: 0.5)
+    var blur: CGFloat = 15
+    
+    var type: ShadowType = .none
+      
+    var offset: CGSize {
+         
+        var _offset = CGSize(width: 10, height: 10)
+        switch type {
+                
+            case .rightTop:
+                _offset = CGSize(width: 10, height: 10)
+            case .rightBottom:
+                _offset = CGSize(width: 10, height: -10)
+            case .leftTop:
+                _offset = CGSize(width: -10, height: 10)
+            case .leftBottom:
+                _offset = CGSize(width: -10, height: -10)
+            case .none:
+                _offset = CGSize(width: 0, height: 0)
+                
+            }
+        
+        return _offset
+            
+    }
+    
+    
+    init(type: ShadowType = .rightTop, color: CGColor = CGColor(red: 0, green: 0, blue: 0, alpha: 0.5), blur: CGFloat = 15) {
+        self.type = type
+        self.color = color
+        self.blur = blur
+    }
+    
+}
+
+struct ImageViewAttributes {
+    
+    var sizefactor: CGFloat
+    var angle: CGFloat
+    
+    var border: Bool
+    var borderColor: NSColor
+    var borderWidthRatio: Int
+    
+    var shadow: Shadow
+    
+}
+
+class VUDraggableImageView: VUDraggableResizableView {
+    
+    var imageView = NSImageView()
     
     var firstMouseDownPoint: NSPoint = NSZeroPoint
     
     var draggingType: DraggingType = .frame
     
     var canvas: VUKollageCanvas?
+   
+    var sizeFactor: Double = 1.0
+    var rotationAngle: Double = 0.0
     
-    var borderColor: NSColor?
+    var enableShadow: Bool = true
+    var shadowColor: NSColor = .black
+    var shadowType: ShadowType = .rightTop
+    
+    var enableBorder: Bool = false
+    var borderColor: NSColor = .white
+    var borderWidthRatio: CGFloat = 0.0
     var borderWidth: CGFloat = 0.0
+   
+    var imageData: Data?
     
-    var selected: Bool = false {
-        didSet {
+    var topConstraint: NSLayoutConstraint = NSLayoutConstraint()
+    var bottomConstraint: NSLayoutConstraint = NSLayoutConstraint()
+    var leftConstraint: NSLayoutConstraint = NSLayoutConstraint()
+    var rightConstraint: NSLayoutConstraint = NSLayoutConstraint()
+    
+    var attributes: ImageViewAttributes {
+        
+        get {
             
-            if selected {
-                self.layer?.borderColor = NSColor.red.cgColor
-                self.layer?.borderWidth = 5.0
-            } else {
+            return ImageViewAttributes(
                 
-                self.layer?.borderWidth = 0.0
-            }
-            needsDisplay = true
+                sizefactor: self.sizeFactor,
+                angle: self.frameCenterRotation,
+               
+                border: self.enableBorder,
+                borderColor: self.borderColor,
+                borderWidthRatio: Int(self.borderWidthRatio * 100),
+                
+                shadow: getShadow()
+            )
         }
     }
     
-    override var image: NSImage? {
+   
+    var image: NSImage?
+     {
+
         didSet {
-            
+
             if let _image = image {
                 
-                let maxDimension: CGFloat =  CGFloat.maximum(self.frame.height, self.frame.width)
-                self.frame.size = _image.sizeForMaxDimension(maxDimension)
+                self.imageView.image = _image
+                self.needsDisplay = true
                 
-                needsDisplay = true
-            }
-            
-            
-        }
-    }
-    
-    private let resizableArea: CGFloat = 5
-    
-    private var cursorPosition: CornerBorderPosition = .none {
-        didSet {
-            switch self.cursorPosition {
-            case .bottomRight, .topLeft:
-                NSCursor(image:
-                            NSImage(byReferencingFile: "/System/Library/Frameworks/WebKit.framework/Versions/Current/Frameworks/WebCore.framework/Resources/northWestSouthEastResizeCursor.png")!,
-                         hotSpot: NSPoint(x: 8, y: 8)).set()
-            case .bottomLeft, .topRight:
-                NSCursor(image:
-                            NSImage(byReferencingFile: "/System/Library/Frameworks/WebKit.framework/Versions/A/Frameworks/WebCore.framework/Versions/A/Resources/northEastSouthWestResizeCursor.png")!,
-                         hotSpot: NSPoint(x: 8, y: 8)).set()
-            case .top, .bottom:
-                NSCursor.resizeUpDown.set()
-            case .left, .right:
-                NSCursor.resizeLeftRight.set()
-            case .none:
-                NSCursor.openHand.set()
             }
         }
     }
@@ -81,28 +132,327 @@ class VUDraggableImageView: NSImageView {
     override init(frame frameRect: NSRect) {
         
         super.init(frame: frameRect)
+        
+        self.wantsLayer = true
+ 
+        self.addSubview(self.imageView)
         configureImageView()
+        
         
     }
     
     required init?(coder: NSCoder) {
         
         super.init(coder: coder)
-        configureImageView()
+        self.wantsLayer = true
+        
+        if let imageView = NSImageView(coder: coder) {
+            
+            self.imageView = imageView
+            self.addSubview(self.imageView)
+
+            configureImageView()
+        }
+        
+        
+    }
+    
+    func getShadow() -> Shadow {
+        
+        if self.enableShadow {
+            return Shadow(type: self.shadowType, color: self.shadowColor.cgColor)
+        } else {
+            return Shadow(type: .none)
+        }
     }
     
     func configureImageView()
     {
         self.wantsLayer = true
         
-        self.layer?.borderWidth = borderWidth
+        addConstraints()
+    
+        self.configureShadow()
         
-        if let color = self.borderColor {
-            self.layer?.borderColor = color.cgColor
+    }
+    
+    func addConstraints() {
+        
+        
+        let marginWidth = self.borderWidth + selectionMarkLineWidth
+        
+        self.imageView.translatesAutoresizingMaskIntoConstraints = false
+        
+        let centerYConstraint: NSLayoutConstraint = NSLayoutConstraint(item: self.imageView, attribute: NSLayoutConstraint.Attribute.centerY, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self, attribute: NSLayoutConstraint.Attribute.centerY, multiplier: 1, constant: 0)
+        let centerXConstraint: NSLayoutConstraint = NSLayoutConstraint(item: self.imageView, attribute: NSLayoutConstraint.Attribute.centerX, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self, attribute: NSLayoutConstraint.Attribute.centerX, multiplier: 1, constant: 0)
+        
+        let leftConstraint: NSLayoutConstraint = NSLayoutConstraint(item: self.imageView, attribute: NSLayoutConstraint.Attribute.left, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self, attribute: NSLayoutConstraint.Attribute.left, multiplier: 1, constant: marginWidth)
+        let rightConstraint: NSLayoutConstraint = NSLayoutConstraint(item: self.imageView, attribute: NSLayoutConstraint.Attribute.right, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self, attribute: NSLayoutConstraint.Attribute.right, multiplier: 1, constant: marginWidth)
+        
+        let topConstraint: NSLayoutConstraint = NSLayoutConstraint(item: self.imageView, attribute: NSLayoutConstraint.Attribute.top, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self, attribute: NSLayoutConstraint.Attribute.top, multiplier: 1, constant: marginWidth)
+        
+        let bottomConstraint: NSLayoutConstraint = NSLayoutConstraint(item: self.imageView, attribute: NSLayoutConstraint.Attribute.bottom, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self, attribute: NSLayoutConstraint.Attribute.bottom, multiplier: 1, constant: marginWidth)
+        
+        bottomConstraint.priority = .dragThatCanResizeWindow
+        rightConstraint.priority = .dragThatCanResizeWindow
+        
+        self.addConstraint(centerXConstraint)
+        self.addConstraint(centerYConstraint)
+        self.addConstraint(leftConstraint)
+        self.addConstraint(rightConstraint)
+        self.addConstraint(topConstraint)
+        self.addConstraint(bottomConstraint)
+        
+        self.topConstraint = topConstraint
+        self.bottomConstraint = bottomConstraint
+        self.leftConstraint = leftConstraint
+        self.rightConstraint = rightConstraint
+        
+    }
+
+    func configureShadow() {
+        
+        if self.enableShadow {
+            
+            self.shadow = NSShadow()
+            self.layer?.shadowOpacity = 0.7
+            self.layer?.shadowColor = self.shadowColor.cgColor
+            self.layer?.shadowOffset = self.getShadowOffset()
+            self.layer?.shadowRadius = 6.0
+            
+        } else {
+            
+            self.shadow = nil
         }
         
         
     }
+    
+    func getShadowOffset() -> NSSize {
+        
+        var xOffset: CGFloat = 0.0
+        var yOffset: CGFloat = 0.0
+        
+        switch self.shadowType {
+            
+        case .rightTop:
+            xOffset = 10
+            yOffset = 10
+        case .rightBottom:
+            xOffset = 10
+            yOffset = -10
+        case .leftTop:
+            xOffset = -10
+            yOffset = 10
+        case .leftBottom:
+            xOffset = -10
+            yOffset = -10
+        case .none:
+            break
+            
+        }
+        
+        return NSMakeSize(xOffset, yOffset)
+    }
+    
+    override func draw(_ dirtyRect: NSRect) {
+        
+        super.draw(dirtyRect)
+        
+        if self.enableBorder {
+            self.borderColor.set()
+            
+            self.bounds.insetBy(dx: selectionMarkLineWidth, dy: selectionMarkLineWidth).fill()
+        }
+
+        
+    }
+    
+    
+    func setImage(image: NSImage) {
+        
+        self.imageData = image.tiffRepresentation
+      
+        self.image = image
+
+        self.setImageFrame()
+        
+    }
+    
+    func setImageFrame() {
+        
+    
+        if let image = self.image {
+            
+            let maxDimension: CGFloat = CGFloat.maximum(self.frame.height, self.frame.width)
+            
+            let imageSize = image.aspectFitSizeForMaxDimension(maxDimension)
+            
+            let borderWidth = self.borderWidthRatio * CGFloat.maximum(imageSize.width, imageSize.height)
+            
+            self.frame.size = NSSize(width: imageSize.width + 2 * borderWidth + 2 * selectionMarkLineWidth,
+                                     height: imageSize.height + 2 * borderWidth + 2 * selectionMarkLineWidth)
+            
+            self.imageView.image = image
+            
+            needsDisplay = true
+        }
+       
+        
+    }
+    
+    func setShadow(enabled: Bool) {
+        
+        self.enableShadow = enabled
+        self.configureShadow()
+        self.needsDisplay = true
+    }
+    
+    func setShadowColor(color: NSColor) {
+        
+        self.shadowColor = color
+        self.configureShadow()
+        self.needsDisplay = true
+    }
+    
+    func setShadowType(type: ShadowType) {
+    
+        self.shadowType = type
+        self.configureShadow()
+        self.needsDisplay = true
+    }
+    
+    func setBorder(enabled: Bool) {
+        
+        self.enableBorder = enabled
+        
+        configureBorder()
+       
+    }
+    
+    func setBorderColor(color: NSColor) {
+        
+        self.borderColor = color
+      
+        self.needsDisplay = true
+    }
+
+    
+    func setBorderWidth(percent: CGFloat) {
+        
+        self.borderWidthRatio = percent/100
+        
+        configureBorder()
+
+    }
+    
+    func configureBorder() {
+    
+        if let _ = self.image {
+            
+           if self.enableBorder {
+                
+               self.borderWidth = getImageDimension() * self.borderWidthRatio
+                
+            }
+            
+            let marginWidth = self.borderWidth + selectionMarkLineWidth
+            
+            self.topConstraint.constant =  marginWidth
+            self.bottomConstraint.constant = marginWidth
+            self.leftConstraint.constant = marginWidth
+            self.rightConstraint.constant = marginWidth
+            
+            self.needsDisplay = true
+            
+            
+        }
+        
+    }
+
+    func getImageDimension() -> CGFloat {
+        
+        var dimension = 0.0
+           
+        let imageSize = self.imageView.frame.size
+        dimension = CGFloat.maximum(imageSize.width, imageSize.height)
+        
+        return dimension
+    }
+    
+    func getImage() -> NSImage? {
+        
+        guard let image = self.image else { return nil }
+        
+        if self.enableBorder {
+            
+            return image.withBorder(color: borderColor, size: self.frame.size, borderWidth: self.borderWidth)
+        } else {
+            
+            return image
+        }
+            
+        
+    }
+    
+    func hasShadow() -> Bool {
+        
+        return self.enableShadow
+    }
+        
+    func select() {
+        
+        self.selected = true
+    }
+
+    func unselect() {
+        
+        self.selected = false
+    }
+    
+    // MARK: Reordering in Z Index
+    
+    @objc func sendToBack(_ sender: NSMenuItem) {
+        
+        self.superview?.sendSubviewToBack(self)
+        
+    }
+    
+    @objc func bringToFront(_ sender: NSMenuItem) {
+        
+        self.superview?.bringSubviewToFront(self)
+        
+    }
+    
+    @objc func sendBackward(_ sender: NSMenuItem) {
+
+        self.superview?.sendSubviewBackward(self)
+        
+    }
+    
+    @objc func bringForward(_ sender: NSMenuItem) {
+        
+        self.superview?.bringSubviewForward(self)
+        
+    }
+    
+    override func rightMouseDown(with event: NSEvent) {
+        
+        let menu = NSMenu()
+        menu.autoenablesItems = false
+        menu.addItem(withTitle: "Bring to Front", action: #selector(bringToFront(_:)), keyEquivalent: "").target = self
+        menu.addItem(withTitle: "Bring Forward", action: #selector(bringForward(_:)), keyEquivalent: "").target = self
+        menu.addItem(withTitle: "Send Backward", action: #selector(sendBackward(_:)), keyEquivalent: "").target = self
+        menu.addItem(withTitle: "Send to Back", action: #selector(sendToBack(_:)), keyEquivalent: "").target = self
+      
+        self.menu = menu
+        
+        let eventLocation = event.locationInWindow
+        menu.popUp(positioning: nil, at: self.convert(eventLocation, from: nil), in: self)
+        
+    }
+   
+    // MARK: Drag and Drop
     
     var nonURLTypes: Set<NSPasteboard.PasteboardType>  { return [NSPasteboard.PasteboardType.tiff, NSPasteboard.PasteboardType.png, .fileURL]}
     
@@ -147,27 +497,7 @@ class VUDraggableImageView: NSImageView {
             needsDisplay = true
         }
     }
-    
-    
-    func processImageURLs(_ urls: [URL]) {
-        
-        
-        for (_,url) in urls.enumerated() {
-            
-            if let image = NSImage(contentsOf:url) {
-                processImage(image)
-            }
-            
-        }
-        
-    }
-    
-    func processImage(_ image: NSImage) {
-        
-        
-        self.image = image
-        
-    }
+
     
     override func updateTrackingAreas() {
         
@@ -183,167 +513,29 @@ class VUDraggableImageView: NSImageView {
     }
     
     
+    // MARK: Mouse events
     override func mouseExited(with event: NSEvent) {
         NSCursor.arrow.set()
     }
     
-    override func mouseDown(with event: NSEvent) {
-        
-        let locationInView = convert(event.locationInWindow, from: nil)
-        
-        self.cursorPosition = self.cursorCornerBorderPosition(locationInView)
-        
-        
-    }
     
     override func mouseUp(with event: NSEvent) {
         
-        self.cursorPosition = .none
+        super.mouseUp(with: event)
+    
+        let unselectOther = event.modifierFlags.contains(.shift)
         
-        selected = true
-        self.canvas?.selectView(self)
-        self.superview?.bringSubviewToFront(self)
+        self.canvas?.selectView(self, unselectOther: !unselectOther)
+        
         
     }
     
-    func select() {
-        
-        self.selected = true
-    }
-    
-    
-    func unselect() {
-        
-        self.selected = false
-    }
-    
-    
-    override func mouseMoved(with event: NSEvent) {
-        
-        let locationInView = convert(event.locationInWindow, from: nil)
-        
-        self.cursorPosition = self.cursorCornerBorderPosition(locationInView)
-    }
-    
-    override func mouseDragged(with event: NSEvent) {
-        
-        guard let superView = superview else { print("returning")
-            return }
-        
-        let deltaX = event.deltaX
-        let deltaY = event.deltaY
-        
-        var frameWidth = self.frame.width
-        var frameHeight = self.frame.height
-        let aspectRatio = frameHeight/frameWidth
-        
-        // print("deltaX = \(deltaX) deltaY = \(deltaY)")
-        
-        switch cursorPosition {
-        case .topLeft:
-            if superView.frame.width / 3 ..< superView.frame.width ~= self.frame.size.width - deltaX,
-               superView.frame.height / 3 ..< superView.frame.height ~= self.frame.size.height - deltaY,
-               self.frame.origin.x + deltaX >= superView.frame.minX,
-               self.frame.origin.y + self.frame.height - deltaY <= superView.frame.maxY {
-                
-                frameWidth -= deltaX
-                
-                // frameHeight -= deltaY
-                frameHeight = aspectRatio * frameWidth
-                
-                self.frame.origin.x += deltaX
-                
-            }
-        case .bottomLeft:
-            if superView.frame.width / 3 ..< superView.frame.width ~= self.frame.size.width - deltaX,
-               superView.frame.height / 3 ..< superView.frame.height ~= self.frame.size.height + deltaY,
-               self.frame.origin.x + deltaX >= superView.frame.minX,
-               self.frame.origin.y - deltaY >= superView.frame.minY {
-                
-                self.frame.origin.x += deltaX
-                
-                self.frame.origin.y -= deltaY
-                
-                frameWidth -= deltaX
-                
-                //frameHeight += deltaY
-                frameHeight = aspectRatio * frameWidth
-                
-            }
-        case .topRight:
-            if superView.frame.width / 3 ..< superView.frame.width ~= self.frame.size.width + deltaX,
-               superView.frame.height / 3 ..< superView.frame.height ~= self.frame.size.height - deltaY,
-               self.frame.origin.x + self.frame.width + deltaX <= superView.frame.maxX,
-               self.frame.origin.y + self.frame.height - deltaY <= superView.frame.maxY {
-                
-                frameWidth += deltaX
-                
-                // frameHeight -= deltaY
-                frameHeight = aspectRatio * frameWidth
-                
-            }
-        case  .bottomRight:
-            if superView.frame.width / 3 ..< superView.frame.width ~= self.frame.size.width + deltaX,
-               superView.frame.height / 3 ..< superView.frame.height ~= self.frame.size.height + deltaY,
-               self.frame.origin.x + self.frame.width + deltaX <= superView.frame.maxX,
-               self.frame.origin.y - deltaY >= superView.frame.minY {
-                
-                self.frame.origin.y -= deltaY
-                
-                frameWidth += deltaX
-                
-                // frameHeight += deltaY
-                frameHeight = aspectRatio * frameWidth
-                
-            }
-        case .top:
-            if superView.frame.height / 3 ..< superView.frame.height ~= self.frame.size.height - deltaY,
-               self.frame.origin.y + self.frame.height - deltaY <= superView.frame.maxY {
-                frameHeight -= deltaY
-                frameWidth = frameWidth / aspectRatio
-            }
-        case .bottom:
-            if superView.frame.height / 3 ..< superView.frame.height ~= self.frame.size.height + deltaY,
-               self.frame.origin.y - deltaY >= superView.frame.minY {
-                frameHeight += deltaY
-                frameWidth = frameWidth / aspectRatio
-                self.frame.origin.y -= deltaY
-            }
-        case .left:
-            if superView.frame.width / 3 ..< superView.frame.width ~= self.frame.size.width - deltaX,
-               self.frame.origin.x + deltaX >= superView.frame.minX {
-                frameWidth -= deltaX
-                frameHeight = aspectRatio * frameWidth
-                self.frame.origin.x += deltaX
-            }
-        case .right:
-            if superView.frame.width / 3 ..< superView.frame.width ~= self.frame.size.width + deltaX,
-               self.frame.origin.x + self.frame.size.width + deltaX <= superView.frame.maxX {
-                frameWidth += deltaX
-                frameHeight = aspectRatio * frameWidth
-            }
-        case .none:
-            self.frame.origin.x += deltaX
-            self.frame.origin.y -= deltaY
-        }
-        
-        
-        
-        //        print("delta: (\(event.deltaX), \(event.deltaY), frame: \(frameWidth) * \(frameHeight)")
-        //
-        
-        self.setFrameSize(.init(width: frameWidth, height: frameHeight))
-        //self.repositionView()
-        
-    }
-    
+   
+    // MARK: Keyboard events
     override func keyDown(with event: NSEvent) {
-        
-        // print("Key Down: \(event.keyCode)")
         
         if event.keyCode == 51 {
             
-            // print("delete")
             self.removeFromSuperview()
         }
         
@@ -355,45 +547,7 @@ class VUDraggableImageView: NSImageView {
         }
     }
     
-    override func performKeyEquivalent(with event: NSEvent) -> Bool {
-        return true
-    }
-    
-    @discardableResult
-    func cursorCornerBorderPosition(_ locationInView: CGPoint) -> CornerBorderPosition {
         
-        if locationInView.x < resizableArea,
-           locationInView.y < resizableArea {
-            return .bottomLeft
-        }
-        if self.bounds.width - locationInView.x < resizableArea,
-           locationInView.y < resizableArea {
-            return .bottomRight
-        }
-        if locationInView.x < resizableArea,
-           self.bounds.height - locationInView.y < resizableArea {
-            return .topLeft
-        }
-        if self.bounds.height - locationInView.y < resizableArea,
-           self.bounds.width - locationInView.x < resizableArea {
-            return .topRight
-        }
-        if locationInView.x < resizableArea {
-            return .left
-        }
-        if self.bounds.width - locationInView.x < resizableArea {
-            return .right
-        }
-        if locationInView.y < resizableArea {
-            return .bottom
-        }
-        if self.bounds.height - locationInView.y < resizableArea {
-            return .top
-        }
-        
-        return .none
-    }
-    
     private func repositionView() {
         
         guard let superView = superview else {
@@ -416,28 +570,18 @@ class VUDraggableImageView: NSImageView {
         }
     }
     
-    func setAsBackground() {
-        
-        print("Fill background")
-        
-        if let canvas = self.canvas {
-            
-            canvas.setAsBackground(self)
-        }
-        
-        
-    }
     
     func scale(factor: Double) {
         
-        //print("scale: \(factor)")
-        
         if let image = self.image {
             
+            let borderWidth = image.size.width * self.borderWidthRatio
+            
             let maxDimension = image.size.width > image.size.height ? image.size.width : image.size.height
+            
             let constrainedSize = image.aspectFitSizeForMaxDimension(maxDimension * factor)
             
-            self.setFrameSize(.init(width:  constrainedSize.width, height: constrainedSize.height))
+            self.setFrameSize(.init(width: constrainedSize.width + 2 * borderWidth, height: constrainedSize.height + 2 * borderWidth))
         }
       
     }
@@ -445,9 +589,29 @@ class VUDraggableImageView: NSImageView {
     
     func rotate(angle: Double) {
         
-        //print("rotate: \(angle)")
-        
         self.frameCenterRotation = angle
+        
+    }
+    
+    // MARK: Filters
+    
+    func applyEffect(effect: String) {
+        
+        if let imageData = self.imageData, let image = NSImage(data: imageData) {
+    
+            self.image = image.withEffect(effect: effect)
+            
+        }
+        
+    }
+    
+    func removeFilter() {
+        
+        if let imageData = self.imageData, let image = NSImage(data: imageData) {
+            
+            self.image = image
+            
+        }
         
         
     }
@@ -461,12 +625,11 @@ extension VUDraggableImageView: NSDraggingSource {
         return .generic
     }
     
-    
-    
-    
+   
 }
 
 // MARK: - NSPasteboardItemDataProvider
+
 extension VUDraggableImageView: NSPasteboardItemDataProvider {
     
     func pasteboard(_ pasteboard: NSPasteboard?, item: NSPasteboardItem, provideDataForType type: NSPasteboard.PasteboardType) {
