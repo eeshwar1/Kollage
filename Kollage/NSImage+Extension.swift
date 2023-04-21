@@ -19,6 +19,10 @@ enum ImageFilter {
     case comic
     case mono
     case sepia
+    case noir
+    case fade
+    case vignette
+    case instant
     
 }
 
@@ -133,24 +137,24 @@ extension NSImage {
         let targetImage = NSImage(size: self.size, flipped: false) { (dstRect: CGRect) -> Bool in
             
             self.draw(in: dstRect)
-         
+            
             let textOrigin = CGPoint(x: dstRect.origin.x + position.x, y: dstRect.origin.y + position.y)
             
             let textSize = attributedText.size()
             let rect = CGRect(origin: textOrigin, size: textSize)
             
             let context = NSGraphicsContext.current!.cgContext
-
+            
             context.saveGState()
             context.rotate(by: angle.toRadians())
             attributedText.draw(in: rect)
             context.restoreGState()
-          
+            
             return true
         }
         return targetImage
     }
-
+    
     
     func withBorder(color: NSColor, size: NSSize, borderWidth: CGFloat) -> NSImage{
         
@@ -185,7 +189,7 @@ extension NSImage {
         
         var newSmallRect: CGRect = .zero
         newSmallRect.size = image.size
- 
+        
         newSmallRect.origin = position
         
         if shadow.type != .none {
@@ -222,7 +226,7 @@ extension NSImage {
         
         var newSmallRect: CGRect = .zero
         newSmallRect.size = image.size
- 
+        
         newSmallRect.origin = position
         
         overlay.draw(in: newSmallRect, from: .zero, operation: .sourceOver, fraction: 1.0)
@@ -255,7 +259,7 @@ extension NSImage {
         
         var newSmallRect: CGRect = .zero
         newSmallRect.size = image.size
- 
+        
         newSmallRect.origin = position
         
         overlay.draw(in: newSmallRect, from: .zero, operation: .sourceOver, fraction: alpha)
@@ -339,7 +343,7 @@ extension NSImage {
         print("clipImage: returning clipped image")
         return clippedImage
     }
-
+    
     
     func rotated(by degrees: CGFloat) -> NSImage {
         
@@ -453,6 +457,14 @@ extension NSImage {
             filter = .blur
         case "Comic":
             filter = .comic
+        case "Noir":
+            filter = .noir
+        case "Fade":
+            filter = .fade
+        case "Vignette":
+            filter = .vignette
+        case "Instant":
+            filter = .instant
         default:
             filter = .normal
             
@@ -484,7 +496,7 @@ extension NSImage {
     func applyGaussianBlur() -> NSImage {
         
         if let blurFilter  = CIFilter(name: "CIGaussianBlur", parameters: [kCIInputRadiusKey: 6.0]) {
-        
+            
             if let cgImage = self.cgImage(forProposedRect: nil, context: nil, hints: nil) {
                 let ciImage = CIImage(cgImage: cgImage)
                 blurFilter.setValue(ciImage, forKey: "inputImage")
@@ -498,26 +510,30 @@ extension NSImage {
     }
     /**
      It returns the actual CIFilter name as a String based on filter name.
-    */
+     */
     private func getFilterName(filter: ImageFilter) -> String {
         
         switch filter {
-            case .sepia:
-                return "CISepiaTone"
-                
-            case .mono:
-                return "CIPhotoEffectMono"
-                
-            case .blur:
-                return "CIDiscBlur"
-                
-            case .comic:
-                return "CIComicEffect"
-            
-            case .normal:
-                return "Normal"
+        case .sepia:
+            return "CISepiaTone"
+        case .mono:
+            return "CIPhotoEffectMono"
+        case .blur:
+            return "CIDiscBlur"
+        case .comic:
+            return "CIComicEffect"
+        case .normal:
+            return "Normal"
+        case .noir:
+            return "CIPhotoEffectNoir"
+        case .vignette:
+            return "CIVignette"
+        case .fade:
+            return "CIPhotoEffectFade"
+        case .instant:
+            return "CIPhotoEffectInstant"
         }
     }
     
-
+    
 }
