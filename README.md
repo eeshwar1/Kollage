@@ -1,5 +1,7 @@
 # Kollage
 
+![Kollage Icon Dark-256](https://user-images.githubusercontent.com/1115336/233795889-973d3a8a-064e-4962-ba4f-44a3021bb041.png)
+
 A simple macOS Utility for creating collages from Photos.
 
 <img width="1515" alt="Kollage v0 2" src="https://user-images.githubusercontent.com/1115336/226148991-f46c758c-6b30-4b61-ae8e-f325f0703078.png">
